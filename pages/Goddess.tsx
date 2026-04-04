@@ -23,14 +23,49 @@ const Goddess: React.FC = () => {
   const currentGoddesses = goddessesBySeason[activeSeason] || [];
 
   const handleGameClick = (gameName: string) => {
-    const game = GAMES_CONFIG.find(g => g.levelName === gameName);
-    if (game) {
-      navigate('/levels', { state: { selectedGameId: game.id } });
+    const targetGame = GAMES_CONFIG.find(g => g.levelName === gameName);
+    if (targetGame) {
+      navigate('/levels', { state: { selectedGameId: targetGame.id } });
+    }
+  };
+
+  // Add touch swipe support for page navigation
+  const touchStartRef = React.useRef<number | null>(null);
+  const touchEndRef = React.useRef<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchEndRef.current = null;
+    touchStartRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (touchStartRef.current === null || touchEndRef.current === null) return;
+    const distance = touchStartRef.current - touchEndRef.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    const currentIndex = seasons.indexOf(activeSeason);
+    
+    if (isLeftSwipe && currentIndex < seasons.length - 1) {
+      setActiveSeason(seasons[currentIndex + 1]);
+    }
+    if (isRightSwipe && currentIndex > 0) {
+      setActiveSeason(seasons[currentIndex - 1]);
     }
   };
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto px-4 md:px-12 pt-4 md:pt-8 pb-12 animate-fade-in flex flex-col flex-1 h-full min-h-[calc(100vh-140px)]">
+    <div 
+      className="w-full max-w-[1200px] mx-auto px-4 md:px-12 pt-4 md:pt-8 pb-8 animate-fade-in flex flex-col flex-1 min-h-[calc(100vh-140px)]"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       
       {/* 顶部导航区 - 极简文字选项卡 */}
       <div className="flex justify-start md:justify-center gap-8 md:gap-16 overflow-x-auto pt-4 pb-8 mb-8 md:mb-16 no-scrollbar items-center w-full max-w-[900px] mx-auto px-4 border-b border-[#F0F0F0] shrink-0"

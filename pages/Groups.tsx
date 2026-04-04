@@ -98,6 +98,34 @@ const Groups: React.FC = () => {
     }
   };
 
+  // Add touch swipe support for page navigation
+  const touchStartRef = React.useRef<number | null>(null);
+  const touchEndRef = React.useRef<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchEndRef.current = null;
+    touchStartRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (touchStartRef.current === null || touchEndRef.current === null) return;
+    const distance = touchStartRef.current - touchEndRef.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      handleNext();
+    }
+    if (isRightSwipe) {
+      handlePrev();
+    }
+  };
+
   // 获取当前选中季度的所有集数
   const currentEpisodes = SEASON_EPISODES_CONFIG.filter(ep => ep.season === activeIndex + 1).sort((a, b) => a.episode - b.episode);
 
@@ -142,6 +170,9 @@ const Groups: React.FC = () => {
       <div 
         className="flex-1 relative flex items-center justify-center w-full max-w-[900px] mx-auto min-h-[500px] md:mb-12"
         onWheel={handleWheel}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
         {/* 极简左右切换按钮 - 带呼吸动画 */}
         <button 

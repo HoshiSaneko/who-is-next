@@ -320,6 +320,34 @@ const Levels: React.FC = () => {
     }
   };
 
+  // Add touch swipe support for page navigation
+  const touchStartRef = React.useRef<number | null>(null);
+  const touchEndRef = React.useRef<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchEndRef.current = null;
+    touchStartRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (touchStartRef.current === null || touchEndRef.current === null) return;
+    const distance = touchStartRef.current - touchEndRef.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      handleNextPage();
+    }
+    if (isRightSwipe) {
+      handlePrevPage();
+    }
+  };
+
   // Remove handleNavClick as we now use handlePrevPage and handleNextPage
   const renderRule = (rule: string, activeId: string) => {
     const parts = rule.split('%');
@@ -587,6 +615,9 @@ const Levels: React.FC = () => {
           <div 
             ref={gridContainerRef}
             className="w-full h-full px-2 md:px-10 relative flex items-start justify-center flex-1 pb-10"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div 

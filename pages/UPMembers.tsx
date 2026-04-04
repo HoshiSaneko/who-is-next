@@ -87,6 +87,34 @@ const UPMembers: React.FC = () => {
     }
   };
 
+  // Add touch swipe support for page navigation
+  const touchStartRef = React.useRef<number | null>(null);
+  const touchEndRef = React.useRef<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchEndRef.current = null;
+    touchStartRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = () => {
+    if (touchStartRef.current === null || touchEndRef.current === null) return;
+    const distance = touchStartRef.current - touchEndRef.current;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      handleNext();
+    }
+    if (isRightSwipe) {
+      handlePrev();
+    }
+  };
+
   return (
     <div className="w-full max-w-[1200px] mx-auto px-4 md:px-12 pt-4 md:pt-8 pb-12 animate-fade-in flex flex-col flex-1 min-h-0 h-full">
       <div className="flex flex-col gap-8 md:gap-12 flex-1 min-h-0">
@@ -130,6 +158,9 @@ const UPMembers: React.FC = () => {
         <div 
           className="flex-1 flex items-center justify-center min-h-[600px] md:min-h-[500px] relative overflow-hidden"
           onWheel={handleWheel}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
           {/* 极简左右切换按钮 - 带呼吸动画 */}
           <button 
