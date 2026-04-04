@@ -86,11 +86,20 @@ const Levels: React.FC = () => {
 
   // 根据屏幕宽高动态计算每页显示的卡片数量
   useEffect(() => {
+    let lastContainerHeight = 0; // 记录初始或最大高度，防止翻页时因内容减少导致容器塌陷
+
     const calculateItemsPerPage = () => {
       if (typeof window !== 'undefined' && gridContainerRef.current) {
         const container = gridContainerRef.current;
         const width = window.innerWidth;
-        const containerHeight = container.clientHeight;
+        // 如果当前高度小于之前记录的高度（可能是因为翻到了最后一页，内容变少了），则使用历史最大高度来计算
+        // 这样可以保证即使最后一页只有几个卡片，翻回前面的页时，itemsPerPage 依然是按最大容量计算的
+        const currentHeight = container.clientHeight;
+        if (currentHeight > lastContainerHeight) {
+          lastContainerHeight = currentHeight;
+        }
+        
+        const containerHeight = lastContainerHeight || currentHeight;
         
         let cols = 8;
         let cardHeight = 96; // md:h-24 = 96px
@@ -140,6 +149,8 @@ const Levels: React.FC = () => {
     
     // 监听容器大小改变
     const resizeObserver = new ResizeObserver(() => {
+      // 只有当窗口宽度改变，或者容器高度变大时，才重新计算
+      // 避免因为最后一页卡片少导致高度塌陷而触发死循环
       calculateItemsPerPage();
     });
 
