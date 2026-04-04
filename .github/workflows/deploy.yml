@@ -1,0 +1,80 @@
+name: Deploy Who Is Next Gallery
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          echo "Build output (static):"
+          ls -la dist/
+          test -f dist/index.html && echo "index.html OK" || (echo "index.html missing!" && exit 1)
+
+      - name: Create target directory on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            # 强制创建目录（-p 自动创建上级目录）
+            mkdir -p /var/www/sites/who-is-next
+            # 提前设置目录权限，避免上传后权限错误
+            chown -R www-data:www-data /var/www/sites/who-is-next
+            chmod -R 755 /var/www/sites/who-is-next
+
+      - name: Deploy to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          source: "dist/*"
+          target: "/var/www/sites/who-is-next"
+          strip_components: 1
+          overwrite: true
+
+      - name: Fix permissions and restart Nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            chown -R www-data:www-data /var/www/sites/who-is-next
+            chmod -R 755 /var/www/sites/who-is-next
+            chmod 644 /var/www/sites/who-is-next/index.html
+
+            # 验证文件是否上传成功
+            echo "=== Deployed files ==="
+            cd /var/www/sites/who-is-next
+            ls -la | head -20
+            test -f index.html && echo "✅ index.html exists" || (echo "❌ index.html missing" && exit 1)
+
+            # 验证 Nginx 配置并重启
+            echo "=== Restart Nginx ==="
+            nginx -t && systemctl restart nginx
+            echo "✅ Nginx restarted successfully"

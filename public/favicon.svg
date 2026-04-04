@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 背景圆角矩形 -->
+  <rect width="100" height="100" rx="24" fill="#88B090"/>
+  
+  <!-- "下"字的横线 -->
+  <line x1="20" y1="28" x2="80" y2="28" stroke="#F8F8F5" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- "下"字的竖线 -->
+  <line x1="48" y1="28" x2="48" y2="80" stroke="#F8F8F5" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- "下"字右侧的点（巧妙地替换为播放按钮三角形，指向右下） -->
+  <polygon points="62,50 82,58 62,66" fill="#F8F8F5"/>
+</svg>
