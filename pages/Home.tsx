@@ -264,13 +264,6 @@ const Home: React.FC = () => {
                     <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>
-
-                    {biliData?.data.co_creation[currentEpisode.bvid] && (
-                      <span className="absolute right-0 bottom-0 text-[10px] text-[#999999] opacity-60 font-mono flex items-center group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                        <span className="font-sans mr-1 tracking-normal">数据截止至</span>
-                        {biliData.data.co_creation[currentEpisode.bvid].update_time}
-                      </span>
-                    )}
                   </div>
                 </div>
               </a>
