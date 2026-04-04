@@ -77,7 +77,9 @@ const Groups: React.FC = () => {
     
     // Only handle horizontal scrolling or if holding shift
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey) {
-      e.preventDefault();
+      if (e.cancelable) {
+        e.preventDefault();
+      }
       
       // Debounce wheel events to prevent multiple rapid page turns
       if (wheelTimeoutRef.current) return;

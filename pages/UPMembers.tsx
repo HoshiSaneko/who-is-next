@@ -65,8 +65,10 @@ const UPMembers: React.FC = () => {
       return;
     }
     
-    // Prevent default scroll behavior
-    e.preventDefault();
+    // Prevent default scroll behavior only if cancelable
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     
     // Debounce wheel events to prevent multiple rapid page turns
     if (wheelTimeoutRef.current) return;
@@ -125,7 +127,9 @@ const UPMembers: React.FC = () => {
             // 允许通过滚轮横向滚动导航栏
             if (e.currentTarget && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
               e.currentTarget.scrollLeft += e.deltaY;
-              e.preventDefault();
+              if (e.cancelable) {
+                e.preventDefault();
+              }
             }
           }}
         >

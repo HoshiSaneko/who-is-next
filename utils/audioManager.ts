@@ -5,9 +5,9 @@ class AudioManager {
     private _volume: number = 0.1;
 
     constructor() {
-        // 创建多个音频对象
-        this.audios.set('card-select', new Audio('/sounds/card-select.mp3'));
-        this.audios.set('card-select2', new Audio('/sounds/card-select2.mp3'));
+        // 创建多个音频对象 (使用 jsdelivr CDN)
+        this.audios.set('card-select', new Audio('https://cdn.jsdelivr.net/gh/HoshiSaneko/who-is-next/public/sounds/card-select.mp3'));
+        this.audios.set('card-select2', new Audio('https://cdn.jsdelivr.net/gh/HoshiSaneko/who-is-next/public/sounds/card-select2.mp3'));
         
         this.audios.forEach(audio => {
             audio.volume = this._volume;

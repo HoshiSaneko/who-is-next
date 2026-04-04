@@ -85,7 +85,10 @@ const Home: React.FC = () => {
       return;
     }
     
-    e.preventDefault();
+    // Only prevent default if it's cancelable to avoid console warnings
+    if (e.cancelable) {
+      e.preventDefault();
+    }
     
     if (wheelTimeoutRef.current) return;
     

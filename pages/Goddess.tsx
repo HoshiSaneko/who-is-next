@@ -73,7 +73,9 @@ const Goddess: React.FC = () => {
              // 允许通过滚轮横向滚动导航栏
              if (e.currentTarget && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
                e.currentTarget.scrollLeft += e.deltaY;
-               e.preventDefault();
+               if (e.cancelable) {
+                 e.preventDefault();
+               }
              }
            }}
       >
