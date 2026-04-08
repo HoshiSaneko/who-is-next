@@ -66,7 +66,7 @@ export const GROUPS_CONFIG: GroupConfig[] = [
         teams: [
             { name: '黑白双煞', members: ['雨哥到处跑', '力元君'] },
             { name: 'Double J', members: ['啊吗粽', '自来卷三木'] },
-            { name: '虾折腾', members: ['在下哲别', '徐大虾咯'] }
+            { name: '虾哲腾', members: ['在下哲别', '徐大虾咯'] }
         ],
         winner: ['Double J']
     }
