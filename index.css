@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-theme-bg text-theme-text font-sans;
+    @apply bg-[#F8F8F5] text-[#333333] font-sans;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -57,4 +57,119 @@
 
 .animate-fade-in {
   animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Waline Custom Variables - Japanese Minimalist */
+:root {
+  --waline-theme-color: #88B090;
+  --waline-active-color: #6D8E74;
+  
+  --waline-color: #555555;
+  --waline-bgcolor: transparent;
+  --waline-bgcolor-light: #F8F8F5;
+  --waline-bgcolor-hover: #F0F0ED;
+  --waline-border-color: #E5E5E5;
+  --waline-disable-bgcolor: #E5E5E5;
+  --waline-disable-color: #999999;
+  --waline-code-bgcolor: #F0F0ED;
+  
+  --waline-bq-color: #F0F0ED;
+  
+  --waline-avatar-size: 3rem;
+  --waline-avatar-radius: 50%;
+  --waline-m-avatar-size: calc(var(--waline-avatar-size) * 9 / 13);
+  
+  --waline-info-bgcolor: transparent;
+  --waline-info-color: #999999;
+  --waline-info-font-size: 0.75em;
+}
+
+/* Waline Overrides for Minimalist Style */
+.wl-panel {
+  border-radius: 0 !important;
+  border: 1px solid #E5E5E5 !important;
+  background: transparent !important;
+  margin-bottom: 2rem !important;
+}
+
+.wl-header {
+  border-bottom: 1px solid #E5E5E5 !important;
+}
+
+.wl-editor {
+  background: transparent !important;
+}
+
+.wl-btn {
+  border-radius: 0 !important;
+  border: 1px solid #88B090 !important;
+  padding: 0.25rem 1rem !important;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+}
+
+.wl-btn:hover {
+  background: #88B090 !important;
+  color: white !important;
+}
+
+.wl-item {
+  border-bottom: 1px solid #E5E5E5 !important;
+  padding: 1rem 0 !important;
+}
+
+.wl-item:last-child {
+  border-bottom: none !important;
+}
+
+.wl-card {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+
+/* Hide Like/Reaction elements entirely */
+.wl-like, .wl-reaction {
+  display: none !important;
+}
+
+.wl-action {
+  color: #999999 !important;
+}
+
+.wl-action:hover {
+  color: #88B090 !important;
+}
+
+.wl-reply {
+  display: flex !important;
+}
+
+/* Pagination Styles for Waline */
+.wl-pagination {
+  margin-top: 2rem !important;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+}
+
+.wl-pagination .wl-btn {
+  border: 1px solid #E5E5E5 !important;
+  background: transparent !important;
+  color: #555555 !important;
+  border-radius: 0 !important;
+  padding: 0.25rem 0.75rem !important;
+  min-width: 2rem !important;
+  text-align: center !important;
+}
+
+.wl-pagination .wl-btn:hover {
+  border-color: #88B090 !important;
+  color: #88B090 !important;
+  background: transparent !important;
+}
+
+.wl-pagination .wl-btn.active {
+  background: #88B090 !important;
+  border-color: #88B090 !important;
+  color: white !important;
 }

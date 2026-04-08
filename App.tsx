@@ -7,6 +7,7 @@ import Groups from './pages/Groups';
 import Levels from './pages/Levels';
 import Goddess from './pages/Goddess';
 import Stats from './pages/Stats';
+import Guestbook from './pages/Guestbook';
 import Footer from './components/Footer';
 import MusicPlayer from './components/MusicPlayer';
 
@@ -23,6 +24,7 @@ const App: React.FC = () => {
             <Route path="/levels" element={<Levels />} />
             <Route path="/goddess" element={<Goddess />} />
             <Route path="/stats" element={<Stats />} />
+            <Route path="/guestbook" element={<Guestbook />} />
           </Routes>
         </main>
         
