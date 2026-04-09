@@ -204,6 +204,7 @@ export const GAMES_CONFIG: Game[] = [
     levelName: "钓鱼",
     rule: "两人合作钓鱼, %钓到一条%即过关。",
     levelChampion: "无",
+    giveUp: "徐大虾咯, 雨哥到处跑, 力元君, 自来卷三木, 啊吗粽, 在下哲别",
     url: "https://www.bilibili.com/video/BV1yq4y1V7vh?t=1407.1"
   },
   {
