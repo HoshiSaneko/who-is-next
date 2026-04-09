@@ -186,19 +186,21 @@ const Home: React.FC = () => {
             </button>
 
             {currentEpisode && (
-              <a 
-                href={`https://www.bilibili.com/video/${currentEpisode.bvid}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-col md:flex-row items-center md:items-stretch gap-4 md:gap-8 w-full max-w-[280px] md:max-w-none mx-auto hover:bg-white hover:shadow-sm p-4 md:p-6 transition-all duration-500 rounded-sm border border-transparent hover:border-[#E5E5E5]"
+              <div 
+                className="flex flex-col md:flex-row items-center md:items-stretch gap-4 md:gap-8 w-full max-w-[280px] md:max-w-none mx-auto p-4 md:p-6 rounded-sm border border-[#E5E5E5] bg-white cursor-default"
               >
                 {/* 封面图 */}
-                <div className="w-full md:w-[320px] aspect-video overflow-hidden shrink-0 relative shadow-sm">
+                <a 
+                  href={`https://www.bilibili.com/video/${currentEpisode.bvid}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/img w-full md:w-[320px] aspect-video overflow-hidden shrink-0 relative shadow-sm block cursor-pointer"
+                >
                   <img 
                     key={currentEpisode.bvid}
                     src={`/covers/${currentEpisode.bvid}.jpg`} 
                     alt={currentEpisode.title} 
-                    className="w-full h-full object-cover filter grayscale-[10%] group-hover:grayscale-0 transform group-hover:scale-105 transition-all duration-700 ease-out animate-[fadeIn_0.5s_ease-out]"
+                    className="w-full h-full object-cover filter grayscale-[10%] group-hover/img:grayscale-0 transform group-hover/img:scale-105 transition-all duration-700 ease-out animate-[fadeIn_0.5s_ease-out]"
                     onError={(e) => {
                       const img = e.target as HTMLImageElement;
                       if (!img.src.includes('data:image')) {
@@ -208,22 +210,29 @@ const Home: React.FC = () => {
                   />
                   {/* 微弱的渐变遮罩，让图片看起来更有质感 */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
-                </div>
+                </a>
 
                 {/* 视频信息 */}
                 <div className="flex flex-col justify-center flex-1 w-full text-center md:text-left py-2">
                   <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-                    <span className="text-[10px] text-[#999999] tracking-[0.2em] border border-[#E5E5E5] px-2 py-0.5 group-hover:border-[#88B090] group-hover:text-[#88B090] transition-colors duration-500">
+                    <span className="text-[10px] text-[#999999] tracking-[0.2em] border border-[#E5E5E5] px-2 py-0.5 transition-colors duration-500">
                       第 {currentEpisode.season} 季
                     </span>
-                    <span className="text-[10px] text-[#999999] tracking-[0.2em] group-hover:text-[#555555] transition-colors duration-500">
+                    <span className="text-[10px] text-[#999999] tracking-[0.2em] transition-colors duration-500">
                       第 {String(currentEpisode.episode).padStart(2, '0')} 集
                     </span>
                   </div>
                   
-                  <h4 key={currentEpisode.bvid + "-title"} className="text-base md:text-lg text-[#333333] font-medium tracking-wider leading-relaxed group-hover:text-[#88B090] transition-colors duration-500 line-clamp-2 animate-[fadeIn_0.5s_ease-out]">
-                    {currentEpisode.title}
-                  </h4>
+                  <a 
+                    href={`https://www.bilibili.com/video/${currentEpisode.bvid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cursor-pointer"
+                  >
+                    <h4 key={currentEpisode.bvid + "-title"} className="inline-block text-base md:text-lg text-[#333333] font-medium tracking-wider leading-relaxed hover:text-[#88B090] transition-colors duration-500 line-clamp-2 animate-[fadeIn_0.5s_ease-out]">
+                      {currentEpisode.title}
+                    </h4>
+                  </a>
 
                   {/* B站视频数据 */}
                   {biliData?.data.co_creation[currentEpisode.bvid] && (
@@ -256,17 +265,24 @@ const Home: React.FC = () => {
                     </div>
                   )}
                   
-                  <div className="mt-auto pt-6 flex items-center justify-center md:justify-start gap-2 text-[11px] text-[#999999] font-mono tracking-widest group-hover:text-[#88B090] transition-colors duration-500 relative">
-                    <span className="relative">
-                      前往 Bilibili 观看
-                      <div className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#88B090] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                    </span>
-                    <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
+                  <div className="mt-auto pt-6 flex items-center justify-center md:justify-start">
+                    <a 
+                      href={`https://www.bilibili.com/video/${currentEpisode.bvid}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/link flex items-center gap-2 text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer w-max"
+                    >
+                      <span className="relative">
+                        前往 Bilibili 观看
+                        <div className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#88B090] scale-x-0 group-hover/link:scale-x-100 transition-transform duration-500 origin-left"></div>
+                      </span>
+                      <svg className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                      </svg>
+                    </a>
                   </div>
                 </div>
-              </a>
+              </div>
             )}
           </div>
         </div>
