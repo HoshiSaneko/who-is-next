@@ -144,6 +144,17 @@
   display: flex !important;
 }
 
+.wl-content .wl-reply-to {
+  display: inline !important;
+  margin: 0 !important;
+  vertical-align: baseline !important;
+}
+
+.wl-content .wl-reply-to + div {
+  display: inline !important;
+  vertical-align: baseline !important;
+}
+
 /* Pagination Styles for Waline */
 .wl-pagination {
   margin-top: 2rem !important;
