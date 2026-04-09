@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UP_MEMBERS_CONFIG } from '../configs/upMembers.config';
@@ -14,7 +14,24 @@ const formatNumber = (num: number) => {
 const UPMembers: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [wheelNavEnabled, setWheelNavEnabled] = useState(() => {
+    try {
+      const saved = window.localStorage.getItem('upMembers:wheelNavEnabled');
+      if (saved === null) return true;
+      return saved === '1';
+    } catch {
+      return true;
+    }
+  });
   const biliData = useBiliData();
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem('upMembers:wheelNavEnabled', wheelNavEnabled ? '1' : '0');
+    } catch {
+      return;
+    }
+  }, [wheelNavEnabled]);
 
   const handleCardClick = (uid?: string) => {
     if (uid) {
@@ -60,6 +77,8 @@ const UPMembers: React.FC = () => {
   // Add mouse wheel support for page navigation
   const wheelTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const handleWheel = (e: React.WheelEvent) => {
+    if (!wheelNavEnabled) return;
+
     // Disable horizontal scroll takeover on mobile to prevent accidental swipes
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       return;
@@ -156,6 +175,22 @@ const UPMembers: React.FC = () => {
               )}
             </div>
           ))}
+        </div>
+
+        <div className="w-full max-w-[800px] mx-auto -mt-6 px-2 flex justify-end">
+          <label className="group flex items-center gap-2 text-[11px] text-[#999999] hover:text-[#777777] transition-colors tracking-widest select-none cursor-pointer">
+            <div className="relative flex items-center justify-center w-3.5 h-3.5 border border-[#CCCCCC] group-hover:border-[#88B090] transition-colors">
+              <input
+                type="checkbox"
+                checked={!wheelNavEnabled}
+                onChange={(e) => setWheelNavEnabled(!e.target.checked)}
+                className="sr-only peer"
+                aria-label="Disable mouse wheel navigation"
+              />
+              <div className="w-2 h-2 bg-[#88B090] scale-0 peer-checked:scale-100 transition-transform duration-200 ease-out" />
+            </div>
+            禁用滚轮切换
+          </label>
         </div>
 
         {/* 右侧内容展示区 */}
