@@ -92,25 +92,14 @@ const UPMembers: React.FC = () => {
     setActiveIndex((prev) => (prev === UP_MEMBERS_CONFIG.length - 1 ? 0 : prev + 1));
   };
 
-  const pressTimerRef = React.useRef<NodeJS.Timeout | null>(null);
-  const isLongPressRef = React.useRef(false);
-  const touchStartYRef = React.useRef<number | null>(null);
-  const touchStartXRef = React.useRef<number | null>(null);
+  const lastTapRef = React.useRef<{ time: number; index: number | null }>({ time: 0, index: null });
+  const clickTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  const handlePointerDown = (index: number, e: React.PointerEvent | React.TouchEvent | React.MouseEvent) => {
-    // 防止多点触控（如两根手指同时按）导致的混乱
-    if ('touches' in e && e.touches.length > 1) return;
-
-    isLongPressRef.current = false;
+  const handleThumbnailClick = (index: number, e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault(); // 阻止默认行为（如双击放大）
     
-    // 如果是触摸事件，记录初始坐标，用于后续判断是否是滚动
-    if ('touches' in e) {
-      touchStartYRef.current = e.touches[0].clientY;
-      touchStartXRef.current = e.touches[0].clientX;
-    }
-
-    pressTimerRef.current = setTimeout(() => {
-      isLongPressRef.current = true;
+    // 检查是否按下了 Alt 或 Ctrl/Cmd 键进行多选彩蛋（保留 PC 端快捷键）
+    if ('altKey' in e && (e.altKey || e.ctrlKey || e.metaKey)) {
       setSelectedIndices(prev => {
         const newSet = new Set(prev);
         if (newSet.has(index)) {
@@ -120,62 +109,55 @@ const UPMembers: React.FC = () => {
         }
         return newSet;
       });
-      // 移动端长按震动反馈
+      return;
+    }
+
+    const now = Date.now();
+    const DOUBLE_CLICK_DELAY = 300; // 300ms内连续点击算双击
+
+    if (lastTapRef.current.index === index && (now - lastTapRef.current.time) < DOUBLE_CLICK_DELAY) {
+      // 触发了双击（选中/取消选中状态，不切换下方信息）
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+        clickTimeoutRef.current = null;
+      }
+      
+      setSelectedIndices(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(index)) {
+          newSet.delete(index);
+        } else {
+          newSet.add(index);
+        }
+        return newSet;
+      });
+
+      // 移动端震动反馈
       if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
         window.navigator.vibrate(50);
       }
-    }, 300); // 再次缩短长按触发时间至 300ms
-  };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    // 放宽防抖阈值：移动超过 15px 才认为是滑动，避免轻微手指颤动导致长按失败
-    if (touchStartYRef.current !== null && touchStartXRef.current !== null) {
-      const touchY = e.touches[0].clientY;
-      const touchX = e.touches[0].clientX;
-      
-      if (Math.abs(touchY - touchStartYRef.current) > 15 || Math.abs(touchX - touchStartXRef.current) > 15) {
-        handlePointerUpOrLeave();
+      // 重置点击时间，防止连续多次点击被识别为多次双击
+      lastTapRef.current = { time: 0, index: null };
+    } else {
+      // 记录这次点击
+      lastTapRef.current = { time: now, index };
+
+      // 延迟触发单击事件，如果是双击则会被取消
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
       }
-    }
-  };
-
-  const handlePointerUpOrLeave = () => {
-    if (pressTimerRef.current) {
-      clearTimeout(pressTimerRef.current);
-      pressTimerRef.current = null;
-    }
-    touchStartYRef.current = null;
-    touchStartXRef.current = null;
-  };
-
-  const handleThumbnailClick = (index: number, e: React.MouseEvent) => {
-    // 【关键修改】：如果已经触发了长按选中，阻止后续的点击事件（特别是移动端的合成 click 事件）
-    if (isLongPressRef.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      isLongPressRef.current = false; // 重置状态
-      return;
-    }
-
-    // 检查是否按下了 Alt 或 Ctrl/Cmd 键进行多选彩蛋（保留 PC 端快捷键）
-    if (e.altKey || e.ctrlKey || e.metaKey) {
-      setSelectedIndices(prev => {
-        const newSet = new Set(prev);
-        if (newSet.has(index)) {
-          newSet.delete(index);
-        } else {
-          newSet.add(index);
+      
+      clickTimeoutRef.current = setTimeout(() => {
+        // 单击逻辑：选择（切换下方的信息，并清除多选状态）
+        setSelectedIndices(new Set()); 
+        if (index !== activeIndex) {
+          setDirection(index > activeIndex ? 1 : -1);
+          setActiveIndex(index);
         }
-        return newSet;
-      });
-      return;
+        clickTimeoutRef.current = null;
+      }, DOUBLE_CLICK_DELAY);
     }
-
-    // 正常点击逻辑
-    setSelectedIndices(new Set()); // 清除多选状态
-    if (index === activeIndex) return;
-    setDirection(index > activeIndex ? 1 : -1);
-    setActiveIndex(index);
   };
 
   const activeMember = UP_MEMBERS_CONFIG[activeIndex];
@@ -282,24 +264,23 @@ const UPMembers: React.FC = () => {
             return (
               <div 
                 key={member.id}
-                onMouseDown={(e) => handlePointerDown(index, e)}
-                onTouchStart={(e) => handlePointerDown(index, e)}
-                onTouchMove={handleTouchMove}
-                onMouseUp={handlePointerUpOrLeave}
-                onMouseLeave={handlePointerUpOrLeave}
-                onTouchEnd={handlePointerUpOrLeave}
-                onTouchCancel={handlePointerUpOrLeave}
                 onContextMenu={(e) => {
                   e.preventDefault();
                 }}
                 onClick={(e) => handleThumbnailClick(index, e)}
+                onTouchEnd={(e) => {
+                  // 在移动端阻止默认行为（如双击放大），并手动调用点击处理
+                  e.preventDefault();
+                  handleThumbnailClick(index, e);
+                }}
                 className={`relative cursor-pointer group transition-all duration-500 flex flex-col items-center justify-center shrink-0 select-none
                   ${isActive || isSelected ? 'opacity-100 scale-110' : 'opacity-40 hover:opacity-70'}
                 `}
                 style={{ 
                   WebkitTouchCallout: 'none', 
                   WebkitUserSelect: 'none',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  touchAction: 'manipulation' // 禁用双击缩放，保留基础滚动
                 }}
               >
                 <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden transition-all duration-500 
