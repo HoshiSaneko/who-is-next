@@ -78,33 +78,8 @@ const Home: React.FC = () => {
   };
 
   // Mouse wheel support for episode navigation
-  const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const handleWheel = (e: React.WheelEvent) => {
-    // Disable on mobile so user can scroll normally
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      return;
-    }
-    
-    // Only prevent default if it's cancelable to avoid console warnings
-    if (e.cancelable) {
-      e.preventDefault();
-    }
-    
-    if (wheelTimeoutRef.current) return;
-    
-    const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    
-    if (delta > 20) {
-      handleNext();
-      wheelTimeoutRef.current = setTimeout(() => {
-        wheelTimeoutRef.current = null;
-      }, 500);
-    } else if (delta < -20) {
-      handlePrev();
-      wheelTimeoutRef.current = setTimeout(() => {
-        wheelTimeoutRef.current = null;
-      }, 500);
-    }
+    // 移除滚动切换逻辑
   };
 
   const currentEpisode = SEASON_EPISODES_CONFIG[currentIndex];
@@ -164,26 +139,9 @@ const Home: React.FC = () => {
         >
           <div className="flex flex-col items-center gap-6 md:gap-8 relative z-10">
             <h3 className="text-[10px] text-[#999999] tracking-[0.4em] font-mono uppercase relative inline-block">
-              <span className="relative z-10 bg-[#F8F8F5] px-4">EPISODE SHOWCASE</span>
+              <span className="relative z-10 bg-[#F8F8F5] px-4">LATEST EPISODE</span>
               <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-[#E5E5E5] -z-0"></div>
             </h3>
-
-            {/* 左右切换按钮 */}
-            <button 
-              onClick={(e) => { e.preventDefault(); handlePrev(); }}
-              className="absolute left-0 md:-left-12 top-1/2 -translate-y-1/2 text-2xl md:text-3xl font-light text-[#CCCCCC] hover:text-[#777777] hover:-translate-x-1 transition-all duration-300 z-30 px-2 py-8 focus:outline-none bg-transparent"
-              aria-label="Previous episode"
-            >
-              &lt;
-            </button>
-
-            <button 
-              onClick={(e) => { e.preventDefault(); handleNext(); }}
-              className="absolute right-0 md:-right-12 top-1/2 -translate-y-1/2 text-2xl md:text-3xl font-light text-[#CCCCCC] hover:text-[#777777] hover:translate-x-1 transition-all duration-300 z-30 px-2 py-8 focus:outline-none bg-transparent"
-              aria-label="Next episode"
-            >
-              &gt;
-            </button>
 
             {currentEpisode && (
               <div 
@@ -265,12 +223,12 @@ const Home: React.FC = () => {
                     </div>
                   )}
                   
-                  <div className="mt-auto pt-6 flex items-center justify-center md:justify-start">
+                  <div className="mt-auto pt-6 flex items-center justify-between w-full">
                     <a 
                       href={`https://www.bilibili.com/video/${currentEpisode.bvid}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group/link flex items-center gap-2 text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer w-max"
+                      className="group/link flex items-center gap-2 text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer"
                     >
                       <span className="relative">
                         前往 Bilibili 观看
@@ -280,6 +238,20 @@ const Home: React.FC = () => {
                         <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                       </svg>
                     </a>
+                    
+                    {/* 更多剧集链接，内嵌在卡片中 */}
+                    <Link 
+                      to="/groups" 
+                      className="group/more flex items-center gap-2 text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer"
+                    >
+                      <span className="relative">
+                        更多剧集
+                        <div className="absolute -bottom-1 left-0 right-0 h-[1px] bg-[#88B090] scale-x-0 group-hover/more:scale-x-100 transition-transform duration-500 origin-left"></div>
+                      </span>
+                      <svg className="w-3.5 h-3.5 group-hover/more:translate-x-1 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="1.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                      </svg>
+                    </Link>
                   </div>
                 </div>
               </div>
