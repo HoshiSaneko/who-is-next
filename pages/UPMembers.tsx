@@ -95,13 +95,18 @@ const UPMembers: React.FC = () => {
   const pressTimerRef = React.useRef<NodeJS.Timeout | null>(null);
   const isLongPressRef = React.useRef(false);
   const touchStartYRef = React.useRef<number | null>(null);
+  const touchStartXRef = React.useRef<number | null>(null);
 
   const handlePointerDown = (index: number, e: React.PointerEvent | React.TouchEvent | React.MouseEvent) => {
+    // 防止多点触控（如两根手指同时按）导致的混乱
+    if ('touches' in e && e.touches.length > 1) return;
+
     isLongPressRef.current = false;
     
-    // 如果是触摸事件，记录初始 Y 坐标，用于后续判断是否是滚动
+    // 如果是触摸事件，记录初始坐标，用于后续判断是否是滚动
     if ('touches' in e) {
       touchStartYRef.current = e.touches[0].clientY;
+      touchStartXRef.current = e.touches[0].clientX;
     }
 
     pressTimerRef.current = setTimeout(() => {
@@ -119,14 +124,16 @@ const UPMembers: React.FC = () => {
       if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
         window.navigator.vibrate(50);
       }
-    }, 400); // 稍微缩短触发时间，提升响应感
+    }, 300); // 再次缩短长按触发时间至 300ms
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    // 如果用户手指在屏幕上移动超过 10px，说明大概率是在滚动而不是长按，取消长按计时
-    if (touchStartYRef.current !== null) {
+    // 放宽防抖阈值：移动超过 15px 才认为是滑动，避免轻微手指颤动导致长按失败
+    if (touchStartYRef.current !== null && touchStartXRef.current !== null) {
       const touchY = e.touches[0].clientY;
-      if (Math.abs(touchY - touchStartYRef.current) > 10) {
+      const touchX = e.touches[0].clientX;
+      
+      if (Math.abs(touchY - touchStartYRef.current) > 15 || Math.abs(touchX - touchStartXRef.current) > 15) {
         handlePointerUpOrLeave();
       }
     }
@@ -138,12 +145,15 @@ const UPMembers: React.FC = () => {
       pressTimerRef.current = null;
     }
     touchStartYRef.current = null;
+    touchStartXRef.current = null;
   };
 
   const handleThumbnailClick = (index: number, e: React.MouseEvent) => {
-    // 如果是长按触发的，直接忽略这次点击，并重置状态
+    // 【关键修改】：如果已经触发了长按选中，阻止后续的点击事件（特别是移动端的合成 click 事件）
     if (isLongPressRef.current) {
-      isLongPressRef.current = false;
+      e.preventDefault();
+      e.stopPropagation();
+      isLongPressRef.current = false; // 重置状态
       return;
     }
 

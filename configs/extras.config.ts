@@ -180,6 +180,12 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2021-12-19 11:05:04',
     category: '衍生篇'
   },
+  {
+    title: '力元君决战后练球',
+    bvid: 'BV1z2AzzNEz7',
+    date: '2026-03-01 13:21:18',
+    category: '衍生篇'
+  },
   // 城市大富翁
   {
     title: '城市大富翁（1）',
