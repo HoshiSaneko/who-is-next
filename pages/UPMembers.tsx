@@ -289,7 +289,8 @@ const UPMembers: React.FC = () => {
                   <img
                     src={member.avatar}
                     alt={member.name}
-                    className={`w-full h-full object-cover transition-all duration-500 ${isActive || isSelected ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'}`}
+                    className={`w-full h-full object-cover transition-all duration-500 pointer-events-none ${isActive || isSelected ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'}`}
+                    draggable={false}
                   />
                 </div>
                 {/* 隐藏的序号装饰，仅当前选中显示 */}
