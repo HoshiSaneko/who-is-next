@@ -11,11 +11,13 @@ import Guestbook from './pages/Guestbook';
 import Extras from './pages/Extras';
 import Footer from './components/Footer';
 import MusicPlayer from './components/MusicPlayer';
+import MobileWarningToast from './components/MobileWarningToast';
 
 const App: React.FC = () => {
   return (
     <Router>
       <div className="flex flex-col min-h-screen w-full bg-[#F8F8F5] text-[#333333] font-sans selection:bg-[#88B090] selection:text-white relative">
+        <MobileWarningToast />
         <Navigation />
         <main className="flex-1 w-full flex flex-col relative overflow-x-clip pt-16 md:pt-20 min-h-0">
           <Routes>
