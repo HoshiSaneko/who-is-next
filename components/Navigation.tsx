@@ -11,6 +11,7 @@ const Navigation: React.FC = () => {
     { path: '/groups', label: '赛季回顾' },
     { path: '/levels', label: '关卡统计' },
     { path: '/goddess', label: '正义女神' },
+    { path: '/extras', label: '番外' },
     { path: '/stats', label: '数据统计' },
     { path: '/guestbook', label: '留言' }
   ];

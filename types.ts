@@ -71,3 +71,11 @@ export interface Goddess {
   games: string[];
   bilibiliUrl: string;
 }
+
+export interface ExtraVideo {
+  title: string;
+  bvid: string;
+  date?: string;
+  duration?: string;
+  category: string; // 新增：视频分类（如前传、生活篇等）
+}
