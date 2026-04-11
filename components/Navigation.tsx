@@ -70,11 +70,11 @@ const Navigation: React.FC = () => {
 
       {/* Mobile Nav */}
       <div 
-        className={`md:hidden overflow-hidden transition-all duration-500 bg-[#F8F8F5] ${
-          mobileMenuOpen ? 'max-h-[500px] border-b border-[#E5E5E5]' : 'max-h-0 border-transparent'
+        className={`md:hidden overflow-hidden transition-all duration-500 bg-[#F8F8F5]/95 backdrop-blur-md shadow-sm ${
+          mobileMenuOpen ? 'max-h-[600px] border-b border-[#E5E5E5]' : 'max-h-0 border-transparent opacity-0'
         }`}
       >
-        <div className="flex flex-col items-center py-4 gap-6">
+        <div className="flex flex-col items-center py-4">
           {navItems.map(item => {
             const isActive = location.pathname === item.path;
             return (
@@ -82,10 +82,10 @@ const Navigation: React.FC = () => {
                 key={item.path}
                 to={item.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`text-base tracking-[0.15em] transition-colors duration-300 ${
+                className={`w-full text-center py-3.5 text-[15px] tracking-[0.2em] transition-colors duration-300 active:bg-[#E5E5E5]/50 ${
                   isActive 
-                    ? 'text-[#333333] font-bold' 
-                    : 'text-[#555555] font-normal hover:text-[#88B090]'
+                    ? 'text-[#88B090] font-bold bg-white/50' 
+                    : 'text-[#555555] font-medium hover:text-[#88B090]'
                 }`}
               >
                 {item.label}
@@ -94,7 +94,7 @@ const Navigation: React.FC = () => {
           })}
           
           {/* 移动端音乐播放器 */}
-          <div className="mt-2 pt-6 border-t border-[#E5E5E5] w-full flex justify-center">
+          <div className="mt-4 pt-4 pb-2 border-t border-[#E5E5E5] w-full flex justify-center">
             <MusicPlayer />
           </div>
         </div>

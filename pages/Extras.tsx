@@ -39,7 +39,7 @@ const Extras: React.FC = () => {
             </div>
 
             {/* 视频列表网格 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 md:gap-x-12 md:gap-y-16">
               <AnimatePresence mode="wait">
                 {videos.map((video, index) => (
                   <motion.div 
@@ -89,7 +89,7 @@ const Extras: React.FC = () => {
                     href={`https://www.bilibili.com/video/${video.bvid}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="group/link flex items-center gap-2 text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer w-max"
+                    className="group/link flex items-center gap-2 py-2 text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer w-max"
                   >
                     <span className="relative">
                       前往 Bilibili 观看

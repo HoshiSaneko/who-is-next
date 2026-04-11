@@ -68,7 +68,7 @@ const Goddess: React.FC = () => {
     >
       
       {/* 顶部导航区 - 极简文字选项卡 */}
-      <div className="flex justify-start md:justify-center gap-8 md:gap-16 overflow-x-auto pt-4 pb-8 mb-8 md:mb-16 no-scrollbar items-center w-full max-w-[900px] mx-auto px-4 border-b border-[#F0F0F0] shrink-0"
+      <div className="flex justify-start md:justify-center gap-6 md:gap-16 overflow-x-auto pt-4 pb-6 md:pb-8 mb-6 md:mb-16 no-scrollbar items-center w-full max-w-[900px] mx-auto px-4 border-b border-[#F0F0F0] shrink-0"
            onWheel={(e) => {
              // 允许通过滚轮横向滚动导航栏
              if (e.currentTarget && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
@@ -103,7 +103,7 @@ const Goddess: React.FC = () => {
       </div>
 
       {/* 女神列表网格 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 flex-1 pb-12 pr-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10 md:gap-y-12 flex-1 pb-12 px-2 md:pr-2">
         <AnimatePresence mode="wait">
           {currentGoddesses.map((goddess, index) => (
             <motion.div 
@@ -112,7 +112,7 @@ const Goddess: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex flex-col gap-6 group"
+              className="flex flex-col gap-5 md:gap-6 group"
             >
               {/* 头部：集数与名字 */}
               <div className="flex items-center gap-4 border-l-2 border-[#E5E5E5] group-hover:border-[#88B090] pl-4 transition-colors duration-300">
@@ -129,13 +129,13 @@ const Goddess: React.FC = () => {
                 </a>
               </div>
 
-              <div className="flex gap-6 items-start">
+              <div className="flex gap-4 md:gap-6 items-start">
                 {/* 小头像 */}
                 <a 
                   href={goddess.bilibiliUrl} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-20 h-20 shrink-0 overflow-hidden rounded-sm"
+                  className="w-16 h-16 md:w-20 md:h-20 shrink-0 overflow-hidden rounded-sm"
                 >
                   <img 
                     src={goddess.avatar} 
@@ -145,19 +145,19 @@ const Goddess: React.FC = () => {
                 </a>
 
                 {/* 描述与关卡信息 */}
-                <div className="flex flex-col gap-4 flex-1">
+                <div className="flex flex-col gap-3 md:gap-4 flex-1">
                   <p className="text-xs text-[#777777] leading-relaxed tracking-wider">
                     {goddess.description}
                   </p>
                   
-                  <div className="pt-4 border-t border-[#F5F5F5]">
+                  <div className="pt-3 md:pt-4 border-t border-[#F5F5F5]">
                     <span className="text-[10px] text-[#999999] tracking-[0.2em] mb-2 block">GAMES</span>
                     <div className="flex flex-wrap gap-2">
                       {goddess.games.map((game, i) => (
                         <span 
                           key={i} 
                           onClick={() => handleGameClick(game)}
-                          className="text-[11px] text-[#555555] bg-[#FAFAFA] px-2 py-1 tracking-wider cursor-pointer hover:bg-[#88B090] hover:text-white transition-colors duration-300"
+                          className="text-[11px] text-[#555555] bg-[#FAFAFA] px-2 py-1.5 md:py-1 tracking-wider cursor-pointer hover:bg-[#88B090] hover:text-white transition-colors duration-300"
                         >
                           {game}
                         </span>

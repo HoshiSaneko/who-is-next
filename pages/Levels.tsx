@@ -465,7 +465,7 @@ const Levels: React.FC = () => {
               placeholder="搜索关卡名称或ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white bg-opacity-60 backdrop-blur-sm border border-[#E5E5E5] px-4 py-2 text-xs md:text-sm text-[#333333] placeholder-[#CCCCCC] focus:outline-none focus:border-[#88B090] transition-colors"
+              className="w-full bg-white bg-opacity-60 backdrop-blur-sm border border-[#E5E5E5] px-4 py-2.5 md:py-2 text-[13px] md:text-sm text-[#333333] placeholder-[#CCCCCC] focus:outline-none focus:border-[#88B090] transition-colors"
             />
             <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#CCCCCC]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>

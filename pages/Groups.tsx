@@ -135,7 +135,7 @@ const Groups: React.FC = () => {
     <div className="w-full max-w-[1200px] mx-auto px-4 md:px-12 pt-4 md:pt-8 pb-12 animate-fade-in flex flex-col flex-1 min-h-[calc(100vh-140px)]">
       {/* 顶部导航区 - 赛季选项卡 */}
       <div 
-        className="flex justify-start md:justify-center gap-8 md:gap-16 overflow-x-auto pt-4 pb-8 mb-8 md:mb-16 no-scrollbar items-center w-full max-w-[900px] mx-auto px-4 border-b border-[#F0F0F0]"
+        className="flex justify-start md:justify-center gap-6 md:gap-16 overflow-x-auto pt-4 pb-6 md:pb-8 mb-6 md:mb-16 no-scrollbar items-center w-full max-w-[900px] mx-auto px-4 border-b border-[#F0F0F0]"
         onWheel={(e) => {
           // 允许通过滚轮横向滚动导航栏
           if (e.currentTarget && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
@@ -176,24 +176,7 @@ const Groups: React.FC = () => {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        {/* 极简左右切换按钮 - 带呼吸动画 */}
-        <button 
-          onClick={handlePrev}
-          className="absolute -left-4 md:-left-16 top-1/2 -translate-y-1/2 text-3xl md:text-4xl font-light text-[#CCCCCC] hover:text-[#777777] hover:-translate-x-1 transition-all duration-300 z-30 px-2 py-8 focus:outline-none bg-transparent animate-pulse"
-          aria-label="Previous season"
-        >
-          &lt;
-        </button>
-
-        <button 
-          onClick={handleNext}
-          className="absolute -right-4 md:-right-16 top-1/2 -translate-y-1/2 text-3xl md:text-4xl font-light text-[#CCCCCC] hover:text-[#777777] hover:translate-x-1 transition-all duration-300 z-30 px-2 py-8 focus:outline-none bg-transparent animate-pulse"
-          aria-label="Next season"
-        >
-          &gt;
-        </button>
-
-        <div className="w-full h-full relative overflow-hidden flex items-center justify-center px-6 md:px-0">
+        <div className="w-full h-full relative overflow-hidden flex items-center justify-center px-4 md:px-0">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div 
               key={activeSeason.id}
@@ -213,7 +196,7 @@ const Groups: React.FC = () => {
               {String(activeIndex + 1).padStart(2, '0')}
             </div>
 
-            <div className="relative z-10 flex flex-col bg-white bg-opacity-60 backdrop-blur-sm p-6 md:p-10 border border-[#F0F0F0] transition-all duration-500">
+            <div className="relative z-10 flex flex-col bg-white bg-opacity-60 backdrop-blur-sm p-5 md:p-10 border border-[#F0F0F0] transition-all duration-500">
               <div className="flex flex-col md:flex-row md:items-stretch w-full">
                 {/* 左侧：赛季标题与胜者 (高亮展示) */}
                 <div className="flex flex-col md:w-1/3 mb-8 md:mb-0 md:pr-8 md:border-r border-[#F0F0F0]">

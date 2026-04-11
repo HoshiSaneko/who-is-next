@@ -416,22 +416,22 @@ const Stats: React.FC = () => {
             </p>
           </div>
           
-          <div className="flex gap-6 md:gap-10">
+          <div className="flex gap-4 md:gap-10">
             <button 
               onClick={() => setActiveRankTab('clear')}
-              className={`pb-2 text-sm tracking-widest transition-all duration-500 border-b ${activeRankTab === 'clear' ? 'border-[#333333] text-[#333333]' : 'border-transparent text-[#999999] hover:text-[#555555]'}`}
+              className={`pb-2 text-xs md:text-sm tracking-widest transition-all duration-500 border-b ${activeRankTab === 'clear' ? 'border-[#333333] text-[#333333]' : 'border-transparent text-[#999999] hover:text-[#555555]'}`}
             >
               单关通关
             </button>
             <button 
               onClick={() => setActiveRankTab('giveup')}
-              className={`pb-2 text-sm tracking-widest transition-all duration-500 border-b ${activeRankTab === 'giveup' ? 'border-[#333333] text-[#333333]' : 'border-transparent text-[#999999] hover:text-[#555555]'}`}
+              className={`pb-2 text-xs md:text-sm tracking-widest transition-all duration-500 border-b ${activeRankTab === 'giveup' ? 'border-[#333333] text-[#333333]' : 'border-transparent text-[#999999] hover:text-[#555555]'}`}
             >
               单关放弃
             </button>
             <button 
               onClick={() => setActiveRankTab('season')}
-              className={`pb-2 text-sm tracking-widest transition-all duration-500 border-b ${activeRankTab === 'season' ? 'border-[#333333] text-[#333333]' : 'border-transparent text-[#999999] hover:text-[#555555]'}`}
+              className={`pb-2 text-xs md:text-sm tracking-widest transition-all duration-500 border-b ${activeRankTab === 'season' ? 'border-[#333333] text-[#333333]' : 'border-transparent text-[#999999] hover:text-[#555555]'}`}
             >
               单季通关
             </button>
@@ -450,17 +450,17 @@ const Stats: React.FC = () => {
             return (
               <div key={`${activeRankTab}-${stat.name}`} className="flex items-center py-6 border-b border-[#F5F5F5] group hover:border-[#E0E0E0] transition-colors duration-500 cursor-default">
                 {/* 排名数字 */}
-                <div className={`w-16 md:w-24 text-2xl md:text-4xl font-light font-mono ${rankColor} opacity-40 group-hover:opacity-100 transition-opacity duration-500`}>
+                <div className={`w-12 md:w-24 text-xl md:text-4xl font-light font-mono ${rankColor} opacity-40 group-hover:opacity-100 transition-opacity duration-500`}>
                   {String(idx + 1).padStart(2, '0')}.
                 </div>
                 
                 {/* 头像 */}
                 {member ? (
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden shrink-0 mr-6 md:mr-10 opacity-90 group-hover:opacity-100 transition-all duration-500">
+                  <div className="w-10 h-10 md:w-16 md:h-16 rounded-full overflow-hidden shrink-0 mr-4 md:mr-10 opacity-90 group-hover:opacity-100 transition-all duration-500">
                     <img src={member.avatar} alt={stat.name} className="w-full h-full object-cover" />
                   </div>
                 ) : (
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-[#F5F5F5] mr-6 md:mr-10 shrink-0" />
+                  <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-[#F5F5F5] mr-4 md:mr-10 shrink-0" />
                 )}
                 
                 {/* 名字 */}
@@ -501,7 +501,7 @@ const Stats: React.FC = () => {
         )}
         
         {/* 总播放模块 */}
-        <div className="bg-[#F5F5F5] rounded-xl p-8 shadow-sm border border-[#E0E0E0]/50 flex flex-col justify-between group hover:border-[#88B090] transition-colors duration-300">
+        <div className="bg-[#F5F5F5] rounded-xl p-6 md:p-8 shadow-sm border border-[#E0E0E0]/50 flex flex-col justify-between group hover:border-[#88B090] transition-colors duration-300">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm tracking-widest font-medium text-[#555555]">全系列总播放量</span>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#88B090] shadow-sm group-hover:scale-110 transition-transform duration-300">
@@ -515,7 +515,7 @@ const Stats: React.FC = () => {
         </div>
         
         {/* 总点赞模块 */}
-        <div className="bg-[#F5F5F5] rounded-xl p-8 shadow-sm border border-[#E0E0E0]/50 flex flex-col justify-between group hover:border-[#88B090] transition-colors duration-300">
+        <div className="bg-[#F5F5F5] rounded-xl p-6 md:p-8 shadow-sm border border-[#E0E0E0]/50 flex flex-col justify-between group hover:border-[#88B090] transition-colors duration-300">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm tracking-widest font-medium text-[#555555]">全系列总点赞数</span>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#88B090] shadow-sm group-hover:scale-110 transition-transform duration-300">
@@ -528,7 +528,7 @@ const Stats: React.FC = () => {
         </div>
 
         {/* 总投币模块 */}
-        <div className="bg-[#F5F5F5] rounded-xl p-8 shadow-sm border border-[#E0E0E0]/50 flex flex-col justify-between group hover:border-[#88B090] transition-colors duration-300">
+        <div className="bg-[#F5F5F5] rounded-xl p-6 md:p-8 shadow-sm border border-[#E0E0E0]/50 flex flex-col justify-between group hover:border-[#88B090] transition-colors duration-300">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm tracking-widest font-medium text-[#555555]">全系列总投币数</span>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#88B090] shadow-sm group-hover:scale-110 transition-transform duration-300">
@@ -541,7 +541,7 @@ const Stats: React.FC = () => {
         </div>
 
         {/* 总收藏模块 */}
-        <div className="bg-[#F5F5F5] rounded-xl p-8 shadow-sm border border-[#E0E0E0]/50 flex flex-col justify-between group hover:border-[#88B090] transition-colors duration-300">
+        <div className="bg-[#F5F5F5] rounded-xl p-6 md:p-8 shadow-sm border border-[#E0E0E0]/50 flex flex-col justify-between group hover:border-[#88B090] transition-colors duration-300">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm tracking-widest font-medium text-[#555555]">全系列总收藏数</span>
             <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-[#88B090] shadow-sm group-hover:scale-110 transition-transform duration-300">

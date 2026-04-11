@@ -85,8 +85,8 @@ const Home: React.FC = () => {
   const currentEpisode = SEASON_EPISODES_CONFIG[currentIndex];
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-12 pt-4 md:pt-8 pb-12 w-full max-w-[1200px] mx-auto min-h-0 relative overflow-hidden">
-      <div className="text-center space-y-12 animate-fade-in w-full flex flex-col items-center mt-4 md:mt-8 mb-12 md:mb-16">
+    <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-12 pt-4 md:pt-8 pb-12 w-full max-w-[1200px] mx-auto min-h-0 relative overflow-hidden">
+      <div className="text-center space-y-8 md:space-y-12 animate-fade-in w-full flex flex-col items-center mt-4 md:mt-8 mb-8 md:mb-16">
         {/* Main Title Image & Video Container */}
         <div className="relative w-full max-w-[400px] md:max-w-[600px] mx-auto flex flex-col items-center justify-center">
           <div 
@@ -145,7 +145,7 @@ const Home: React.FC = () => {
 
             {currentEpisode && (
               <div 
-                className="flex flex-col md:flex-row items-center md:items-stretch gap-4 md:gap-8 w-full max-w-[280px] md:max-w-none mx-auto p-4 md:p-6 rounded-sm border border-[#E5E5E5] bg-white cursor-default"
+                className="flex flex-col md:flex-row items-center md:items-stretch gap-4 md:gap-8 w-full max-w-[360px] md:max-w-none mx-auto p-4 md:p-6 rounded-sm border border-[#E5E5E5] bg-white cursor-default"
               >
                 {/* 封面图 */}
                 <a 
@@ -194,7 +194,7 @@ const Home: React.FC = () => {
 
                   {/* B站视频数据 */}
                   {biliData?.data.co_creation[currentEpisode.bvid] && (
-                    <div className="mt-4 flex flex-wrap items-center justify-center md:justify-start gap-4 text-[13px] text-[#666666] font-medium tracking-wide animate-[fadeIn_0.5s_ease-out] relative">
+                    <div className="mt-3 md:mt-4 flex flex-wrap items-center justify-center md:justify-start gap-3 md:gap-4 text-[12px] md:text-[13px] text-[#666666] font-medium tracking-wide animate-[fadeIn_0.5s_ease-out] relative">
                       <span className="flex items-center gap-1" title="播放量">
                         <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M10 4.040041666666666C7.897383333333334 4.040041666666666 6.061606666666667 4.147 4.765636666666667 4.252088333333334C3.806826666666667 4.32984 3.061106666666667 5.0637316666666665 2.9755000000000003 6.015921666666667C2.8803183333333333 7.074671666666667 2.791666666666667 8.471183333333332 2.791666666666667 9.998333333333333C2.791666666666667 11.525566666666668 2.8803183333333333 12.922083333333333 2.9755000000000003 13.9808C3.061106666666667 14.932983333333334 3.806826666666667 15.666916666666667 4.765636666666667 15.744683333333336C6.061611666666668 15.849716666666666 7.897383333333334 15.956666666666667 10 15.956666666666667C12.10285 15.956666666666667 13.93871666666667 15.849716666666666 15.234766666666667 15.74461666666667C16.193416666666668 15.66685 16.939000000000004 14.933216666666667 17.024583333333336 13.981216666666668C17.11975 12.922916666666667 17.208333333333332 11.526666666666666 17.208333333333332 9.998333333333333C17.208333333333332 8.470083333333333 17.11975 7.073818333333334 17.024583333333336 6.015513333333334C16.939000000000004 5.063538333333333 16.193416666666668 4.329865000000001 15.234766666666667 4.252118333333334C13.93871666666667 4.147016666666667 12.10285 4.040041666666666 10 4.040041666666666zM4.684808333333334 3.255365C6.001155 3.14862 7.864583333333334 3.0400416666666668 10 3.0400416666666668C12.13565 3.0400416666666668 13.999199999999998 3.148636666666667 15.315566666666667 3.2553900000000002C16.753416666666666 3.3720016666666672 17.890833333333333 4.483195 18.020583333333335 5.925965000000001C18.11766666666667 7.005906666666667 18.208333333333336 8.433 18.208333333333336 9.998333333333333C18.208333333333336 11.56375 18.11766666666667 12.990833333333335 18.020583333333335 14.0708C17.890833333333333 15.513533333333331 16.753416666666666 16.624733333333335 15.315566666666667 16.74138333333333C13.999199999999998 16.848116666666666 12.13565 16.95666666666667 10 16.95666666666667C7.864583333333334 16.95666666666667 6.001155 16.848116666666666 4.684808333333334 16.7414C3.2467266666666665 16.624750000000002 2.1092383333333338 15.513266666666667 1.9795200000000002 14.070383333333334C1.8823900000000002 12.990000000000002 1.7916666666666667 11.562683333333334 1.7916666666666667 9.998333333333333C1.7916666666666667 8.434066666666666 1.8823900000000002 7.00672 1.9795200000000002 5.926381666666667C2.1092383333333338 4.483463333333334 3.2467266666666665 3.371976666666667 4.684808333333334 3.255365z"></path>
@@ -223,12 +223,12 @@ const Home: React.FC = () => {
                     </div>
                   )}
                   
-                  <div className="mt-auto pt-6 flex items-center justify-between w-full">
+                  <div className="mt-auto pt-6 flex flex-row items-center justify-between w-full">
                     <a 
                       href={`https://www.bilibili.com/video/${currentEpisode.bvid}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group/link flex items-center gap-2 text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer"
+                      className="group/link flex items-center gap-1 md:gap-2 py-2 text-[10px] md:text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer"
                     >
                       <span className="relative">
                         前往 Bilibili 观看
@@ -242,7 +242,7 @@ const Home: React.FC = () => {
                     {/* 更多剧集链接，内嵌在卡片中 */}
                     <Link 
                       to="/groups" 
-                      className="group/more flex items-center gap-2 text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer"
+                      className="group/more flex items-center gap-1 md:gap-2 py-2 text-[10px] md:text-[11px] text-[#999999] font-mono tracking-widest hover:text-[#88B090] transition-colors duration-500 relative cursor-pointer"
                     >
                       <span className="relative">
                         更多剧集

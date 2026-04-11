@@ -246,7 +246,7 @@ const UPMembers: React.FC = () => {
       <div className="flex flex-col gap-8 md:gap-12 flex-1 min-h-0">
         {/* 顶部导航区 - 极简水平头像列表 */}
         <div 
-          className="flex justify-start md:justify-center gap-4 md:gap-6 overflow-x-auto pt-4 pb-8 no-scrollbar items-center w-full max-w-[800px] mx-auto px-2"
+          className="flex justify-start md:justify-center gap-3 md:gap-6 overflow-x-auto pt-4 pb-6 md:pb-8 no-scrollbar items-center w-full max-w-[800px] mx-auto px-2"
           onWheel={(e) => {
             // 允许通过滚轮横向滚动导航栏
             if (e.currentTarget && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
@@ -329,7 +329,7 @@ const UPMembers: React.FC = () => {
 
         {/* 右侧内容展示区 */}
         <div 
-          className="flex-1 flex items-center justify-center min-h-[600px] md:min-h-[500px] relative overflow-hidden"
+          className="flex-1 flex items-center justify-center min-h-[500px] relative overflow-hidden mt-4 md:mt-0"
           onWheel={handleWheel}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
@@ -338,7 +338,7 @@ const UPMembers: React.FC = () => {
           {/* 极简左右切换按钮 - 带呼吸动画 */}
           <button 
             onClick={handlePrev}
-            className="absolute left-0 md:left-4 top-[10%] md:top-1/2 -translate-y-1/2 text-3xl md:text-4xl font-light text-[#CCCCCC] hover:text-[#777777] hover:-translate-x-1 transition-all duration-300 z-30 px-2 md:px-4 py-8 focus:outline-none bg-transparent animate-pulse"
+            className="absolute left-0 md:left-4 top-[15%] md:top-1/2 -translate-y-1/2 text-2xl md:text-4xl font-light text-[#CCCCCC] hover:text-[#777777] hover:-translate-x-1 transition-all duration-300 z-30 px-2 md:px-4 py-6 md:py-8 focus:outline-none bg-transparent animate-pulse"
             aria-label="Previous member"
           >
             &lt;
@@ -346,7 +346,7 @@ const UPMembers: React.FC = () => {
 
           <button 
             onClick={handleNext}
-            className="absolute right-0 md:right-4 top-[10%] md:top-1/2 -translate-y-1/2 text-3xl md:text-4xl font-light text-[#CCCCCC] hover:text-[#777777] hover:translate-x-1 transition-all duration-300 z-30 px-2 md:px-4 py-8 focus:outline-none bg-transparent animate-pulse"
+            className="absolute right-0 md:right-4 top-[15%] md:top-1/2 -translate-y-1/2 text-2xl md:text-4xl font-light text-[#CCCCCC] hover:text-[#777777] hover:translate-x-1 transition-all duration-300 z-30 px-2 md:px-4 py-6 md:py-8 focus:outline-none bg-transparent animate-pulse"
             aria-label="Next member"
           >
             &gt;
@@ -362,9 +362,9 @@ const UPMembers: React.FC = () => {
                   transition={{ type: "spring", stiffness: 200, damping: 20 }}
                   className="flex flex-col items-center justify-center gap-12 group w-full max-w-[800px] mx-auto relative px-8 md:px-0"
                 >
-                  <div className="flex gap-4 md:gap-12 items-center justify-center relative z-10">
+                  <div className="flex gap-3 md:gap-12 items-center justify-center relative z-10 w-full">
                     {/* 左侧头像 */}
-                    <div className="w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 shadow-[0_0_30px_rgba(197,160,89,0.3)] border-2 border-[#C5A059]">
+                    <div className="w-20 h-20 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 shadow-[0_0_30px_rgba(197,160,89,0.3)] border-2 border-[#C5A059]">
                       <img src={UP_MEMBERS_CONFIG[Array.from(selectedIndices)[0]].avatar} alt={UP_MEMBERS_CONFIG[Array.from(selectedIndices)[0]].name} className="w-full h-full object-cover" />
                     </div>
 
@@ -374,7 +374,7 @@ const UPMembers: React.FC = () => {
                     </div>
 
                     {/* 右侧头像 */}
-                    <div className="w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 shadow-[0_0_30px_rgba(197,160,89,0.3)] border-2 border-[#C5A059]">
+                    <div className="w-20 h-20 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 shadow-[0_0_30px_rgba(197,160,89,0.3)] border-2 border-[#C5A059]">
                       <img src={UP_MEMBERS_CONFIG[Array.from(selectedIndices)[1]].avatar} alt={UP_MEMBERS_CONFIG[Array.from(selectedIndices)[1]].name} className="w-full h-full object-cover" />
                     </div>
                   </div>
