@@ -33,7 +33,14 @@ const Footer: React.FC = () => {
             <span className="w-1 h-1 rounded-full bg-[#D9D9D9] hidden md:block"></span>
             <span className="text-[#AAAAAA]">Crafted with Gemini 3.1 Pro</span>
             <span className="w-1 h-1 rounded-full bg-[#D9D9D9] hidden md:block"></span>
-            <span className="text-[#AAAAAA]">© 2026 Saneko</span>
+            <a 
+              href="https://saneko.me" 
+              target="_blank" 
+              rel="noreferrer"
+              className="text-[#AAAAAA] hover:text-[#88B090] transition-colors duration-300"
+            >
+              © {currentYear} Saneko
+            </a>
             <span className="w-1 h-1 rounded-full bg-[#D9D9D9] hidden md:block"></span>
             <a 
               href="https://beian.miit.gov.cn/" 
