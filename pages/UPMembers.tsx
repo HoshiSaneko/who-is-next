@@ -96,7 +96,7 @@ const UPMembers: React.FC = () => {
   const isLongPressRef = React.useRef(false);
   const touchStartYRef = React.useRef<number | null>(null);
 
-  const handlePointerDown = (index: number, e: React.PointerEvent | React.TouchEvent) => {
+  const handlePointerDown = (index: number, e: React.PointerEvent | React.TouchEvent | React.MouseEvent) => {
     isLongPressRef.current = false;
     
     // 如果是触摸事件，记录初始 Y 坐标，用于后续判断是否是滚动
@@ -119,7 +119,7 @@ const UPMembers: React.FC = () => {
       if (typeof window !== 'undefined' && window.navigator && window.navigator.vibrate) {
         window.navigator.vibrate(50);
       }
-    }, 500); // 500ms 触发长按
+    }, 400); // 稍微缩短触发时间，提升响应感
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
@@ -144,6 +144,20 @@ const UPMembers: React.FC = () => {
     // 如果是长按触发的，直接忽略这次点击，并重置状态
     if (isLongPressRef.current) {
       isLongPressRef.current = false;
+      return;
+    }
+
+    // 检查是否按下了 Alt 或 Ctrl/Cmd 键进行多选彩蛋（保留 PC 端快捷键）
+    if (e.altKey || e.ctrlKey || e.metaKey) {
+      setSelectedIndices(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(index)) {
+          newSet.delete(index);
+        } else {
+          newSet.add(index);
+        }
+        return newSet;
+      });
       return;
     }
 
@@ -258,19 +272,15 @@ const UPMembers: React.FC = () => {
             return (
               <div 
                 key={member.id}
-                onPointerDown={(e) => handlePointerDown(index, e)}
+                onMouseDown={(e) => handlePointerDown(index, e)}
                 onTouchStart={(e) => handlePointerDown(index, e)}
                 onTouchMove={handleTouchMove}
-                onPointerUp={handlePointerUpOrLeave}
-                onPointerLeave={handlePointerUpOrLeave}
-                onPointerCancel={handlePointerUpOrLeave}
+                onMouseUp={handlePointerUpOrLeave}
+                onMouseLeave={handlePointerUpOrLeave}
                 onTouchEnd={handlePointerUpOrLeave}
                 onTouchCancel={handlePointerUpOrLeave}
                 onContextMenu={(e) => {
-                  // 仅在移动设备上禁用长按菜单，PC 上的右键依然保留
-                  if (typeof window !== 'undefined' && 'ontouchstart' in window) {
-                    e.preventDefault();
-                  }
+                  e.preventDefault();
                 }}
                 onClick={(e) => handleThumbnailClick(index, e)}
                 className={`relative cursor-pointer group transition-all duration-500 flex flex-col items-center justify-center shrink-0 select-none
@@ -279,7 +289,7 @@ const UPMembers: React.FC = () => {
                 style={{ 
                   WebkitTouchCallout: 'none', 
                   WebkitUserSelect: 'none',
-                  touchAction: 'pan-x pan-y' // 允许浏览器处理默认滚动，避免干预过深
+                  userSelect: 'none'
                 }}
               >
                 <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden transition-all duration-500 
