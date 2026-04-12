@@ -336,23 +336,6 @@ const UPMembers: React.FC = () => {
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
-          {/* 极简左右切换按钮 - 带呼吸动画 */}
-          <button 
-            onClick={handlePrev}
-            className="absolute left-0 md:left-4 top-[15%] md:top-1/2 -translate-y-1/2 text-2xl md:text-4xl font-light text-[#CCCCCC] hover:text-[#777777] hover:-translate-x-1 transition-all duration-300 z-30 px-2 md:px-4 py-6 md:py-8 focus:outline-none bg-transparent animate-pulse"
-            aria-label="Previous member"
-          >
-            &lt;
-          </button>
-
-          <button 
-            onClick={handleNext}
-            className="absolute right-0 md:right-4 top-[15%] md:top-1/2 -translate-y-1/2 text-2xl md:text-4xl font-light text-[#CCCCCC] hover:text-[#777777] hover:translate-x-1 transition-all duration-300 z-30 px-2 md:px-4 py-6 md:py-8 focus:outline-none bg-transparent animate-pulse"
-            aria-label="Next member"
-          >
-            &gt;
-          </button>
-
           <AnimatePresence custom={direction} mode="wait">
             {duoEasterEgg ? (
                 <motion.div 

@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 w-full">
           {/* Logo 或 标题 */}
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-medium text-[#333333] tracking-[0.2em]">下一个是谁</h3>
+            <h3 className="text-sm font-medium text-[#333333] tracking-[0.2em] whitespace-nowrap">下一个是谁</h3>
             <span className="w-[1px] h-3 bg-[#D9D9D9] hidden md:block"></span>
             <p className="text-[10px] text-[#999999] tracking-widest font-mono uppercase hidden md:block mt-0.5">WHO IS THE NEXT</p>
           </div>
