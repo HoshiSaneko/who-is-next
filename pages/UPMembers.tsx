@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UP_MEMBERS_CONFIG } from '../configs/upMembers.config';
 import { useBiliData } from '../hooks/useBiliData';
+import { UpMember } from '../types';
 
 const formatNumber = (num: number) => {
   if (num >= 10000) {
@@ -164,7 +165,7 @@ const UPMembers: React.FC = () => {
 
   const slideVariants = {
     enter: (direction: number) => ({
-      x: direction > 0 ? 100 : -100,
+      x: direction > 0 ? 100 : direction < 0 ? -100 : 0,
       opacity: 0
     }),
     center: {
@@ -352,7 +353,7 @@ const UPMembers: React.FC = () => {
             &gt;
           </button>
 
-          <AnimatePresence initial={false} custom={direction} mode="wait">
+          <AnimatePresence custom={direction} mode="wait">
             {duoEasterEgg ? (
                 <motion.div 
                   key="duo-easter-egg"
@@ -516,7 +517,7 @@ const UPMembers: React.FC = () => {
                   />
                 </div>
 
-                {/* 名字与基础信息 */}
+                  {/* 名字与基础信息 */}
                 <div className="flex flex-col items-center md:items-start w-full">
                   {/* 称号与荣誉分散排布 */}
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-2 md:mb-3">
@@ -547,7 +548,7 @@ const UPMembers: React.FC = () => {
 
                   {/* B站数据展示 - 极简排版 */}
                   {activeMember.uid && biliData?.data.up_info[activeMember.uid] && (
-                    <div className="flex items-center justify-center md:justify-start gap-4 py-2 border-y border-[#F0F0F0] w-full md:max-w-[200px] mx-auto md:mx-0">
+                    <div className="flex items-center justify-center md:justify-start gap-4 py-2 border-y border-[#F0F0F0] w-full md:max-w-[200px] mx-auto md:mx-0 mb-4 md:mb-6">
                       <div className="flex flex-col items-center md:items-start">
                         <span className="text-[10px] text-[#CCCCCC] font-mono tracking-widest mb-1">
                           BILIBILI FANS
@@ -555,6 +556,45 @@ const UPMembers: React.FC = () => {
                         <span className="text-lg text-[#555555] font-light tracking-wider">
                           {formatNumber(biliData.data.up_info[activeMember.uid].fans_count)}
                         </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 应援口号展示 (日式极简风带边框背景 + 打字机动画) */}
+                  {activeMember.slogans && activeMember.slogans.length > 0 && (
+                    <div className="w-full flex justify-center md:justify-start">
+                      <div 
+                        className="relative px-5 py-3 border rounded-sm w-max max-w-full overflow-hidden"
+                        style={{
+                          backgroundColor: `${activeMember.cheerColor}08` || '#f9f9f9', // 极浅背景
+                          borderColor: `${activeMember.cheerColor}40` || '#E5E5E5' // 柔和边框
+                        }}
+                      >
+                        <div className="relative z-10 inline-flex flex-wrap items-center justify-center">
+                          {/* 左侧装饰线 */}
+                          <div 
+                            className="w-1 h-3 mr-3"
+                            style={{ backgroundColor: activeMember.cheerColor || '#88B090' }}
+                          />
+                          {activeMember.slogans[0].split('').map((char, index) => (
+                            <motion.span
+                              key={`${activeMember.id}-char-${index}`}
+                              initial={{ opacity: 0, y: 5 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{
+                                duration: 0.3,
+                                ease: "easeOut",
+                                delay: index * 0.05 // 每个字延迟 0.05 秒，实现快速打字机效果
+                              }}
+                              className="text-[13px] md:text-sm tracking-[0.15em] inline-block font-medium"
+                              style={{ 
+                                color: activeMember.cheerColor || '#555555',
+                              }}
+                            >
+                              {char === ' ' ? '\u00A0' : char}
+                            </motion.span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}

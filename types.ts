@@ -10,6 +10,8 @@ export interface UpMember {
   tags?: string[];     // 经典名场面标签（已废弃，使用 buffs 和 debuffs）
   buffs?: string[];    // 正面效果（Buff）
   debuffs?: string[];  // 负面效果（Debuff）
+  slogans?: string[];  // 应援口号
+  cheerColor?: string; // 应援色
   stats: Record<string, number>; // 能力值，支持不同的能力项
   uid?: string;      // B站UID，用于跳转到空间
 }
