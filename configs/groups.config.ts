@@ -44,9 +44,9 @@ export const GROUPS_CONFIG: GroupConfig[] = [
         id: 's4',
         season: '第四季',
         teams: [
-            { name: '', members: ['力元君', '徐大虾咯'] },
-            { name: '', members: ['雨哥到处跑', '自来卷三木'] },
-            { name: '', members: ['啊吗粽', '在下哲别'] }
+            { name: '机械狗', members: ['力元君', '徐大虾咯'] },
+            { name: '哼哈二将', members: ['雨哥到处跑', '自来卷三木'] },
+            { name: '父子组', members: ['啊吗粽', '在下哲别'] }
         ],
         winner: ['力元君', '徐大虾咯']
     },
