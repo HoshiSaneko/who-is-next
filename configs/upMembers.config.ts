@@ -11,7 +11,7 @@ export const UP_MEMBERS_CONFIG: UpMember[] = [
         honor: '占位',
         buffs: ['智力提升50%', '被力元君超越后，所有属性提升100%'],
         debuffs: ['其余属性下降50%'],
-        slogans: ['你的瑞帝, 开天劈地！'],
+        slogans: ['你的瑞帝, 开天辟地！'],
         cheerColor: '#C89B00', // 优化后的深金/橘黄色，在浅色背景下更易读
         stats: { 力量: 1.5, 默契: 2, 技巧: 1, 智力:5, 运气: 1, 准度: 1.5},
         uid: '7552204' // 添加 uid 字段用于匹配接口数据
