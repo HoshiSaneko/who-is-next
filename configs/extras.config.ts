@@ -205,6 +205,12 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2026-03-28 11:05:00',
     category: '城市大富翁'
   },
+  {
+    title: '城市大富翁（4）',
+    bvid: 'BV1cmo4BsEbQ',
+    date: '2026-04-23 11:00:00',
+    category: '城市大富翁'
+  },
   // 其他联动
   {
     title: '四个up主在商场里玩物资大搜索游戏！！ 《下一个是谁6》番外01',
