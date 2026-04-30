@@ -123,21 +123,28 @@ const Memes: React.FC = () => {
   };
 
   const filteredMemes = React.useMemo(() => {
-    if (!searchQuery.trim()) return MEMES_CONFIG;
-    const lowerQuery = searchQuery.toLowerCase();
-    return MEMES_CONFIG.filter(meme => {
-      // 匹配名场面名字
-      if (meme.name.toLowerCase().includes(lowerQuery)) return true;
-      // 匹配 ID
-      if (meme.id.toLowerCase().includes(lowerQuery)) return true;
-      // 匹配相关 UP 主名字
-      if (meme.relatedUp && meme.relatedUp.some(up => up.toLowerCase().includes(lowerQuery))) return true;
-      // 匹配出处标题（如果有的话）
-      if (meme.sources && meme.sources.some(source => source.title && source.title.toLowerCase().includes(lowerQuery))) return true;
-      
-      return false;
+    let result = MEMES_CONFIG;
+    
+    // 如果有搜索词，先进行过滤
+    if (searchQuery.trim()) {
+      const lowerQuery = searchQuery.toLowerCase();
+      result = result.filter(meme => {
+        if (meme.name.toLowerCase().includes(lowerQuery)) return true;
+        if (meme.id.toLowerCase().includes(lowerQuery)) return true;
+        if (meme.relatedUp && meme.relatedUp.some(up => up.toLowerCase().includes(lowerQuery))) return true;
+        if (meme.sources && meme.sources.some(source => source.title && source.title.toLowerCase().includes(lowerQuery))) return true;
+        return false;
+      });
+    }
+
+    // 根据点赞数(likes)进行降序排序
+    // 注意：如果是初始状态 likes 还是空对象，大家都是 0，则保持配置数组原本的顺序
+    return [...result].sort((a, b) => {
+      const likesA = likes[a.id] || 0;
+      const likesB = likes[b.id] || 0;
+      return likesB - likesA; // 降序：点赞高的在前面
     });
-  }, [searchQuery]);
+  }, [searchQuery, likes]);
 
   return (
     <div className="w-full max-w-[1200px] mx-auto px-4 md:px-12 pt-4 md:pt-8 pb-8 animate-fade-in flex flex-col flex-1 min-h-[calc(100vh-140px)]">
@@ -212,10 +219,12 @@ const Memes: React.FC = () => {
               filteredMemes.map((meme, index) => (
                 <motion.div
                   key={meme.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: (index % 10) * 0.1 }} // 优化搜索时的动画延迟，最多延迟1秒
-                  className="flex flex-col overflow-hidden bg-white border border-[#F0F0F0] rounded-none hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] hover:border-transparent transition-all duration-500 group hover:-translate-y-1.5"
+                  layout // 添加 layout 属性以实现平滑的位置变化动画
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.4, type: "spring", bounce: 0.3 }}
+                  className="flex flex-col overflow-hidden bg-white border border-[#F0F0F0] rounded-none hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] hover:border-transparent transition-shadow duration-500 group hover:-translate-y-1.5"
                 >
                   {/* 图片展示区 */}
                   <div className="w-full aspect-video overflow-hidden relative bg-[#FAFAFA]">
