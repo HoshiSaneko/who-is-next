@@ -30,7 +30,7 @@ const Extras: React.FC = () => {
     <div className="w-full max-w-[1200px] mx-auto px-4 md:px-12 pt-4 md:pt-8 pb-8 animate-fade-in flex flex-col flex-1 min-h-[calc(100vh-140px)]">
       
       <div className="flex flex-col flex-1 mt-4 md:mt-8">
-        {Object.entries(groupedVideos).map(([category, videos], groupIndex) => (
+        {Object.entries(groupedVideos).map(([category, videos]: [string, typeof EXTRAS_CONFIG]) => (
           <div key={category} className="mb-16 md:mb-20 last:mb-0">
             {/* 分类标题 */}
             <div className="flex items-center gap-6 mb-8 md:mb-10">

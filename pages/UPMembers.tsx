@@ -31,7 +31,7 @@ const UPMembers: React.FC = () => {
 
   // 获取选中成员的名字集合，用于判断双人彩蛋
   const selectedNames = React.useMemo(() => {
-    return Array.from(selectedIndices).map(idx => UP_MEMBERS_CONFIG[idx].name);
+    return Array.from(selectedIndices).map((idx: number) => UP_MEMBERS_CONFIG[idx].name);
   }, [selectedIndices]);
 
   // 判断双人彩蛋关系
@@ -349,7 +349,7 @@ const UPMembers: React.FC = () => {
                   <div className="flex gap-3 md:gap-12 items-center justify-center relative z-10 w-full">
                     {/* 左侧头像 */}
                     <div className="w-20 h-20 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 shadow-[0_0_30px_rgba(197,160,89,0.3)] border-2 border-[#C5A059]">
-                      <img src={UP_MEMBERS_CONFIG[Array.from(selectedIndices)[0]].avatar} alt={UP_MEMBERS_CONFIG[Array.from(selectedIndices)[0]].name} className="w-full h-full object-cover" />
+                      <img src={UP_MEMBERS_CONFIG[Array.from<number>(selectedIndices)[0]].avatar} alt={UP_MEMBERS_CONFIG[Array.from<number>(selectedIndices)[0]].name} className="w-full h-full object-cover" />
                     </div>
 
                     {/* 中间关系图标 */}
@@ -359,7 +359,7 @@ const UPMembers: React.FC = () => {
 
                     {/* 右侧头像 */}
                     <div className="w-20 h-20 md:w-40 md:h-40 rounded-full overflow-hidden shrink-0 shadow-[0_0_30px_rgba(197,160,89,0.3)] border-2 border-[#C5A059]">
-                      <img src={UP_MEMBERS_CONFIG[Array.from(selectedIndices)[1]].avatar} alt={UP_MEMBERS_CONFIG[Array.from(selectedIndices)[1]].name} className="w-full h-full object-cover" />
+                      <img src={UP_MEMBERS_CONFIG[Array.from<number>(selectedIndices)[1]].avatar} alt={UP_MEMBERS_CONFIG[Array.from<number>(selectedIndices)[1]].name} className="w-full h-full object-cover" />
                     </div>
                   </div>
                   

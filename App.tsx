@@ -9,6 +9,7 @@ import Goddess from './pages/Goddess';
 import Stats from './pages/Stats';
 import Guestbook from './pages/Guestbook';
 import Extras from './pages/Extras';
+import Memes from './pages/Memes';
 import Footer from './components/Footer';
 import MusicPlayer from './components/MusicPlayer';
 import MobileWarningToast from './components/MobileWarningToast';
@@ -27,6 +28,7 @@ const App: React.FC = () => {
             <Route path="/levels" element={<Levels />} />
             <Route path="/goddess" element={<Goddess />} />
             <Route path="/extras" element={<Extras />} />
+            <Route path="/memes" element={<Memes />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/guestbook" element={<Guestbook />} />
           </Routes>

@@ -81,3 +81,16 @@ export interface ExtraVideo {
   duration?: string;
   category: string; // 新增：视频分类（如前传、生活篇等）
 }
+
+export interface MemeSource {
+  title?: string; // 视频标题或出处名称 (可选，如果没有则自动显示 出处1, 出处2 等)
+  url: string;   // 对应的B站链接或其他链接
+}
+
+export interface Meme {
+  id: string;
+  name: string;
+  image?: string; // 梗的图片地址
+  sources: MemeSource[]; // 出处列表 (可能有多个)
+  relatedUp?: string[]; // 相关的UP主id列表
+}

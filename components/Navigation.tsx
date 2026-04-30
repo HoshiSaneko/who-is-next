@@ -33,6 +33,7 @@ const Navigation: React.FC = () => {
   const moreNavItems = [
     { path: '/goddess', label: '正义女神' },
     { path: '/extras', label: '番外' },
+    { path: '/memes', label: '名场面' },
     { path: '/guestbook', label: '留言' }
   ];
 
