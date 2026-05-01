@@ -118,6 +118,12 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2026-01-17 17:06:36',
     category: '生活篇'
   },
+  {
+    title: '下一个是谁7 超前剧透！女神竟有三个人？？',
+    bvid: 'BV1fzRKBHES9',
+    date: '2026-05-01 11:31:44',
+    category: '生活篇'
+  },
   // 花絮
   {
     title: '【骆歆】拿下！我去《下一个是谁》居然直接干碎一个游戏！',
