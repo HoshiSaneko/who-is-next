@@ -20,12 +20,6 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2025-12-09 17:05:00',
     category: '前传'
   },
-  {
-    title: '下一个是谁7 超前剧透！女神竟有三个人？？',
-    bvid: 'BV1fzRKBHES9',
-    date: '2026-05-01 11:31:44',
-    category: '前传'
-  },
   // 主题曲
   {
     title: '你还记得那个节目吗？《下一个是谁5》主题曲',
@@ -124,6 +118,30 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2026-01-17 17:06:36',
     category: '生活篇'
   },
+  {
+    title: '下一个是谁7 超前剧透！女神竟有三个人？？',
+    bvid: 'BV1fzRKBHES9',
+    date: '2026-05-01 11:31:44',
+    category: '生活篇'
+  },
+  {
+    title: '下一个是谁7 超前剧透！有人受伤了..',
+    bvid: 'BV1W6RYBiE6s',
+    date: '2026-05-04 11:49:17',
+    category: '生活篇'
+  },
+  {
+    title: '拍生活片真的去医院拍片了',
+    bvid: 'BV1x6RvB5Egf',
+    date: '2026-05-05 17:00:00',
+    category: '生活篇'
+  },
+  {
+    title: '谁是NG王，耍帅都不会？《下一个是谁》MV花絮！',
+    bvid: 'BV1RvVs6aEWR',
+    date: '2026-05-29 10:30:00',
+    category: '生活篇'
+  },
   // 花絮
   {
     title: '【骆歆】拿下！我去《下一个是谁》居然直接干碎一个游戏！',
@@ -217,6 +235,12 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2026-04-23 11:00:00',
     category: '城市大富翁'
   },
+  {
+    title: '城市大富翁（5）',
+    bvid: 'BV1wEEc6REms',
+    date: '2026-06-05 11:05:00',
+    category: '城市大富翁'
+  },
   // 其他联动
   {
     title: '四个up主在商场里玩物资大搜索游戏！！ 《下一个是谁6》番外01',
@@ -240,6 +264,24 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     title: '最难绷【你画我猜】',
     bvid: 'BV1QoPazMEqZ',
     date: '2026-03-07 18:34:48',
+    category: '其他联动'
+  },
+  {
+    title: '史上最离谱海龟汤',
+    bvid: 'BV1wP5R6FEQ6',
+    date: '2026-05-14 16:48:35',
+    category: '其他联动'
+  },
+  {
+    title: '全b站胆子最大的3个人！！',
+    bvid: 'BV1fTVG6AEGW',
+    date: '2026-05-30 18:00:00',
+    category: '其他联动'
+  },
+  {
+    title: '下 一 个 抓 谁 ！！！',
+    bvid: 'BV1MG7961Efg',
+    date: '2026-06-03 18:27:45',
     category: '其他联动'
   },
 ];
