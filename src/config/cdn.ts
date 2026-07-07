@@ -1,4 +1,4 @@
-export const CDN_BASE_URL = 'http://cdn.xygss.saneko.me';
+export const CDN_BASE_URL = 'https://cdn.xygss.saneko.me';
 
 /**
  * 获取 CDN URL

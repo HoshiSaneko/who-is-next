@@ -28,21 +28,53 @@ export function OptimizedImage({
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const baseSrc = useCDN ? getCDNUrl(src) : src;
+    // 构建不同的图片 URL 尝试顺序
+    const urls: string[] = [];
 
-    // Convert original image path to WebP if available
-    const webpSrc = baseSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+    if (useCDN) {
+      // 1. CDN WebP
+      const cdnWebP = getCDNUrl(src).replace(/\.(jpg|jpeg|png)$/i, '.webp');
+      urls.push(cdnWebP);
 
-    // Check if WebP is supported and if WebP version exists
-    const img = new Image();
-    img.onload = () => {
-      setImageSrc(webpSrc);
+      // 2. CDN 原始格式
+      const cdnOriginal = getCDNUrl(src);
+      urls.push(cdnOriginal);
+    }
+
+    // 3. 本地 WebP
+    const localWebP = src.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+    urls.push(localWebP);
+
+    // 4. 本地原始格式
+    urls.push(src);
+
+    // 尝试按顺序加载图片
+    let currentIndex = 0;
+
+    const tryLoadImage = () => {
+      if (currentIndex >= urls.length) {
+        // 所有 URL 都失败了，使用最后一个（原始 src）
+        setImageSrc(src);
+        return;
+      }
+
+      const img = new Image();
+      const currentUrl = urls[currentIndex];
+
+      img.onload = () => {
+        setImageSrc(currentUrl);
+      };
+
+      img.onerror = () => {
+        // 当前 URL 失败，尝试下一个
+        currentIndex++;
+        tryLoadImage();
+      };
+
+      img.src = currentUrl;
     };
-    img.onerror = () => {
-      // Fallback to original format if WebP not available
-      setImageSrc(baseSrc);
-    };
-    img.src = webpSrc;
+
+    tryLoadImage();
   }, [src, useCDN]);
 
   const handleLoad = () => {
