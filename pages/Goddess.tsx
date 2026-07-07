@@ -1,180 +1,92 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+﻿import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FiExternalLink, FiSearch } from 'react-icons/fi';
 import { GODDESSES_CONFIG } from '../configs/goddesses.config';
-import { GAMES_CONFIG } from '../configs/games.config';
+import { PageShell } from '../components/ui';
 
 const Goddess: React.FC = () => {
-  const [activeSeason, setActiveSeason] = useState<number>(6);
   const navigate = useNavigate();
-
-  const goddessesBySeason = useMemo(() => {
-    const grouped: Record<number, typeof GODDESSES_CONFIG> = {};
-    GODDESSES_CONFIG.forEach(goddess => {
-      if (!grouped[goddess.season]) {
-        grouped[goddess.season] = [];
-      }
-      grouped[goddess.season].push(goddess);
-    });
-    return grouped;
-  }, []);
-
-  const seasons = Object.keys(goddessesBySeason).map(Number).sort((a, b) => a - b);
-  const currentGoddesses = goddessesBySeason[activeSeason] || [];
-
-  const handleGameClick = (gameName: string) => {
-    const targetGame = GAMES_CONFIG.find(g => g.levelName === gameName);
-    if (targetGame) {
-      navigate('/levels', { state: { selectedGameId: targetGame.id } });
-    }
-  };
-
-  // Add touch swipe support for page navigation
-  const touchStartRef = React.useRef<number | null>(null);
-  const touchEndRef = React.useRef<number | null>(null);
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchEndRef.current = null;
-    touchStartRef.current = e.targetTouches[0].clientX;
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    touchEndRef.current = e.targetTouches[0].clientX;
-  };
-
-  const onTouchEnd = () => {
-    if (touchStartRef.current === null || touchEndRef.current === null) return;
-    const distance = touchStartRef.current - touchEndRef.current;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    const currentIndex = seasons.indexOf(activeSeason);
-    
-    if (isLeftSwipe && currentIndex < seasons.length - 1) {
-      setActiveSeason(seasons[currentIndex + 1]);
-    }
-    if (isRightSwipe && currentIndex > 0) {
-      setActiveSeason(seasons[currentIndex - 1]);
-    }
-  };
+  const seasons = useMemo(() => Array.from(new Set(GODDESSES_CONFIG.map((item) => item.season))).sort((a, b) => a - b), []);
+  const [activeSeason, setActiveSeason] = useState<number | 'all'>('all');
+  const filtered = activeSeason === 'all' ? GODDESSES_CONFIG : GODDESSES_CONFIG.filter((item) => item.season === activeSeason);
 
   return (
-    <div 
-      className="w-full max-w-[1200px] mx-auto px-4 md:px-12 pt-4 md:pt-8 pb-8 animate-fade-in flex flex-col flex-1 min-h-[calc(100vh-140px)]"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
-      
-      {/* 顶部导航区 - 极简文字选项卡 */}
-      <div className="flex justify-start md:justify-center gap-6 md:gap-16 overflow-x-auto pt-4 pb-6 md:pb-8 mb-6 md:mb-16 no-scrollbar items-center w-full max-w-[900px] mx-auto px-4 border-b border-[#F0F0F0] shrink-0"
-           onWheel={(e) => {
-             // 允许通过滚轮横向滚动导航栏
-             if (e.currentTarget && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-               e.currentTarget.scrollLeft += e.deltaY;
-               if (e.cancelable) {
-                 e.preventDefault();
-               }
-             }
-           }}
-      >
-        {seasons.map(season => (
-          <div
-            key={season}
-            onClick={() => setActiveSeason(season)}
-            className={`relative cursor-pointer transition-all duration-300 pb-4 whitespace-nowrap flex items-center shrink-0 ${
-              activeSeason === season 
-                ? 'text-[#333333]' 
-                : 'text-[#999999] hover:text-[#666666]'
-            }`}
-          >
-            <span className="text-sm md:text-base tracking-[0.2em] font-normal">
-              第{['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'][season - 1] || season}季
-            </span>
-            {activeSeason === season && (
-              <motion.div 
-                layoutId="season-indicator"
-                className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#88B090]"
-              />
-            )}
+    <div className="guest-archive-page">
+      <PageShell className="guest-archive-shell relative z-10">
+        <section className="guest-archive-toolbar" aria-label="Guest filters">
+          <div className="guest-season-tabs">
+            {(['all', ...seasons] as Array<number | 'all'>).map((season) => {
+              const active = activeSeason === season;
+
+              return (
+                <button
+                  key={season}
+                  type="button"
+                  onClick={() => setActiveSeason(season)}
+                  className={`guest-season-tab ${active ? 'is-active' : ''}`}
+                >
+                  <span>{season === 'all' ? 'All' : `S${season}`}</span>
+                  <strong>{season === 'all' ? '全部赛季' : `第 ${season} 季`}</strong>
+                </button>
+              );
+            })}
           </div>
-        ))}
-      </div>
+        </section>
 
-      {/* 女神列表网格 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10 md:gap-y-12 flex-1 pb-12 px-2 md:pr-2">
-        <AnimatePresence mode="wait">
-          {currentGoddesses.map((goddess, index) => (
-            <motion.div 
-              key={goddess.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex flex-col gap-5 md:gap-6 group"
-            >
-              {/* 头部：集数与名字 */}
-              <div className="flex items-center gap-4 border-l-2 border-[#E5E5E5] group-hover:border-[#88B090] pl-4 transition-colors duration-300">
-                <span className="text-xs text-[#999999] tracking-[0.2em] shrink-0">
-                  第 {String(goddess.episode).padStart(2, '0')} 集
-                </span>
-                <a 
-                  href={goddess.bilibiliUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-xl font-normal text-[#333333] tracking-[0.1em] hover:text-[#88B090] transition-colors"
-                >
-                  {goddess.name}
-                </a>
-              </div>
-
-              <div className="flex gap-4 md:gap-6 items-start">
-                {/* 小头像 */}
-                <a 
-                  href={goddess.bilibiliUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-16 h-16 md:w-20 md:h-20 shrink-0 overflow-hidden rounded-sm"
-                >
-                  <img 
-                    src={goddess.avatar} 
-                    alt={goddess.name}
-                    className="w-full h-full object-cover filter grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out"
-                  />
-                </a>
-
-                {/* 描述与关卡信息 */}
-                <div className="flex flex-col gap-3 md:gap-4 flex-1">
-                  <p className="text-xs text-[#777777] leading-relaxed tracking-wider">
-                    {goddess.description}
-                  </p>
-                  
-                  <div className="pt-3 md:pt-4 border-t border-[#F5F5F5]">
-                    <span className="text-[10px] text-[#999999] tracking-[0.2em] mb-2 block">GAMES</span>
-                    <div className="flex flex-wrap gap-2">
-                      {goddess.games.map((game, i) => (
-                        <span 
-                          key={i} 
-                          onClick={() => handleGameClick(game)}
-                          className="text-[11px] text-[#555555] bg-[#FAFAFA] px-2 py-1.5 md:py-1 tracking-wider cursor-pointer hover:bg-[#88B090] hover:text-white transition-colors duration-300"
-                        >
-                          {game}
-                        </span>
-                      ))}
+        <section className="guest-archive-panel">
+          <div className="guest-archive-panel-heading">
+            <div>
+              <p>正义女神卡片</p>
+              <span>{filtered.length} 位正义女神 · {activeSeason === 'all' ? '全部赛季' : `第 ${activeSeason} 季`}</span>
+            </div>
+          </div>
+          {filtered.length === 0 ? (
+          <div className="guest-empty">
+            <FiSearch aria-hidden="true" />
+            <strong>没有找到正义女神</strong>
+            <span>换一个赛季筛选试试。</span>
+          </div>
+        ) : (
+          <div className="guest-card-grid">
+            {filtered.map((guest) => (
+              <article key={guest.id} className="guest-card">
+                <div className="guest-card-main">
+                  <div className="guest-avatar-frame">
+                    <img src={guest.avatar} alt={guest.name} />
+                  </div>
+                  <div className="guest-card-copy">
+                    <div className="guest-card-meta">
+                      <span>S{guest.season}</span>
+                      <span>EP{String(guest.episode).padStart(2, '0')}</span>
                     </div>
+                    <h2>{guest.name}</h2>
+                    <p>{guest.description}</p>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-      
-      {/* 底部留白 */}
-      <div className="mt-12 md:mt-auto pt-12 md:pt-24 text-center">
-        <div className="w-1 h-1 bg-[#E5E5E5] mx-auto rounded-full"></div>
-      </div>
+                <div className="guest-card-bottom">
+                  <div className="guest-game-list">
+                    {guest.games.slice(0, 4).map((game) => (
+                      <button
+                        key={game}
+                        type="button"
+                        onClick={() => navigate('/levels', { state: { selectedGameName: game, selectedSeason: guest.season } })}
+                      >
+                        {game}
+                      </button>
+                    ))}
+                    {guest.games.length > 4 && <span>+{guest.games.length - 4}</span>}
+                  </div>
+                  <a href={guest.bilibiliUrl} target="_blank" rel="noreferrer" className="guest-source-link">
+                    Bilibili Space
+                    <FiExternalLink className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+        </section>
+      </PageShell>
     </div>
   );
 };

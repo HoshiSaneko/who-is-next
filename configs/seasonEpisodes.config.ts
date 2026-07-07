@@ -5,6 +5,11 @@ export interface SeasonEpisode {
     bvid: string;
 }
 
+export const HOME_FEATURED_VIDEO_CONFIG = {
+    bvid: 'BV11bAUzBEqG',
+    title: '决战！我要夺冠！！！《下一个是谁6》06',
+};
+
 export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
     // S1
     { season: 1, episode: 1, title: '很对不起大家！我将会退出节目！《下一个是谁1》01', bvid: 'BV1CQ4y1f7dA' },

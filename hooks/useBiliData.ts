@@ -1,25 +1,27 @@
 import { useState, useEffect } from 'react';
 import { BiliData } from '../types';
+import { BILI_API_ENDPOINTS } from '../configs/api.config';
 
 let cachedData: BiliData | null = null;
 let lastFetchTime: number = 0;
 
-export const useBiliData = () => {
+export const BILI_REFRESH_INTERVAL_MS = 30 * 1000;
+
+export const useBiliData = (refreshIntervalMs = BILI_REFRESH_INTERVAL_MS) => {
   const [biliData, setBiliData] = useState<BiliData | null>(cachedData);
 
   useEffect(() => {
     let mounted = true;
     
-    const fetchData = async () => {
+    const fetchData = async (forceRefresh = false) => {
       try {
         const now = Date.now();
-        // Return cache if it's less than 5 minutes old
-        if (cachedData && now - lastFetchTime < 5 * 60 * 1000) {
+        if (!forceRefresh && cachedData && now - lastFetchTime < refreshIntervalMs) {
           if (mounted) setBiliData(cachedData);
           return;
         }
 
-        const response = await fetch('https://bili.saneko.me/api/data');
+        const response = await fetch(BILI_API_ENDPOINTS.data, { cache: 'no-store' });
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         
@@ -34,16 +36,15 @@ export const useBiliData = () => {
       }
     };
 
-    fetchData(); // Initial fetch
+    fetchData();
     
-    // Set up polling every 5 minutes
-    const intervalId = setInterval(fetchData, 5 * 60 * 1000);
+    const intervalId = window.setInterval(() => fetchData(true), refreshIntervalMs);
     
     return () => {
       mounted = false;
-      clearInterval(intervalId);
+      window.clearInterval(intervalId);
     };
-  }, []);
+  }, [refreshIntervalMs]);
 
   return biliData;
 };

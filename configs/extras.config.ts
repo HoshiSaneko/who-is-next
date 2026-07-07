@@ -33,6 +33,12 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2022-10-29 10:00:00',
     category: '主题曲'
   },
+  {
+    title: '《少年》-《下一个是谁7》主题曲',
+    bvid: 'BV1VbJ56EEm6',
+    date: '2026-06-13 18:00:00',
+    category: '主题曲'
+  },
   // 生活篇
   {
     title: '五个男人睡到一张床上，原因竟然是...',
@@ -240,6 +246,19 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     bvid: 'BV1wEEc6REms',
     date: '2026-06-05 11:05:00',
     category: '城市大富翁'
+  },
+  // 谁是流量王
+  {
+    title: '谁一周后的播放量高，谁就是流量王！！！【流量王01红队】',
+    bvid: 'BV1zgTn6rEsh',
+    date: '2026-07-03 12:00:00',
+    category: '谁是流量王'
+  },
+  {
+    title: '谁一周后的播放量高，谁就是流量王！！！【流量王01蓝队】',
+    bvid: 'BV1UUTJ6dErS',
+    date: '2026-07-03 12:00:00',
+    category: '谁是流量王'
   },
   // 其他联动
   {

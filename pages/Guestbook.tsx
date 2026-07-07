@@ -1,31 +1,44 @@
-import React from 'react';
+﻿import React from 'react';
+import { FiEdit3, FiRadio } from 'react-icons/fi';
 import WalineComponent from '../components/WalineComponent';
+import { PageShell } from '../components/ui';
 
 const Guestbook: React.FC = () => {
   return (
-    <div className="w-full max-w-[800px] mx-auto px-6 py-12 md:py-20 animate-fade-in">
-      <div className="mb-16 text-center">
-        <h1 className="text-3xl font-bold tracking-[0.2em] text-[#333333] mb-4">留 言</h1>
-        <div className="w-12 h-[2px] bg-[#88B090] mx-auto mb-6"></div>
-        <p className="text-[#555555] tracking-[0.1em] text-sm leading-relaxed">
-          言辞如风，亦能生花<br />
-          愿在此处，相逢皆是温良
-        </p>
-      </div>
+    <div className="guest-archive-page">
+      <PageShell className="guestbook-shell relative z-10">
+        <section className="guestbook-surface" aria-label="留言">
+          <div className="guestbook-panel">
+            <div className="guestbook-panel-head">
+              <div className="guestbook-panel-title">
+                <span className="guestbook-status-dot" />
+                <div>
+                  <p>留言板</p>
+                  <span>写下想法、补充信息或节目记忆</span>
+                </div>
+              </div>
+              <div className="guestbook-meta">
+                <span><FiRadio aria-hidden="true" /> Waline</span>
+                <span><FiEdit3 aria-hidden="true" /> 实时评论</span>
+              </div>
+            </div>
 
-      <div className="bg-white/50 backdrop-blur-sm p-6 md:p-10 border border-[#E5E5E5] shadow-sm">
-        <WalineComponent
-          serverURL="https://xygss-waline.saneko.me"
-          path="/guestbook"
-          reaction={false}
-          pageSize={10}
-          dark={false}
-          emoji={[
-            'https://unpkg.com/@waline/emojis@1.2.0/bilibili',
-            'https://unpkg.com/@waline/emojis@1.2.0/weibo',
-          ]}
-        />
-      </div>
+            <div className="guestbook-waline-frame">
+              <WalineComponent
+                serverURL="https://xygss-waline.saneko.me"
+                path="/guestbook"
+                reaction={false}
+                pageSize={10}
+                dark
+                emoji={[
+                  'https://unpkg.com/@waline/emojis@1.2.0/bilibili',
+                  'https://unpkg.com/@waline/emojis@1.2.0/weibo',
+                ]}
+              />
+            </div>
+          </div>
+        </section>
+      </PageShell>
     </div>
   );
 };

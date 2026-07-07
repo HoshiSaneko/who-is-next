@@ -1,7 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import MusicPlayer from './MusicPlayer';
 import { AnimatePresence, motion } from 'framer-motion';
+import { FiBarChart2, FiChevronDown, FiGrid, FiMenu, FiMessageSquare, FiStar, FiUser, FiX } from 'react-icons/fi';
+import MusicPlayer from './MusicPlayer';
+
+const primaryNavItems = [
+  { path: '/', label: '总览', icon: FiGrid },
+  { path: '/up-members', label: '主创', icon: FiUser },
+  { path: '/groups', label: '赛季', icon: FiStar },
+  { path: '/levels', label: '关卡', icon: FiGrid },
+  { path: '/stats', label: '数据', icon: FiBarChart2 },
+  { path: '/extras', label: '番外' },
+  { path: '/traffic-king', label: '流量王' },
+];
+
+const secondaryNavItems = [
+  { path: '/goddess', label: '正义女神' },
+  { path: '/memes', label: '名场面' },
+  { path: '/guestbook', label: '留言', icon: FiMessageSquare },
+];
 
 const Navigation: React.FC = () => {
   const location = useLocation();
@@ -9,7 +26,6 @@ const Navigation: React.FC = () => {
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
-  // 点击外部关闭“更多”菜单
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (moreMenuRef.current && !moreMenuRef.current.contains(event.target as Node)) {
@@ -18,103 +34,74 @@ const Navigation: React.FC = () => {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.addEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const mainNavItems = [
-    { path: '/up-members', label: '主创' },
-    { path: '/groups', label: '赛季回顾' },
-    { path: '/levels', label: '关卡统计' },
-    { path: '/stats', label: '数据统计' },
-  ];
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setMoreMenuOpen(false);
+  }, [location.pathname]);
 
-  const moreNavItems = [
-    { path: '/goddess', label: '正义女神' },
-    { path: '/extras', label: '番外' },
-    { path: '/memes', label: '名场面' },
-    { path: '/guestbook', label: '留言' }
-  ];
-
-  // 移动端保持扁平化展示所有菜单
-  const allNavItems = [...mainNavItems, ...moreNavItems];
+  const isSecondaryActive = secondaryNavItems.some((item) => item.path === location.pathname);
+  const allNavItems = [...primaryNavItems, ...secondaryNavItems];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#F8F8F5]/90 backdrop-blur-md border-b border-[#E5E5E5] transition-all duration-300">
-      <div className="max-w-[1000px] mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link 
-          to="/" 
-          onClick={() => setMobileMenuOpen(false)}
-          className="text-xl font-bold tracking-[0.2em] text-[#333333] hover:text-[#88B090] transition-colors"
-        >
-          下谁图鉴
+    <nav className="pointer-events-none fixed left-3 top-0 z-50 py-3" style={{ width: 'calc(100vw - 1.5rem)' }}>
+      <div className="pointer-events-auto relative mx-auto box-border flex h-14 w-full max-w-[1240px] items-center gap-4 rounded-[18px] border border-slate-200 bg-white px-3 shadow-[0_12px_34px_rgba(15,23,42,0.10)] sm:px-4 lg:grid lg:grid-cols-[minmax(220px,1fr)_auto_minmax(320px,1fr)] lg:px-5">
+        <Link to="/" className="flex min-w-0 items-center gap-2.5 lg:justify-self-start">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-slate-950 text-sm font-semibold text-white shadow-[0_8px_18px_rgba(15,23,42,0.16)]">
+            下
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-semibold text-slate-950">下谁图鉴</span>
+            <span className="hidden text-[11px] leading-3 text-slate-600 sm:block">Who Is Next Archive</span>
+          </span>
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6 lg:gap-8">
-          {mainNavItems.map(item => {
-            const isActive = location.pathname === item.path;
+        <div className="hidden items-center gap-0.5 lg:flex lg:justify-self-center">
+          {primaryNavItems.map((item) => {
+            const active = location.pathname === item.path;
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`text-sm tracking-[0.1em] transition-all duration-300 relative py-1 ${
-                  isActive 
-                    ? 'text-[#333333] font-bold' 
-                    : 'text-[#555555] font-normal hover:text-[#88B090]'
+                className={`inline-flex min-h-9 items-center rounded-[11px] px-3 text-sm font-semibold transition ${
+                  active ? 'bg-slate-950 text-white shadow-[0_8px_18px_rgba(15,23,42,0.15)]' : 'text-slate-700 hover:bg-slate-950/[0.06] hover:text-slate-950'
                 }`}
               >
                 {item.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] bg-[#88B090] rounded-full"></span>
-                )}
               </Link>
             );
           })}
-          
-          {/* 更多选项下拉菜单 */}
+
           <div className="relative" ref={moreMenuRef}>
             <button
-              onClick={() => setMoreMenuOpen(!moreMenuOpen)}
-              className={`flex items-center gap-1 text-sm tracking-[0.1em] transition-all duration-300 py-1 font-normal ${
-                moreMenuOpen || moreNavItems.some(item => location.pathname === item.path)
-                  ? 'text-[#88B090]'
-                  : 'text-[#555555] hover:text-[#88B090]'
+              type="button"
+              onClick={() => setMoreMenuOpen((open) => !open)}
+              className={`inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-[11px] px-3 text-sm font-semibold transition ${
+                isSecondaryActive || moreMenuOpen ? 'bg-slate-950 text-white shadow-[0_8px_18px_rgba(15,23,42,0.15)]' : 'text-slate-700 hover:bg-slate-950/[0.06] hover:text-slate-950'
               }`}
             >
               更多
-              <svg 
-                className={`w-3.5 h-3.5 transition-transform duration-300 ${moreMenuOpen ? 'rotate-180' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
-              </svg>
+              <FiChevronDown className={`h-4 w-4 transition ${moreMenuOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
             </button>
-
             <AnimatePresence>
               {moreMenuOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute top-full right-0 mt-4 w-32 bg-white border border-[#E5E5E5] shadow-lg rounded-sm py-2 flex flex-col z-[100]"
+                  exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                  transition={{ duration: 0.18 }}
+                  className="pointer-events-auto absolute right-0 top-full z-20 mt-3 w-44 overflow-hidden rounded-[14px] border border-slate-200 bg-white p-1.5 shadow-[0_18px_45px_rgba(15,23,42,0.14)]"
                 >
-                  {moreNavItems.map(item => {
-                    const isActive = location.pathname === item.path;
+                  {secondaryNavItems.map((item) => {
+                    const active = location.pathname === item.path;
                     return (
                       <Link
                         key={item.path}
                         to={item.path}
-                        onClick={() => setMoreMenuOpen(false)}
-                        className={`px-4 py-2.5 text-xs tracking-widest transition-colors duration-300 ${
-                          isActive 
-                            ? 'text-[#88B090] bg-[#FAFAFA] font-medium' 
-                            : 'text-[#555555] hover:bg-[#FAFAFA] hover:text-[#88B090]'
+                        className={`block rounded-[10px] px-3 py-2.5 text-sm font-semibold transition ${
+                          active ? 'bg-slate-950 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
                         }`}
                       >
                         {item.label}
@@ -125,58 +112,58 @@ const Navigation: React.FC = () => {
               )}
             </AnimatePresence>
           </div>
-          
-          {/* 音乐播放器，放回导航项最右侧 */}
-          <div className="ml-4 pl-4 border-l border-[#E5E5E5] flex items-center h-6">
-            <MusicPlayer />
-          </div>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button 
-          className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px] focus:outline-none z-50"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        <div className="hidden w-[350px] min-w-0 shrink-0 items-center justify-end border-l border-slate-900/10 pl-4 lg:flex lg:justify-self-end">
+          <MusicPlayer />
+        </div>
+
+        <button
+          type="button"
+          className="ml-1 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-slate-950 bg-slate-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.18)] transition hover:bg-slate-800 lg:hidden"
+          onClick={() => setMobileMenuOpen((open) => !open)}
           aria-label="Toggle menu"
         >
-          <span className={`block w-6 h-[1.5px] bg-[#333333] transition-transform duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-[6.5px]' : ''}`}></span>
-          <span className={`block w-6 h-[1.5px] bg-[#333333] transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`}></span>
-          <span className={`block w-6 h-[1.5px] bg-[#333333] transition-transform duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-[6.5px]' : ''}`}></span>
+          {mobileMenuOpen ? <FiX className="h-5 w-5" /> : <FiMenu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Mobile Nav */}
-      <div 
-        className={`md:hidden overflow-hidden transition-all duration-500 bg-[#F8F8F5]/95 backdrop-blur-md shadow-sm ${
-          mobileMenuOpen ? 'max-h-[600px] border-b border-[#E5E5E5]' : 'max-h-0 border-transparent opacity-0'
-        }`}
-      >
-        <div className="flex flex-col items-center py-4">
-          {allNavItems.map(item => {
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`w-full text-center py-3.5 text-[15px] tracking-[0.2em] transition-colors duration-300 active:bg-[#E5E5E5]/50 ${
-                  isActive 
-                    ? 'text-[#88B090] font-bold bg-white/50' 
-                    : 'text-[#555555] font-medium hover:text-[#88B090]'
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-          
-          {/* 移动端音乐播放器 */}
-          <div className="mt-4 pt-4 pb-2 border-t border-[#E5E5E5] w-full flex justify-center">
-            <MusicPlayer />
-          </div>
-        </div>
-      </div>
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className="pointer-events-auto absolute left-3 right-3 top-[4.35rem] z-20 overflow-hidden rounded-[18px] border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.14)] lg:hidden"
+          >
+            <div className="mx-auto flex max-w-7xl flex-col gap-2 p-3">
+              {allNavItems.map((item) => {
+                const active = location.pathname === item.path;
+                const Icon = 'icon' in item && item.icon ? item.icon : FiGrid;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-3 rounded-[12px] px-3 py-3 text-sm font-medium transition ${
+                      active ? 'bg-slate-950 text-white' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+              <div className="mt-2 border-t border-slate-100 pt-3">
+                <MusicPlayer />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
 
 export default Navigation;
+
