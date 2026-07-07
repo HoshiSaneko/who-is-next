@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: url("https://saneko.me/_astro/fonts/b372976faae541b1.woff2") format("woff2");
+  src: url("/fonts/satoshi-400.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: "Satoshi";
-  src: url("https://saneko.me/_astro/fonts/8b39278bc39e0777.woff2") format("woff2");
+  src: url("/fonts/satoshi-500.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 500;
