@@ -3,6 +3,7 @@ import { getPageview, updatePageview } from '@waline/client';
 import { FiExternalLink, FiHeart, FiImage, FiSearch, FiX } from 'react-icons/fi';
 import { MEMES_CONFIG } from '../configs/memes.config';
 import { PageShell } from '../components/ui';
+import { OptimizedImage } from '../src/components/OptimizedImage';
 
 const getMemeImage = (id: string, image?: string) => image || `/meme-images/${id}.png`;
 const serverURL = 'https://xygss-waline.saneko.me';
@@ -171,7 +172,7 @@ const Memes: React.FC = () => {
             {filtered.map((meme) => (
               <article key={meme.id} className="group relative flex min-w-0 flex-col overflow-hidden rounded-[8px] border border-white/[0.11] bg-[linear-gradient(135deg,rgba(255,255,255,0.095),rgba(255,255,255,0.045)),rgba(18,16,15,0.72)] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.025),0_10px_24px_rgba(0,0,0,0.08)] transition duration-300 hover:-translate-y-1 hover:border-[#ffd59d]/[0.38] hover:bg-[linear-gradient(135deg,rgba(255,213,157,0.12),rgba(255,255,255,0.065)),rgba(34,27,22,0.78)] hover:shadow-[0_18px_42px_rgba(255,178,92,0.08)]">
                 <div className="relative aspect-[4/3] overflow-hidden bg-white/[0.08]">
-                  <img src={getMemeImage(meme.id, meme.image)} alt={meme.name} className="h-full w-full object-cover brightness-[0.86] contrast-[0.98] saturate-[0.9] transition duration-500 group-hover:scale-[1.035] group-hover:brightness-100 group-hover:saturate-100" loading="lazy" />
+                  <OptimizedImage src={getMemeImage(meme.id, meme.image)} alt={meme.name} className="h-full w-full object-cover brightness-[0.86] contrast-[0.98] saturate-[0.9] transition duration-500 group-hover:scale-[1.035] group-hover:brightness-100 group-hover:saturate-100" loading="lazy" />
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_48%,rgba(8,11,15,0.52)_100%)]" />
                 </div>
                 <div className="flex flex-1 flex-col gap-4 p-4">

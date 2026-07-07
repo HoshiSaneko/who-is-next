@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiExternalLink, FiSearch } from 'react-icons/fi';
 import { GODDESSES_CONFIG } from '../configs/goddesses.config';
 import { PageShell } from '../components/ui';
+import { OptimizedImage } from '../src/components/OptimizedImage';
 
 const Goddess: React.FC = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const Goddess: React.FC = () => {
               <article key={guest.id} className="guest-card">
                 <div className="guest-card-main">
                   <div className="guest-avatar-frame">
-                    <img src={guest.avatar} alt={guest.name} />
+                    <OptimizedImage src={guest.avatar} alt={guest.name} />
                   </div>
                   <div className="guest-card-copy">
                     <div className="guest-card-meta">

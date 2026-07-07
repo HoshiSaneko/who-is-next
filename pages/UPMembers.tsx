@@ -9,6 +9,7 @@ import { PageShell } from '../components/ui';
 import { formatCompactNumber } from '../utils/format';
 import { BiliData } from '../types';
 import { BILI_API_ENDPOINTS } from '../configs/api.config';
+import { getWebPUrl } from '../src/config/cdn';
 
 const splitNames = (value?: string) => (value ? value.split(/[,，、&]+/).map((item) => item.trim()).filter(Boolean) : []);
 type UpLiveInfo = BiliData['data']['up_info'][string];
@@ -98,7 +99,7 @@ const UPMembers: React.FC = () => {
                   onClick={() => setActiveIndex(index)}
                   className={`up-member-selector-item ${active ? 'is-active' : ''}`}
                 >
-                  <span className="up-member-selector-visual" style={{ backgroundImage: `url(${member.background || member.avatar})` }}>
+                  <span className="up-member-selector-visual" style={{ backgroundImage: `url(${getWebPUrl(member.background || member.avatar)})` }}>
                   </span>
                   <span className="min-w-0">
                     <span className="up-member-selector-name block truncate text-sm font-semibold">{member.name}</span>
@@ -109,7 +110,7 @@ const UPMembers: React.FC = () => {
             })}
           </div>
 
-          <section className={`up-member-profile-scene ${profileCollapsed ? 'is-profile-collapsed' : ''}`} style={{ backgroundImage: `url(${visualBackground})` }}>
+          <section className={`up-member-profile-scene ${profileCollapsed ? 'is-profile-collapsed' : ''}`} style={{ backgroundImage: `url(${getWebPUrl(visualBackground)})` }}>
             <button
               type="button"
               className="up-member-profile-toggle"

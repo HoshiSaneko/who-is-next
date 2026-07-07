@@ -8,6 +8,7 @@ import { SEASON_EPISODES_CONFIG } from '../configs/seasonEpisodes.config';
 import { useBiliData } from '../hooks/useBiliData';
 import { useBiliVideoTotal } from '../hooks/useBiliVideoTotal';
 import { PageShell } from '../components/ui';
+import { OptimizedImage } from '../src/components/OptimizedImage';
 
 const splitNames = (value?: string) => (value ? value.split(/[,，、&]+/).map((item) => item.trim()).filter(Boolean) : []);
 
@@ -311,7 +312,7 @@ const Stats: React.FC = () => {
             }}
           >
             {avatar ? (
-              <img
+              <OptimizedImage
                 src={avatar}
                 alt=""
                 style={{
@@ -438,7 +439,7 @@ const Stats: React.FC = () => {
                       {team?.members.map((member) => {
                         const avatar = getAvatarByName(member);
                         return avatar ? (
-                          <img
+                          <OptimizedImage
                             key={member}
                             src={avatar}
                             alt={member}
@@ -490,7 +491,7 @@ const Stats: React.FC = () => {
               {team.members.map((member) => {
                 const avatar = getAvatarByName(member);
                 return avatar ? (
-                  <img
+                  <OptimizedImage
                     key={member}
                     src={avatar}
                     alt={member}

@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import { IconType } from 'react-icons';
+import { OptimizedImage } from '../src/components/OptimizedImage';
 
 type Tone = 'blue' | 'teal' | 'amber' | 'rose' | 'slate';
 
@@ -148,7 +149,7 @@ export const MediaCard: React.FC<{
       {image && (
         <div className="aspect-video overflow-hidden bg-slate-100 p-2">
           <div className="h-full w-full overflow-hidden rounded-[6px]">
-            <img src={image} alt={title} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+            <OptimizedImage src={image} alt={title} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
           </div>
         </div>
       )}

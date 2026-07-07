@@ -10,6 +10,7 @@ import { BILI_REFRESH_INTERVAL_MS, useBiliData } from '../hooks/useBiliData';
 import { useBiliVideoTotal } from '../hooks/useBiliVideoTotal';
 import { useBiliVideoStats } from '../hooks/useBiliVideoStats';
 import { formatCompactNumber, getBiliVideoUrl, getCover } from '../utils/format';
+import { OptimizedImage } from '../src/components/OptimizedImage';
 
 const heroImage = '/images/home-hero-next-basketball.png';
 
@@ -119,10 +120,11 @@ const Home: React.FC = () => {
   return (
     <div className="w-full bg-[#080c16]">
       <section className="relative isolate flex min-h-[100svh] w-full overflow-hidden bg-[#080c16] text-white">
-        <img
+        <OptimizedImage
           src={heroImage}
           alt="下一个是谁篮球馆合影"
           className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+          loading="eager"
         />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(8,12,22,0.18)_0%,rgba(8,12,22,0.10)_24%,rgba(8,12,22,0.36)_64%,rgba(5,8,15,0.84)_100%)]" />
         <div className="absolute inset-0 -z-10 opacity-[0.16] [background-image:linear-gradient(rgba(244,247,251,0.18)_1px,transparent_1px)] [background-size:100%_9px]" />
@@ -207,7 +209,7 @@ const Home: React.FC = () => {
                 </div>
               </div>
               <div className="latest-episode-cover">
-                <img src={getCover(latestEpisode.bvid)} alt={latestEpisode.title} />
+                <OptimizedImage src={getCover(latestEpisode.bvid)} alt={latestEpisode.title} />
               </div>
               <div className="latest-episode-action">
                 <FiExternalLink className="h-4 w-4" aria-hidden="true" />

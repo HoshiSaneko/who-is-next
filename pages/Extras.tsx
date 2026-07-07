@@ -3,6 +3,7 @@ import { FiArrowUpRight } from 'react-icons/fi';
 import { EXTRAS_CONFIG } from '../configs/extras.config';
 import { PageShell } from '../components/ui';
 import { formatDate, getBiliVideoUrl, getCover } from '../utils/format';
+import { OptimizedImage } from '../src/components/OptimizedImage';
 
 const Extras: React.FC = () => {
   const groupedVideos = useMemo(() => {
@@ -35,7 +36,7 @@ const Extras: React.FC = () => {
                 className="extras-feature-card"
                 style={{ '--feature-index': index } as React.CSSProperties}
               >
-                <img src={getCover(video.bvid)} alt={video.title} />
+                <OptimizedImage src={getCover(video.bvid)} alt={video.title} />
                 <span>
                   <small>{formatDate(video.date)}</small>
                   <strong>{video.title}</strong>
@@ -66,7 +67,7 @@ const Extras: React.FC = () => {
                     className="extras-card"
                   >
                     <span className="extras-card-cover">
-                      <img src={getCover(video.bvid)} alt={video.title} />
+                      <OptimizedImage src={getCover(video.bvid)} alt={video.title} />
                     </span>
                     <span className="extras-card-body">
                       <span className="extras-card-meta">

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "optimize-images": "node scripts/optimize-images.js"
   },
   "dependencies": {
     "@waline/client": "^3.13.0",
@@ -32,6 +33,7 @@
     "autoprefixer": "^10.4.27",
     "jsdom": "^28.1.0",
     "postcss": "^8.5.8",
+    "sharp": "^0.35.3",
     "tailwindcss": "^4.2.1",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",

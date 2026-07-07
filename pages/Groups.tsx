@@ -6,6 +6,7 @@ import { SEASON_EPISODES_CONFIG } from '../configs/seasonEpisodes.config';
 import { PageShell } from '../components/ui';
 import { useBiliData } from '../hooks/useBiliData';
 import { formatCompactNumber, getBiliVideoUrl, getCover } from '../utils/format';
+import { OptimizedImage } from '../src/components/OptimizedImage';
 
 const getAvatarByName = (name: string) => UP_MEMBERS_CONFIG.find((member) => member.name === name)?.avatar;
 
@@ -97,7 +98,7 @@ const Groups: React.FC = () => {
                     return (
                       <div key={winner} className="season-solo-winner-chip">
                         {avatar ? (
-                          <img src={avatar} alt={winner} />
+                          <OptimizedImage src={avatar} alt={winner} />
                         ) : (
                           <span aria-hidden="true">{winner.slice(0, 1)}</span>
                         )}
@@ -132,7 +133,7 @@ const Groups: React.FC = () => {
                           return (
                             <div key={member} className="season-member-chip">
                               {avatar ? (
-                                <img src={avatar} alt={member} />
+                                <OptimizedImage src={avatar} alt={member} />
                               ) : (
                                 <span aria-hidden="true">{member.slice(0, 1)}</span>
                               )}
