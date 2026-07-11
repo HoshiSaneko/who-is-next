@@ -222,4 +222,34 @@ export const GODDESSES_CONFIG: Goddess[] = [
     games: ['听铃辨数', '接力保龄球', '邦邦邦邦(无畏契约赞助)', '画！', '音准测测测', '空中接力篮球', '再战心魔', '省份猜猜猜', 'π', '影子猜猜猜', '冠军之路', '决战门票-仰卧气球', 'S6决战'],
     bilibiliUrl: 'https://space.bilibili.com/210752'
   },
+  { 
+    id: '23', 
+    season: 7, 
+    episode: 1, 
+    name: '萌爱moi', 
+    avatar: '/avatars/mengai.gif',
+    description: 'bilibili 知名舞蹈UP主 FIVEver女团成员',
+    games: ['S7-组队游戏', '体操摇摇落', '嘴接披萨(又名狗的披萨)', '青蛙上楼', '网页猜词', '接力蹴鞠', '默契接球挑战', '四大名著答题', '乒乓掂掂乐', '撑杯搭搭搭', '决战: 三国演义答题'],
+    bilibiliUrl: 'https://space.bilibili.com/1600113'
+  },
+  { 
+    id: '24', 
+    season: 7, 
+    episode: 1, 
+    name: '慕慕有奶糖', 
+    avatar: '/avatars/naitang.png',
+    description: 'bilibili 知名舞蹈UP主 FIVEver女团成员',
+    games: ['S7-组队游戏', '体操摇摇落', '嘴接披萨(又名狗的披萨)', '青蛙上楼', '网页猜词', '接力蹴鞠', '默契接球挑战', '四大名著答题', '乒乓掂掂乐', '撑杯搭搭搭', '决战: 三国演义答题'],
+    bilibiliUrl: 'https://space.bilibili.com/18841842'
+  },
+  { 
+    id: '25', 
+    season: 7, 
+    episode: 1, 
+    name: '-MyMy麦麦-', 
+    avatar: '/avatars/maimai.jpg',
+    description: 'bilibili 知名舞蹈UP主 FIVEver女团成员',
+    games: ['S7-组队游戏', '体操摇摇落', '嘴接披萨(又名狗的披萨)', '青蛙上楼', '网页猜词', '接力蹴鞠', '默契接球挑战', '四大名著答题', '乒乓掂掂乐', '撑杯搭搭搭', '决战: 三国演义答题'],
+    bilibiliUrl: 'https://space.bilibili.com/848008'
+  },
 ];

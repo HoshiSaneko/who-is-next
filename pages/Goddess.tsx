@@ -5,6 +5,8 @@ import { GODDESSES_CONFIG } from '../configs/goddesses.config';
 import { PageShell } from '../components/ui';
 import { OptimizedImage } from '../src/components/OptimizedImage';
 
+const getBiliUid = (url: string) => url.match(/space\.bilibili\.com\/(\d+)/)?.[1];
+
 const Goddess: React.FC = () => {
   const navigate = useNavigate();
   const seasons = useMemo(() => Array.from(new Set(GODDESSES_CONFIG.map((item) => item.season))).sort((a, b) => a - b), []);
@@ -53,7 +55,7 @@ const Goddess: React.FC = () => {
               <article key={guest.id} className="guest-card">
                 <div className="guest-card-main">
                   <div className="guest-avatar-frame">
-                    <OptimizedImage src={guest.avatar} alt={guest.name} />
+                    <OptimizedImage src={guest.avatar} alt={guest.name} biliUid={getBiliUid(guest.bilibiliUrl)} />
                   </div>
                   <div className="guest-card-copy">
                     <div className="guest-card-meta">

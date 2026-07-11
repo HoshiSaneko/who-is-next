@@ -54,4 +54,7 @@ export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
     { season: 6, episode: 4, title: '真的笑不动了！！！《下一个是谁6》04', bvid: 'BV1tKzcB1ECE' },
     { season: 6, episode: 5, title: '99%的人过不了第一关！！《下一个是谁6》05', bvid: 'BV1QfcVzVEwJ' },
     { season: 6, episode: 6, title: '决战！我要夺冠！！！《下一个是谁6》06', bvid: 'BV11bAUzBEqG' },
+
+    // S7
+    { season: 7, episode: 1, title: '《下一个是谁》第七季（1）', bvid: 'BV1UjMn6hEXQ' },
 ];

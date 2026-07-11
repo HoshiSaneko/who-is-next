@@ -8,7 +8,7 @@ import { useBiliData } from '../hooks/useBiliData';
 import { formatCompactNumber, getBiliVideoUrl, getCover } from '../utils/format';
 import { OptimizedImage } from '../src/components/OptimizedImage';
 
-const getAvatarByName = (name: string) => UP_MEMBERS_CONFIG.find((member) => member.name === name)?.avatar;
+const getMemberByName = (name: string) => UP_MEMBERS_CONFIG.find((member) => member.name === name);
 
 type BiliMetricIconType = 'play' | 'like' | 'coin' | 'favorite';
 
@@ -94,11 +94,12 @@ const Groups: React.FC = () => {
                 <span>本季为个人赛制</span>
                 <div className="season-solo-winners">
                   {activeSeason.winner.map((winner) => {
-                    const avatar = getAvatarByName(winner);
+                    const member = getMemberByName(winner);
+                    const avatar = member?.avatar;
                     return (
                       <div key={winner} className="season-solo-winner-chip">
                         {avatar ? (
-                          <OptimizedImage src={avatar} alt={winner} />
+                          <OptimizedImage src={avatar} alt={winner} biliUid={member?.uid} />
                         ) : (
                           <span aria-hidden="true">{winner.slice(0, 1)}</span>
                         )}
@@ -129,11 +130,12 @@ const Groups: React.FC = () => {
                       </div>
                       <div className="season-member-list">
                         {team.members.map((member) => {
-                          const avatar = getAvatarByName(member);
+                          const upMember = getMemberByName(member);
+                          const avatar = upMember?.avatar;
                           return (
                             <div key={member} className="season-member-chip">
                               {avatar ? (
-                                <OptimizedImage src={avatar} alt={member} />
+                                <OptimizedImage src={avatar} alt={member} biliUid={upMember?.uid} />
                               ) : (
                                 <span aria-hidden="true">{member.slice(0, 1)}</span>
                               )}
@@ -173,7 +175,13 @@ const Groups: React.FC = () => {
                     rel="noopener noreferrer"
                     className="season-episode-card"
                   >
-                    <span className="season-episode-cover" style={{ backgroundImage: `url(${getCover(episode.bvid)})` }} />
+                    <span className="season-episode-cover">
+                      <OptimizedImage
+                        src={getCover(episode.bvid)}
+                        alt={episode.title}
+                        className="h-full w-full object-contain"
+                      />
+                    </span>
                     <span className="season-episode-copy">
                       <span className="season-episode-meta">Episode {String(episode.episode).padStart(2, '0')}</span>
                       <strong>{episode.title}</strong>

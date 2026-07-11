@@ -5,7 +5,10 @@ export interface UpMember {
   pinyin?: string;    // 名字拼音
   nickname?: string;  // 绰号/代号 (如 "雨霁")
   avatar: string;
+  /** 主创卡片及选择器中的人物展示图 */
   background?: string;
+  /** 主创详情页的场景背景图 */
+  pageBackground?: string;
   title: string;      // 称号 (如 "实力雨神")
   honor: string;      // 荣誉 (如 "2025百大UP主、2020百大UP主")
   tags?: string[];     // 经典名场面标签（已废弃，使用 buffs 和 debuffs）

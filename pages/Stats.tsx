@@ -12,7 +12,7 @@ import { OptimizedImage } from '../src/components/OptimizedImage';
 
 const splitNames = (value?: string) => (value ? value.split(/[,，、&]+/).map((item) => item.trim()).filter(Boolean) : []);
 
-const getAvatarByName = (name: string) => UP_MEMBERS_CONFIG.find((member) => member.name === name)?.avatar;
+const getMemberByName = (name: string) => UP_MEMBERS_CONFIG.find((member) => member.name === name);
 const getTeamName = (team: GroupTeam, index: number) => team.name || `第 ${index + 1} 组`;
 const teamMatchesNames = (team: GroupTeam, value?: string) => {
   const names = splitNames(value);
@@ -150,7 +150,14 @@ const Stats: React.FC = () => {
   const biliData = useBiliData();
   const totalData = useBiliVideoTotal();
   const [activeLeaderboard, setActiveLeaderboard] = useState<LeaderboardType>('clears');
-  const [activeProgressSeason, setActiveProgressSeason] = useState(2);
+  const [activeProgressSeason, setActiveProgressSeason] = useState(() =>
+    GROUPS_CONFIG.reduce((latestSeason, season) => {
+      const seasonNum = Number(season.id.replace('s', ''));
+      return !season.isPlaceholder && season.teams.length > 0 && seasonNum >= 2
+        ? Math.max(latestSeason, seasonNum)
+        : latestSeason;
+    }, 2),
+  );
   const [hiddenProgressTeams, setHiddenProgressTeams] = useState<string[]>([]);
 
   const detailTotals = useMemo(() => {
@@ -199,13 +206,21 @@ const Stats: React.FC = () => {
       });
     });
 
-    Array.from(new Set(GAMES_CONFIG.map((game) => game.season))).forEach((season) => {
-      const seasonGames = GAMES_CONFIG.filter((game) => game.season === season);
-      const finalGame = seasonGames[seasonGames.length - 1];
-      splitNames(finalGame?.levelChampion).forEach((name) => {
-        if (name !== '无') seasonWins[name] = (seasonWins[name] || 0) + 1;
+    const completedSeasons = new Set(
+      GROUPS_CONFIG
+        .filter((season) => !season.isPlaceholder && season.winner.length > 0)
+        .map((season) => Number(season.id.replace('s', ''))),
+    );
+
+    Array.from(new Set(GAMES_CONFIG.map((game) => game.season)))
+      .filter((season) => completedSeasons.has(season))
+      .forEach((season) => {
+        const seasonGames = GAMES_CONFIG.filter((game) => game.season === season);
+        const finalGame = seasonGames[seasonGames.length - 1];
+        splitNames(finalGame?.levelChampion).forEach((name) => {
+          if (name !== '无') seasonWins[name] = (seasonWins[name] || 0) + 1;
+        });
       });
-    });
 
     const toChart = (record: Record<string, number>) => Object.entries(record).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
 
@@ -293,7 +308,8 @@ const Stats: React.FC = () => {
   };
   const renderMemberTick = ({ x, y, payload }: any) => {
     const name = String(payload?.value || '');
-    const avatar = getAvatarByName(name);
+    const member = getMemberByName(name);
+    const avatar = member?.avatar;
 
     return (
       <g transform={`translate(${x},${y})`}>
@@ -315,6 +331,7 @@ const Stats: React.FC = () => {
               <OptimizedImage
                 src={avatar}
                 alt=""
+                biliUid={member?.uid}
                 style={{
                   width: '24px',
                   height: '24px',
@@ -437,12 +454,14 @@ const Stats: React.FC = () => {
                     <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
                     <span className="flex shrink-0 -space-x-1.5">
                       {team?.members.map((member) => {
-                        const avatar = getAvatarByName(member);
+                        const upMember = getMemberByName(member);
+                        const avatar = upMember?.avatar;
                         return avatar ? (
                           <OptimizedImage
                             key={member}
                             src={avatar}
                             alt={member}
+                            biliUid={upMember?.uid}
                             title={member}
                             className="h-5 w-5 rounded-full border border-[#ffd59d]/35 object-cover shadow-[0_5px_12px_rgba(0,0,0,0.24)]"
                           />
@@ -489,12 +508,14 @@ const Stats: React.FC = () => {
             <span className="text-xs font-bold text-white/[0.78]">{team.chartName}</span>
             <span className="flex -space-x-1.5">
               {team.members.map((member) => {
-                const avatar = getAvatarByName(member);
+                const upMember = getMemberByName(member);
+                const avatar = upMember?.avatar;
                 return avatar ? (
                   <OptimizedImage
                     key={member}
                     src={avatar}
                     alt={member}
+                    biliUid={upMember?.uid}
                     title={member}
                     className="h-5 w-5 rounded-full border border-[#ffd59d]/35 object-cover shadow-[0_5px_12px_rgba(0,0,0,0.24)]"
                   />
@@ -581,10 +602,7 @@ const Stats: React.FC = () => {
   );
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[#15110f] text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_4%,rgba(255,229,188,0.24),transparent_24rem),radial-gradient(circle_at_86%_2%,rgba(42,119,105,0.18),transparent_30rem),linear-gradient(180deg,#15110f_0%,#2a1d18_38%,#755034_72%,#c99a66_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,transparent_0_9%,rgba(255,255,255,0.08)_9.06%,transparent_9.18%_50%,rgba(255,255,255,0.07)_50.06%,transparent_50.18%_91%,rgba(255,255,255,0.07)_91.06%,transparent_91.18%),repeating-linear-gradient(0deg,rgba(255,255,255,0.04)_0_1px,transparent_1px_30px),repeating-linear-gradient(90deg,rgba(54,29,18,0.13)_0_1px,transparent_1px_128px)] opacity-60" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,10,0.62)_0%,rgba(5,7,10,0.2)_32%,rgba(255,255,255,0.08)_72%,rgba(255,255,255,0.2)_100%),radial-gradient(ellipse_at_center,transparent_42%,rgba(5,7,10,0.25)_100%)]" />
+    <div className="stats-page relative min-h-screen w-full overflow-hidden text-white">
 
       <PageShell className="relative z-10 max-w-[1280px] gap-5 pt-24">
         <div className="grid gap-4">

@@ -69,6 +69,16 @@ export const GROUPS_CONFIG: GroupConfig[] = [
             { name: '虾哲腾', members: ['在下哲别', '徐大虾咯'] }
         ],
         winner: ['Double J']
+    },
+    {
+        id: 's7',
+        season: '第七季',
+        teams: [
+            { name: '粽横天虾', members: ['啊吗粽', '徐大虾咯'] },
+            { name: 'Golden Boy', members: ['雨哥到处跑', '自来卷三木'] },
+            { name: 'AA兄弟', members: ['力元君', '在下哲别'] }
+        ],
+        winner: []
     }
 ];
 

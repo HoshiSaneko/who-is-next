@@ -70,6 +70,7 @@ const UPMembers: React.FC = () => {
   );
 
   const visualBackground = activeMember.background || '/images/home-hero-basketball-clarity-2400.webp';
+  const pageBackground = activeMember.pageBackground;
   const profileMetrics = [
     { label: 'Fans', value: formatCompactNumber(liveInfo?.fans_count), icon: FiUsers },
     { label: 'Videos', value: formatCompactNumber(liveInfo?.video_count), icon: FiFilm },
@@ -86,7 +87,14 @@ const UPMembers: React.FC = () => {
   });
 
   return (
-    <div className="up-members-page">
+    <div
+      className="up-members-page"
+      style={pageBackground ? {
+        backgroundImage: `url(${getWebPUrl(pageBackground)})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+      } : undefined}
+    >
       <PageShell className="up-members-shell relative z-10">
         <div className="grid gap-4">
           <div className="up-member-selector-strip">
@@ -172,10 +180,10 @@ const UPMembers: React.FC = () => {
                   <h3>Ability Radar</h3>
                   <div className="h-[220px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart data={radarData} outerRadius="68%">
+                      <RadarChart data={radarData} outerRadius={activeMember.id === 'amazong' ? '56%' : '68%'}>
                         <PolarGrid stroke="rgba(255,255,255,0.22)" />
                         <PolarAngleAxis dataKey="subject" tick={{ fill: 'rgba(255,255,255,0.72)', fontSize: 10 }} />
-                        <PolarRadiusAxis angle={90} domain={[0, 5]} tick={false} axisLine={false} />
+                        <PolarRadiusAxis angle={90} domain={[0, 5]} allowDataOverflow tick={false} axisLine={false} />
                         <Radar name={activeMember.name} dataKey="value" stroke="rgba(255,213,157,0.96)" fill="rgba(255,213,157,0.42)" fillOpacity={0.72} strokeWidth={2.5} />
                       </RadarChart>
                     </ResponsiveContainer>

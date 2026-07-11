@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { getCDNUrl } from '@/src/config/cdn';
+import { preloadImageSource } from '@/src/utils/imageSources';
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -9,6 +9,7 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   height?: number;
   loading?: 'lazy' | 'eager';
   useCDN?: boolean;
+  biliUid?: string;
 }
 
 export function OptimizedImage({
@@ -19,6 +20,7 @@ export function OptimizedImage({
   height,
   loading = 'lazy',
   useCDN = true,
+  biliUid,
   style,
   title,
   ...restProps
@@ -28,54 +30,20 @@ export function OptimizedImage({
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
+    setImageSrc('');
+    setIsLoaded(false);
+
     // 构建不同的图片 URL 尝试顺序
-    const urls: string[] = [];
+    let cancelled = false;
 
-    if (useCDN) {
-      // 1. CDN WebP
-      const cdnWebP = getCDNUrl(src).replace(/\.(jpg|jpeg|png)$/i, '.webp');
-      urls.push(cdnWebP);
+    preloadImageSource(src, { biliUid, useCDN }).then((resolvedSrc) => {
+      if (!cancelled) setImageSrc(resolvedSrc);
+    });
 
-      // 2. CDN 原始格式
-      const cdnOriginal = getCDNUrl(src);
-      urls.push(cdnOriginal);
-    }
-
-    // 3. 本地 WebP
-    const localWebP = src.replace(/\.(jpg|jpeg|png)$/i, '.webp');
-    urls.push(localWebP);
-
-    // 4. 本地原始格式
-    urls.push(src);
-
-    // 尝试按顺序加载图片
-    let currentIndex = 0;
-
-    const tryLoadImage = () => {
-      if (currentIndex >= urls.length) {
-        // 所有 URL 都失败了，使用最后一个（原始 src）
-        setImageSrc(src);
-        return;
-      }
-
-      const img = new Image();
-      const currentUrl = urls[currentIndex];
-
-      img.onload = () => {
-        setImageSrc(currentUrl);
-      };
-
-      img.onerror = () => {
-        // 当前 URL 失败，尝试下一个
-        currentIndex++;
-        tryLoadImage();
-      };
-
-      img.src = currentUrl;
+    return () => {
+      cancelled = true;
     };
-
-    tryLoadImage();
-  }, [src, useCDN]);
+  }, [biliUid, src, useCDN]);
 
   const handleLoad = () => {
     setIsLoaded(true);

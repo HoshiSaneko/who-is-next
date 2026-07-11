@@ -112,10 +112,7 @@ const Memes: React.FC = () => {
   const metricValues = [MEMES_CONFIG.length, totalSources, likedCount];
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[#15110f] text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_4%,rgba(255,229,188,0.24),transparent_24rem),radial-gradient(circle_at_86%_2%,rgba(42,119,105,0.18),transparent_30rem),linear-gradient(180deg,#15110f_0%,#2a1d18_38%,#755034_72%,#c99a66_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,transparent_0_9%,rgba(255,255,255,0.08)_9.06%,transparent_9.18%_50%,rgba(255,255,255,0.07)_50.06%,transparent_50.18%_91%,rgba(255,255,255,0.07)_91.06%,transparent_91.18%),repeating-linear-gradient(0deg,rgba(255,255,255,0.04)_0_1px,transparent_1px_30px),repeating-linear-gradient(90deg,rgba(54,29,18,0.13)_0_1px,transparent_1px_128px)] opacity-60" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,10,0.62)_0%,rgba(5,7,10,0.2)_32%,rgba(255,255,255,0.08)_72%,rgba(255,255,255,0.2)_100%),radial-gradient(ellipse_at_center,transparent_42%,rgba(5,7,10,0.25)_100%)]" />
+    <div className="memes-page relative min-h-screen w-full overflow-hidden text-white">
 
       <PageShell className="relative z-10 max-w-[1280px] gap-5 pt-24">
         <section className="grid gap-3 sm:grid-cols-3" aria-label="Meme metrics">
