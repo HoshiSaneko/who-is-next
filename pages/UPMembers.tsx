@@ -3,6 +3,7 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 import { useEffect } from 'react';
 import { FiAward, FiChevronLeft, FiChevronRight, FiExternalLink, FiFilm, FiUsers } from 'react-icons/fi';
 import { GAMES_CONFIG } from '../configs/games.config';
+import { GROUPS_CONFIG } from '../configs/groups.config';
 import { UP_MEMBERS_CONFIG } from '../configs/upMembers.config';
 import { useBiliData } from '../hooks/useBiliData';
 import { PageShell } from '../components/ui';
@@ -60,12 +61,22 @@ const UPMembers: React.FC = () => {
   );
 
   const championCount = useMemo(
-    () => Array.from(new Set(GAMES_CONFIG.map((game) => game.season))).reduce((count, season) => {
-      const seasonGames = GAMES_CONFIG.filter((game) => game.season === season);
-      const finalGame = seasonGames[seasonGames.length - 1];
-      const champions = splitNames(finalGame?.levelChampion).filter((name) => name !== '无');
-      return count + (champions.includes(activeMember.name) ? 1 : 0);
-    }, 0),
+    () => {
+      const completedSeasons = new Set(
+        GROUPS_CONFIG
+          .filter((season) => !season.isPlaceholder && season.winner.length > 0)
+          .map((season) => Number(season.id.replace('s', ''))),
+      );
+
+      return Array.from(new Set(GAMES_CONFIG.map((game) => game.season)))
+        .filter((season) => completedSeasons.has(season))
+        .reduce((count, season) => {
+          const seasonGames = GAMES_CONFIG.filter((game) => game.season === season);
+          const finalGame = seasonGames[seasonGames.length - 1];
+          const champions = splitNames(finalGame?.levelChampion).filter((name) => name !== '无');
+          return count + (champions.includes(activeMember.name) ? 1 : 0);
+        }, 0);
+    },
     [activeMember],
   );
 
