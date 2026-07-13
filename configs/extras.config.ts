@@ -148,6 +148,12 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2026-05-29 10:30:00',
     category: '生活篇'
   },
+  {
+    title: '《下一个是谁》第七季MV幕后，第一支属于我们的MV',
+    bvid: 'BV1hENP65EKz',
+    date: '2026-07-12 11:30:00',
+    category: '生活篇'
+  },
   // 花絮
   {
     title: '【骆歆】拿下！我去《下一个是谁》居然直接干碎一个游戏！',

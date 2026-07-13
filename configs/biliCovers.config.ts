@@ -94,6 +94,7 @@ export const BILI_COVER_MAPPING: Record<string, string> = {
   'BV1wP5R6FEQ6': 'http://i1.hdslb.com/bfs/archive/d15595fc3d7dbfb332644f5a971a270862cdeecf.jpg',
   'BV1fTVG6AEGW': 'http://i1.hdslb.com/bfs/archive/54ed913360d8103a957b1b971c9e41a079cd8b77.jpg',
   'BV1MG7961Efg': 'http://i2.hdslb.com/bfs/archive/55e9b58ea3d6a84a655b0d2607bb6ff7e31c6d34.jpg',
+  'BV1hENP65EKz': 'http://i2.hdslb.com/bfs/archive/6320cb2db85f0460bd83605e4bb88595a575ea79.jpg',
 };
 
 /**
