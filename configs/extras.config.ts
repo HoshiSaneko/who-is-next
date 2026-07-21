@@ -222,6 +222,12 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2026-03-01 13:21:18',
     category: '衍生篇'
   },
+  {
+    title: '《下一个是谁》第一次线下活动！！！【一雨季#06】',
+    bvid: 'BV1pVKa6LE7k',
+    date: '2026-07-21 18:33:29',
+    category: '衍生篇'
+  },
   // 城市大富翁
   {
     title: '城市大富翁（1）',
