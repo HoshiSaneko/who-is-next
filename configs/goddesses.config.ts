@@ -251,5 +251,15 @@ export const GODDESSES_CONFIG: Goddess[] = [
     description: 'bilibili 知名舞蹈UP主 FIVEver女团成员',
     games: ['S7-组队游戏', '体操摇摇落', '嘴接披萨(又名狗的披萨)', '青蛙上楼', '网页猜词', '接力蹴鞠', '默契接球挑战', '四大名著答题', '乒乓掂掂乐', '撑杯搭搭搭', '决战: 三国演义答题'],
     bilibiliUrl: 'https://space.bilibili.com/848008'
+  },  
+  { 
+    id: '26', 
+    season: 7, 
+    episode: 2, 
+    name: '代古拉k', 
+    avatar: '/avatars/daigula.jpg',
+    description: '上古真神',
+    games: ['精准降落', '帽子DIY', '愤怒的弹弓', '舞蹈克隆', '海洋球丢三盆', '名胜答答答', '黑白双进', '双人侧方位停车', '飞镖套圈圈', '上上上上上签'],
+    bilibiliUrl: 'https://space.bilibili.com/334378024'
   },
 ];

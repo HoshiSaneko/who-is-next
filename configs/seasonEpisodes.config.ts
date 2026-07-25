@@ -57,4 +57,5 @@ export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
 
     // S7
     { season: 7, episode: 1, title: '《下一个是谁》第七季（1）', bvid: 'BV1UjMn6hEXQ' },
+    { season: 7, episode: 2, title: '《下一个是谁》第七季（2）', bvid: 'BV1KRg462E53' },
 ];

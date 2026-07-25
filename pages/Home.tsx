@@ -1,7 +1,6 @@
 ﻿import React, { useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import {
   FiBookOpen,
   FiExternalLink,
@@ -29,34 +28,65 @@ const DEFAULT_HERO_BACKGROUND: HeroBackground = {
   alt: '下一个是谁篮球馆',
   src: LOCAL_HERO_BACKGROUND,
 };
-let cachedHeroBackground: HeroBackground | null = null;
-
 const formatHeroPlayCount = (value: number) => value.toLocaleString('zh-CN');
 
 const FlipNumber: React.FC<{ value: number }> = ({ value }) => {
   const formattedValue = formatHeroPlayCount(value);
+  const prefersReducedMotion = useReducedMotion();
+  let digitIndex = -1;
 
   return (
-    <span className="relative inline-grid overflow-hidden py-[0.08em] align-baseline [perspective:1200px]" aria-label={formattedValue}>
-      <AnimatePresence mode="popLayout" initial={false}>
-        <motion.span
-          key={value}
-          initial={{ y: '42%', opacity: 0, filter: 'blur(10px) brightness(1.42)' }}
-          animate={{ y: '0%', opacity: 1, filter: 'blur(0px) brightness(1)' }}
-          exit={{ y: '-34%', opacity: 0, filter: 'blur(8px) brightness(0.78)' }}
-          transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
-          className="relative col-start-1 row-start-1 inline-block whitespace-nowrap will-change-transform"
-        >
-          {formattedValue}
-          <motion.span
+    <span
+      className="relative inline-flex whitespace-nowrap py-[0.08em] align-baseline [font-variant-numeric:tabular-nums]"
+      aria-label={formattedValue}
+    >
+      {Array.from(formattedValue).map((character, characterIndex) => {
+        if (!/\d/.test(character)) {
+          return <span key={`separator-${characterIndex}`} aria-hidden="true">{character}</span>;
+        }
+
+        digitIndex += 1;
+        const currentDigitIndex = digitIndex;
+        const exitDirection = currentDigitIndex % 2 === 0 ? -1 : 1;
+        const transition = prefersReducedMotion
+          ? { duration: 0.16 }
+          : {
+              type: 'spring' as const,
+              stiffness: 420,
+              damping: 38,
+              mass: 0.72,
+              delay: Math.min(currentDigitIndex * 0.018, 0.12),
+            };
+
+        return (
+          <span
+            key={`digit-${characterIndex}`}
+            className="relative inline-grid overflow-hidden [perspective:1200px]"
             aria-hidden="true"
-            initial={{ x: '-115%', opacity: 0 }}
-            animate={{ x: '115%', opacity: [0, 0.42, 0] }}
-            transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1], delay: 0.04 }}
-            className="pointer-events-none absolute inset-y-[0.08em] left-0 w-[36%] skew-x-[-18deg] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.34),transparent)] mix-blend-screen"
-          />
-        </motion.span>
-      </AnimatePresence>
+          >
+            <AnimatePresence initial={false}>
+              <motion.span
+                key={character}
+                initial={{
+                  y: prefersReducedMotion ? '0%' : `${exitDirection * -52}%`,
+                  opacity: 0,
+                  filter: prefersReducedMotion ? 'blur(0px)' : 'blur(7px)',
+                }}
+                animate={{ y: '0%', opacity: 1, filter: 'blur(0px)' }}
+                exit={{
+                  y: prefersReducedMotion ? '0%' : `${exitDirection * 44}%`,
+                  opacity: 0,
+                  filter: prefersReducedMotion ? 'blur(0px)' : 'blur(6px)',
+                }}
+                transition={transition}
+                className="col-start-1 row-start-1 inline-block will-change-transform"
+              >
+                {character}
+              </motion.span>
+            </AnimatePresence>
+          </span>
+        );
+      })}
     </span>
   );
 };
@@ -66,16 +96,21 @@ const Home: React.FC = () => {
   const totalData = useBiliVideoTotal();
   const [heroMetric, setHeroMetric] = useState<'total' | 'latest'>('total');
   const latestEpisode = SEASON_EPISODES_CONFIG[SEASON_EPISODES_CONFIG.length - 1];
+  const latestEpisodeBackground = useMemo<HeroBackground>(
+    () => latestEpisode
+      ? { id: latestEpisode.bvid, alt: `下一个是谁第 ${latestEpisode.season} 季第 ${latestEpisode.episode} 集封面`, src: getCover(latestEpisode.bvid) }
+      : DEFAULT_HERO_BACKGROUND,
+    [latestEpisode],
+  );
   const latestVideoStats = useBiliVideoStats(latestEpisode?.bvid || '');
   const latestStats = latestEpisode ? biliData?.data.co_creation[latestEpisode.bvid] : null;
-  const [activeBackground, setActiveBackground] = useState<HeroBackground>(() => cachedHeroBackground || DEFAULT_HERO_BACKGROUND);
+  const [activeBackground, setActiveBackground] = useState<HeroBackground>(() => latestEpisodeBackground);
   const activeBackgroundRef = useRef(activeBackground);
   const heroBackgrounds = useMemo<HeroBackground[]>(
-    () => [
-      DEFAULT_HERO_BACKGROUND,
-      ...(latestEpisode ? [{ id: latestEpisode.bvid, alt: `下一个是谁第 ${latestEpisode.season} 季第 ${latestEpisode.episode} 集封面`, src: getCover(latestEpisode.bvid) }] : []),
-    ],
-    [latestEpisode],
+    () => latestEpisodeBackground.id === DEFAULT_HERO_BACKGROUND.id
+      ? [DEFAULT_HERO_BACKGROUND]
+      : [latestEpisodeBackground, DEFAULT_HERO_BACKGROUND],
+    [latestEpisodeBackground],
   );
 
   useEffect(() => {
@@ -83,7 +118,6 @@ const Home: React.FC = () => {
     let intervalId: number | undefined;
 
     const activateBackground = (background: HeroBackground) => {
-      cachedHeroBackground = background;
       activeBackgroundRef.current = background;
       setActiveBackground(background);
     };
@@ -100,6 +134,10 @@ const Home: React.FC = () => {
       if (cancelled) return;
 
       const loadedBackgrounds = [DEFAULT_HERO_BACKGROUND, loadedVideoBackground];
+
+      if (activeBackgroundRef.current.id === videoBackground.id) {
+        activateBackground(loadedVideoBackground);
+      }
 
       const showNextBackground = () => {
         const nextBackground = loadedBackgrounds.find((background) => background.id !== activeBackgroundRef.current.id) || DEFAULT_HERO_BACKGROUND;
@@ -194,12 +232,6 @@ const Home: React.FC = () => {
                 })}
                 </div>
               </div>
-              <Link to="/traffic-king" className="hero-traffic-king-cta">
-                <span className="hero-traffic-king-node" aria-hidden="true">
-                  <span className="hero-traffic-king-diamond" />
-                </span>
-                <span className="hero-traffic-king-text">谁是流量王</span>
-              </Link>
             </div>
           </div>
 
