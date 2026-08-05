@@ -2595,7 +2595,7 @@ export const GAMES_CONFIG: Game[] = [
     levelName: "决战: 三国演义答题",
     rule: "每组%每人轮流答题PK%，直到%决出冠亚军%为止。(不允许家里)",
     levelChampion: "雨哥到处跑, 自来卷三木",
-    levelRunnerUp: "力啊吗粽, 徐大虾咯",
+    levelRunnerUp: "啊吗粽, 徐大虾咯",
     levelThirdPlace: "力元君, 在下哲别",
     url: "https://www.bilibili.com/video/BV1UjMn6hEXQ?t=4947.9",
   },
