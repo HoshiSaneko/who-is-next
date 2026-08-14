@@ -1,8 +1,9 @@
 ﻿import React, { useMemo, useState } from 'react';
 import { FiAward, FiExternalLink } from 'react-icons/fi';
-import { GROUPS_CONFIG } from '../configs/groups.config';
+import { GROUPS_CONFIG, SPECIAL_GROUPS_CONFIG } from '../configs/groups.config';
 import { UP_MEMBERS_CONFIG } from '../configs/upMembers.config';
-import { SEASON_EPISODES_CONFIG } from '../configs/seasonEpisodes.config';
+import { SEASON_EPISODES_CONFIG, SPECIALS_CONFIG } from '../configs/seasonEpisodes.config';
+import { getSpecialCategoryConfig, SPECIAL_CATEGORIES_CONFIG } from '../configs/specialCategories.config';
 import { PageShell } from '../components/ui';
 import { useBiliData } from '../hooks/useBiliData';
 import { formatCompactNumber, getBiliVideoUrl, getCover } from '../utils/format';
@@ -52,14 +53,36 @@ const Groups: React.FC = () => {
   const biliData = useBiliData();
   const seasons = GROUPS_CONFIG.filter((season) => !season.isPlaceholder);
   const [activeId, setActiveId] = useState(seasons[seasons.length - 1]?.id || 's1');
+  const activeSpecialCategory = activeId.startsWith('special:') ? activeId.slice('special:'.length) : null;
+  const isSpecial = activeSpecialCategory !== null;
   const activeSeason = seasons.find((season) => season.id === activeId) || seasons[0];
+  const activeGroup = activeSpecialCategory
+    ? SPECIAL_GROUPS_CONFIG.find((group) => group.specialCategory === activeSpecialCategory)
+    : activeSeason;
   const activeIndex = seasons.findIndex((season) => season.id === activeId);
   const seasonNum = Number(activeSeason.id.replace('s', '')) || activeIndex + 1;
 
-  const episodes = useMemo(
-    () => SEASON_EPISODES_CONFIG.filter((episode) => episode.season === seasonNum).sort((a, b) => a.episode - b.episode),
-    [seasonNum],
-  );
+  const videos = useMemo(() => {
+    if (activeSpecialCategory) {
+      const category = getSpecialCategoryConfig(activeSpecialCategory);
+      return SPECIALS_CONFIG
+        .filter((video) => video.specialCategory === activeSpecialCategory)
+        .map((video) => ({
+          ...video,
+          meta: category.label,
+          statsLabel: `${video.title}数据`,
+        }));
+    }
+
+    return SEASON_EPISODES_CONFIG
+      .filter((episode) => episode.season === seasonNum)
+      .sort((a, b) => a.episode - b.episode)
+      .map((episode) => ({
+        ...episode,
+        meta: `Episode ${String(episode.episode).padStart(2, '0')}`,
+        statsLabel: `第 ${episode.episode} 集数据`,
+      }));
+  }, [activeSpecialCategory, seasonNum]);
 
   return (
     <div className="season-page">
@@ -79,6 +102,20 @@ const Groups: React.FC = () => {
               </button>
             );
           })}
+          {SPECIAL_CATEGORIES_CONFIG.map((category) => {
+            const categoryId = `special:${category.id}`;
+            return (
+              <button
+                key={category.id}
+                type="button"
+                className={`season-selector-item ${activeId === categoryId ? 'is-active' : ''}`}
+                onClick={() => setActiveId(categoryId)}
+              >
+                <span>{category.shortLabel}</span>
+                <strong>{category.label}</strong>
+              </button>
+            );
+          })}
         </div>
 
         <div className="season-content-stack">
@@ -87,13 +124,18 @@ const Groups: React.FC = () => {
               <p>Team composition</p>
             </div>
 
-            {activeSeason.teams.length === 0 ? (
+            {!activeGroup || (activeGroup.teams.length === 0 && activeGroup.winner.length === 0 && !activeGroup.isPersonal) ? (
+              <div className="season-solo-panel">
+                <strong>暂无分组信息</strong>
+                <span>请在分组配置中添加特辑队伍</span>
+              </div>
+            ) : activeGroup.teams.length === 0 ? (
               <div className="season-solo-panel is-champion">
                 <FiAward className="h-5 w-5" aria-hidden="true" />
                 <strong>个人赛冠军</strong>
-                <span>本季为个人赛制</span>
+                <span>{isSpecial ? '本特辑为个人赛制' : '本季为个人赛制'}</span>
                 <div className="season-solo-winners">
-                  {activeSeason.winner.map((winner) => {
+                  {activeGroup.winner.map((winner) => {
                     const member = getMemberByName(winner);
                     const avatar = member?.avatar;
                     return (
@@ -111,10 +153,10 @@ const Groups: React.FC = () => {
               </div>
             ) : (
               <div className="season-team-grid">
-                {activeSeason.teams.map((team, index) => {
+                {activeGroup.teams.map((team, index) => {
                   const isChampion =
-                    activeSeason.winner.includes(team.name) ||
-                    team.members.some((member) => activeSeason.winner.includes(member));
+                    activeGroup.winner.includes(team.name) ||
+                    team.members.some((member) => activeGroup.winner.includes(member));
 
                   return (
                     <article key={`${team.name}-${index}`} className={`season-team-card ${isChampion ? 'is-champion' : ''}`}>
@@ -153,13 +195,13 @@ const Groups: React.FC = () => {
 
           <section className="season-section season-episode-section">
             <div className="season-section-heading">
-              <p>Episode coverage</p>
-              <span>{episodes.length} entries</span>
+              <p>{activeSpecialCategory ? getSpecialCategoryConfig(activeSpecialCategory).label : 'Episode coverage'}</p>
+              <span>{videos.length} entries</span>
             </div>
 
             <div className="season-episode-grid">
-              {episodes.map((episode) => {
-                const episodeStats = biliData?.data.co_creation[episode.bvid];
+              {videos.map((video) => {
+                const episodeStats = biliData?.data.co_creation[video.bvid];
                 const episodeMetrics = [
                   { label: '播放', value: episodeStats?.play, type: 'play' as const },
                   { label: '点赞', value: episodeStats?.like, type: 'like' as const },
@@ -169,23 +211,23 @@ const Groups: React.FC = () => {
 
                 return (
                   <a
-                    key={episode.bvid}
-                    href={getBiliVideoUrl(episode.bvid)}
+                    key={video.bvid}
+                    href={getBiliVideoUrl(video.bvid)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="season-episode-card"
                   >
                     <span className="season-episode-cover">
                       <OptimizedImage
-                        src={getCover(episode.bvid)}
-                        alt={episode.title}
+                        src={getCover(video.bvid)}
+                        alt={video.title}
                         className="h-full w-full object-contain"
                       />
                     </span>
                     <span className="season-episode-copy">
-                      <span className="season-episode-meta">Episode {String(episode.episode).padStart(2, '0')}</span>
-                      <strong>{episode.title}</strong>
-                      <span className="season-episode-stats" aria-label={`第 ${episode.episode} 集数据`}>
+                      <span className="season-episode-meta">{video.meta}</span>
+                      <strong>{video.title}</strong>
+                      <span className="season-episode-stats" aria-label={video.statsLabel}>
                         {episodeMetrics.map(({ label, value, type }) => (
                           <span key={label} className="season-episode-stat" title={label}>
                             <BiliMetricIcon type={type} />

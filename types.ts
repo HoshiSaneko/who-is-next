@@ -44,6 +44,11 @@ export interface Game {
   spTag?: string;
 }
 
+/** 不属于任何赛季的特辑关卡 */
+export type SpecialGame = Omit<Game, 'season'> & {
+  specialCategory: string;
+};
+
 export interface BiliData {
   code: number;
   message: string;

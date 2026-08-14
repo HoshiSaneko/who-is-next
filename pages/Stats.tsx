@@ -1,10 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { GAMES_CONFIG } from '../configs/games.config';
-import { GROUPS_CONFIG, GroupTeam } from '../configs/groups.config';
+import { GAMES_CONFIG, SPECIAL_GAMES_CONFIG } from '../configs/games.config';
+import { GROUPS_CONFIG, GroupTeam, SPECIAL_GROUPS_CONFIG } from '../configs/groups.config';
+import { getSpecialCategoryConfig } from '../configs/specialCategories.config';
 import { UP_MEMBERS_CONFIG } from '../configs/upMembers.config';
-import { SEASON_EPISODES_CONFIG } from '../configs/seasonEpisodes.config';
+import { SEASON_EPISODES_CONFIG, SPECIALS_CONFIG } from '../configs/seasonEpisodes.config';
 import { useBiliData } from '../hooks/useBiliData';
 import { useBiliVideoTotal } from '../hooks/useBiliVideoTotal';
 import { PageShell } from '../components/ui';
@@ -35,7 +36,7 @@ type DifficultyBucket = {
   name: string;
   count: number;
   color: string;
-  levels: { id: string; levelName: string; season: number }[];
+  levels: { id: string; levelName: string; collectionLabel: string }[];
 };
 
 const toneStyles: Record<Tone, { text: string; icon: string; border: string; glow: string }> = {
@@ -150,18 +151,22 @@ const Stats: React.FC = () => {
   const biliData = useBiliData();
   const totalData = useBiliVideoTotal();
   const [activeLeaderboard, setActiveLeaderboard] = useState<LeaderboardType>('clears');
-  const [activeProgressSeason, setActiveProgressSeason] = useState(() =>
-    GROUPS_CONFIG.reduce((latestSeason, season) => {
+  const [activeProgressId, setActiveProgressId] = useState(() => {
+    const latestSeason = GROUPS_CONFIG.reduce((latest, season) => {
       const seasonNum = Number(season.id.replace('s', ''));
       return !season.isPlaceholder && season.teams.length > 0 && seasonNum >= 2
-        ? Math.max(latestSeason, seasonNum)
-        : latestSeason;
-    }, 2),
-  );
+        ? Math.max(latest, seasonNum)
+        : latest;
+    }, 2);
+    return `season:${latestSeason}`;
+  });
   const [hiddenProgressTeams, setHiddenProgressTeams] = useState<string[]>([]);
 
   const detailTotals = useMemo(() => {
-    const configuredBvids = new Set(SEASON_EPISODES_CONFIG.map((episode) => episode.bvid));
+    const configuredBvids = new Set([
+      ...SEASON_EPISODES_CONFIG.map((episode) => episode.bvid),
+      ...SPECIALS_CONFIG.map((special) => special.bvid),
+    ]);
     return Object.entries(biliData?.data.co_creation || {}).reduce(
       (acc, [bvid, video]) => {
         if (!configuredBvids.has(bvid)) return acc;
@@ -197,7 +202,7 @@ const Stats: React.FC = () => {
       seasonWins[member.name] = 0;
     });
 
-    GAMES_CONFIG.forEach((game) => {
+    [...GAMES_CONFIG, ...SPECIAL_GAMES_CONFIG].forEach((game) => {
       splitNames(game.levelChampion).forEach((name) => {
         if (name !== '无') clearCounts[name] = (clearCounts[name] || 0) + 1;
       });
@@ -222,6 +227,26 @@ const Stats: React.FC = () => {
         });
       });
 
+    SPECIAL_GROUPS_CONFIG.forEach((specialGroup) => {
+      const champions = new Set<string>();
+
+      specialGroup.winner.forEach((winner) => {
+        const winningTeam = specialGroup.teams.find((team) => team.name === winner);
+        if (winningTeam) {
+          winningTeam.members.forEach((member) => champions.add(member));
+          return;
+        }
+
+        splitNames(winner).forEach((name) => {
+          if (name !== '无') champions.add(name);
+        });
+      });
+
+      champions.forEach((name) => {
+        seasonWins[name] = (seasonWins[name] || 0) + 1;
+      });
+    });
+
     const toChart = (record: Record<string, number>) => Object.entries(record).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
 
     const difficulty: DifficultyBucket[] = [
@@ -238,7 +263,22 @@ const Stats: React.FC = () => {
       const bucket = gaveUpTeams.length >= 3 ? difficulty[0] : gaveUpTeams.length === 2 ? difficulty[1] : gaveUpTeams.length === 1 ? difficulty[2] : null;
       if (!bucket) return;
       bucket.count += 1;
-      bucket.levels.push({ id: game.id, levelName: game.levelName, season: game.season });
+      bucket.levels.push({ id: game.id, levelName: game.levelName, collectionLabel: `S${game.season}` });
+    });
+
+    SPECIAL_GAMES_CONFIG.forEach((game) => {
+      const specialGroup = SPECIAL_GROUPS_CONFIG.find((group) => group.specialCategory === game.specialCategory);
+      if (!specialGroup?.teams.length) return;
+
+      const gaveUpTeams = specialGroup.teams.filter((team) => teamMatchesNames(team, game.giveUp));
+      const bucket = gaveUpTeams.length >= 3 ? difficulty[0] : gaveUpTeams.length === 2 ? difficulty[1] : gaveUpTeams.length === 1 ? difficulty[2] : null;
+      if (!bucket) return;
+      bucket.count += 1;
+      bucket.levels.push({
+        id: game.id,
+        levelName: game.levelName,
+        collectionLabel: getSpecialCategoryConfig(game.specialCategory).shortLabel,
+      });
     });
 
     const progressSeasons = GROUPS_CONFIG
@@ -270,26 +310,64 @@ const Stats: React.FC = () => {
         });
 
         return {
-          seasonNum,
+          progressId: `season:${seasonNum}`,
           seasonName: seasonConfig.season,
           teams,
           chartData,
         };
     });
 
+    const progressSpecials = SPECIAL_GROUPS_CONFIG.map((specialGroup) => {
+      const category = getSpecialCategoryConfig(specialGroup.specialCategory);
+      const teams = specialGroup.teams.map((team, index) => ({
+        ...team,
+        chartName: getTeamName(team, index),
+        color: ['#f5d9a7', '#d9a85f', '#c96f56', '#b7a27a'][index % 4],
+      }));
+      const specialGames = SPECIAL_GAMES_CONFIG.filter(
+        (game) => game.specialCategory === specialGroup.specialCategory,
+      );
+      const chartData = specialGames.map((game) => {
+        const point: Record<string, string | number | null> = {
+          id: game.id,
+          levelName: game.levelName,
+        };
+
+        teams.forEach((team) => {
+          let value: number | null = null;
+          if (teamMatchesNames(team, game.giveUp)) value = 4;
+          else if (teamMatchesNames(team, game.levelChampion)) value = 1;
+          else if (teamMatchesNames(team, game.levelRunnerUp)) value = 2;
+          else if (teamMatchesNames(team, game.levelThirdPlace)) value = 3;
+          point[team.chartName] = value;
+        });
+
+        return point;
+      });
+
+      return {
+        progressId: `special:${specialGroup.specialCategory}`,
+        seasonName: category.label,
+        teams,
+        chartData,
+      };
+    });
+
+    const progressCollections = [...progressSeasons, ...progressSpecials];
+
     return {
       clears: toChart(clearCounts),
       giveUps: toChart(giveUpCounts),
       seasonWins: toChart(seasonWins),
       difficulty,
-      progressSeasons,
+      progressCollections,
     };
   }, []);
 
   const topClears = stats.clears.slice(0, 6);
   const topGiveUps = stats.giveUps.slice(0, 6);
   const topSeasonWins = stats.seasonWins.slice(0, 6);
-  const activeProgress = stats.progressSeasons.find((season) => season.seasonNum === activeProgressSeason) || stats.progressSeasons[0];
+  const activeProgress = stats.progressCollections.find((collection) => collection.progressId === activeProgressId) || stats.progressCollections[0];
   const leaderboardTabs: Array<{
     type: LeaderboardType;
     label: string;
@@ -298,7 +376,7 @@ const Stats: React.FC = () => {
     data: { name: string; count: number }[];
   }> = [
     { type: 'clears', label: '单关通关王', title: '单关通关王', description: '按单关通关次数排序。', data: topClears },
-    { type: 'seasonWins', label: '赛季通关王', title: '赛季通关王', description: '按赛季最终胜场排序。', data: topSeasonWins },
+    { type: 'seasonWins', label: '赛季 / 特辑通关王', title: '赛季 / 特辑通关王', description: '按赛季及特辑最终胜场排序。', data: topSeasonWins },
     { type: 'giveUps', label: '放弃王', title: '放弃王', description: '按放弃次数排序。', data: topGiveUps },
   ];
   const activeLeaderboardConfig = leaderboardTabs.find((item) => item.type === activeLeaderboard) || leaderboardTabs[0];
@@ -540,24 +618,24 @@ const Stats: React.FC = () => {
     <section className="overflow-hidden rounded-[10px] border border-white/[0.12] bg-[linear-gradient(135deg,rgba(8,11,15,0.68),rgba(8,11,15,0.36))] text-white shadow-[0_22px_62px_rgba(0,0,0,0.22)] backdrop-blur-[18px]">
       <div className="flex flex-col gap-4 border-b border-white/10 px-5 py-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <h2 className="text-[0.82rem] font-[760] uppercase leading-none tracking-[0.12em] text-white/90">各赛季闯关进度</h2>
+          <h2 className="text-[0.82rem] font-[760] uppercase leading-none tracking-[0.12em] text-white/90">各赛季与特辑闯关进度</h2>
           <p className="mt-2 text-sm leading-5 text-[#ffd59d]/[0.68]">横轴为关卡，纵轴为第一、第二、第三和放弃。</p>
         </div>
         <div className="flex max-w-full gap-1 overflow-x-auto rounded-[8px] border border-white/10 bg-white/[0.055] p-1">
-          {stats.progressSeasons.map((season) => {
-            const active = season.seasonNum === activeProgress?.seasonNum;
+          {stats.progressCollections.map((collection) => {
+            const active = collection.progressId === activeProgress?.progressId;
             return (
               <button
-                key={season.seasonNum}
+                key={collection.progressId}
                 type="button"
-                onClick={() => setActiveProgressSeason(season.seasonNum)}
+                onClick={() => setActiveProgressId(collection.progressId)}
                 className={`shrink-0 rounded-[7px] px-3 py-2 text-xs font-bold transition duration-200 ${
                   active
                     ? 'bg-[#ffd59d]/[0.16] text-[#ffe1b0] shadow-[inset_0_0_0_1px_rgba(255,213,157,0.2)]'
                     : 'text-white/[0.56] hover:bg-white/[0.07] hover:text-white/[0.86]'
                 }`}
               >
-                {season.seasonName}
+                {collection.seasonName}
               </button>
             );
           })}
@@ -641,7 +719,7 @@ const Stats: React.FC = () => {
                             className="group flex w-full items-center justify-between gap-3 rounded-[7px] border border-white/10 bg-white/[0.055] px-3 py-2 text-left text-xs transition duration-200 hover:border-[#ffd59d]/35 hover:bg-[#ffd59d]/[0.09] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd59d]/70"
                           >
                             <span className="min-w-0 truncate font-semibold text-white/[0.78]" title={level.levelName}>{level.levelName}</span>
-                            <span className="shrink-0 text-[#ffd59d]/70 transition group-hover:text-[#ffe1b0]">S{level.season} · {level.id}</span>
+                            <span className="shrink-0 text-[#ffd59d]/70 transition group-hover:text-[#ffe1b0]">{level.collectionLabel} · {level.id}</span>
                           </button>
                         ))}
                       </div>

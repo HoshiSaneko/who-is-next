@@ -12,6 +12,13 @@ export interface GroupConfig {
     isPersonal?: boolean;
 }
 
+export interface SpecialGroupConfig {
+    specialCategory: string;
+    teams: GroupTeam[];
+    winner: string[];
+    isPersonal?: boolean;
+}
+
 export const GROUPS_CONFIG: GroupConfig[] = [
     {
         id: 's1',
@@ -79,6 +86,18 @@ export const GROUPS_CONFIG: GroupConfig[] = [
             { name: 'AA兄弟', members: ['力元君', '在下哲别'] }
         ],
         winner: []
+    },
+];
+
+export const SPECIAL_GROUPS_CONFIG: SpecialGroupConfig[] = [
+    {
+        specialCategory: 'music',
+        teams: [
+            { name: '粽横天虾', members: ['啊吗粽', '徐大虾咯'] },
+            { name: 'Golden Boy', members: ['雨哥到处跑', '自来卷三木'] },
+            { name: 'AA兄弟', members: ['力元君', '在下哲别'] }
+        ],
+        winner: ['Golden Boy']
     }
 ];
 

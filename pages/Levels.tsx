@@ -1,9 +1,28 @@
 ﻿import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiArrowRight, FiAward, FiExternalLink, FiFlag, FiSearch, FiTarget, FiXCircle } from 'react-icons/fi';
-import { GAMES_CONFIG } from '../configs/games.config';
-import { Game } from '../types';
+import { GAMES_CONFIG, SPECIAL_GAMES_CONFIG } from '../configs/games.config';
+import { getSpecialCategoryConfig, SPECIAL_CATEGORIES_CONFIG } from '../configs/specialCategories.config';
+import { Game, SpecialGame } from '../types';
 import { PageShell } from '../components/ui';
+
+type LevelEntry =
+  | (Game & { collection: 'season' })
+  | (SpecialGame & { collection: 'special' });
+
+type SpecialFilter = `special:${string}`;
+type LevelFilter = number | 'all' | SpecialFilter;
+
+const getSpecialCategoryFromFilter = (filter: LevelFilter) => (
+  typeof filter === 'string' && filter.startsWith('special:')
+    ? filter.slice('special:'.length)
+    : null
+);
+
+const ALL_GAMES_CONFIG: LevelEntry[] = [
+  ...GAMES_CONFIG.map((game) => ({ ...game, collection: 'season' as const })),
+  ...SPECIAL_GAMES_CONFIG.map((game) => ({ ...game, collection: 'special' as const })),
+];
 
 const getLevelPageSize = (gridElement?: HTMLDivElement | null) => {
   if (typeof window === 'undefined') return 18;
@@ -36,16 +55,20 @@ const Levels: React.FC = () => {
   const navigate = useNavigate();
   const cardGridRef = React.useRef<HTMLDivElement | null>(null);
   const seasons = useMemo(() => Array.from(new Set(GAMES_CONFIG.map((game) => game.season))).sort((a, b) => a - b), []);
-  const [selectedSeason, setSelectedSeason] = useState<number | 'all'>(seasons[seasons.length - 1] || 'all');
+  const [selectedSeason, setSelectedSeason] = useState<LevelFilter>(seasons[seasons.length - 1] || 'all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(() => getLevelPageSize());
-  const [activeGame, setActiveGame] = useState<Game | null>(null);
+  const [activeGame, setActiveGame] = useState<LevelEntry | null>(null);
 
   const filteredGames = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    return GAMES_CONFIG.filter((game) => {
-      const seasonMatch = selectedSeason === 'all' || game.season === selectedSeason;
+    return ALL_GAMES_CONFIG.filter((game) => {
+      const selectedSpecialCategory = getSpecialCategoryFromFilter(selectedSeason);
+      const seasonMatch = selectedSeason === 'all'
+        || (selectedSpecialCategory
+          ? game.collection === 'special' && game.specialCategory === selectedSpecialCategory
+          : game.collection === 'season' && game.season === selectedSeason);
       const queryMatch = !query || game.levelName.toLowerCase().includes(query) || game.id.toLowerCase().includes(query);
       return seasonMatch && queryMatch;
     });
@@ -93,15 +116,21 @@ const Levels: React.FC = () => {
   useEffect(() => {
     const state = location.state as { selectedGameId?: string; selectedGameName?: string; selectedSeason?: number } | null;
     if (!state?.selectedGameId && !state?.selectedGameName) return;
-    const target = GAMES_CONFIG.find((game) => {
+    const target = ALL_GAMES_CONFIG.find((game) => {
       if (state.selectedGameId && game.id === state.selectedGameId) return true;
       if (!state.selectedGameName || game.levelName !== state.selectedGameName) return false;
-      return !state.selectedSeason || game.season === state.selectedSeason;
+      return !state.selectedSeason || (game.collection === 'season' && game.season === state.selectedSeason);
     });
     if (!target) return;
-    const targetGames = GAMES_CONFIG.filter((game) => game.season === target.season);
+    const targetFilter: LevelFilter = target.collection === 'special' ? `special:${target.specialCategory}` : target.season;
+    const targetSpecialCategory = getSpecialCategoryFromFilter(targetFilter);
+    const targetGames = ALL_GAMES_CONFIG.filter((game) => (
+      targetSpecialCategory
+        ? game.collection === 'special' && game.specialCategory === targetSpecialCategory
+        : game.collection === 'season' && game.season === targetFilter
+    ));
     const targetIndex = Math.max(0, targetGames.findIndex((game) => game.id === target.id));
-    setSelectedSeason(target.season);
+    setSelectedSeason(targetFilter);
     setCurrentPage(Math.floor(targetIndex / pageSize));
     setActiveGame(target);
     navigate(location.pathname, { replace: true, state: {} });
@@ -112,8 +141,14 @@ const Levels: React.FC = () => {
       <PageShell className="levels-shell relative z-10">
         <section className="levels-toolbar" aria-label="Level filters">
           <div className="levels-season-tabs">
-            {(['all', ...seasons] as Array<number | 'all'>).map((season) => {
+            {([
+              'all',
+              ...seasons,
+              ...SPECIAL_CATEGORIES_CONFIG.map((category) => `special:${category.id}` as SpecialFilter),
+            ] as LevelFilter[]).map((season) => {
               const active = selectedSeason === season;
+              const specialCategoryId = getSpecialCategoryFromFilter(season);
+              const specialCategory = specialCategoryId ? getSpecialCategoryConfig(specialCategoryId) : null;
               return (
                 <button
                   key={season}
@@ -121,8 +156,8 @@ const Levels: React.FC = () => {
                   className={`levels-season-tab ${active ? 'is-active' : ''}`}
                   onClick={() => setSelectedSeason(season)}
                 >
-                  <span>{season === 'all' ? 'All' : String(season).padStart(2, '0')}</span>
-                  <strong>{season === 'all' ? '全部赛季' : `第 ${season} 季`}</strong>
+                  <span>{season === 'all' ? 'All' : specialCategory?.shortLabel || String(season).padStart(2, '0')}</span>
+                  <strong>{season === 'all' ? '全部关卡' : specialCategory?.label || `第 ${season} 季`}</strong>
                 </button>
               );
             })}
@@ -175,7 +210,11 @@ const Levels: React.FC = () => {
                       <span className="levels-card-content">
                         <span className="levels-card-kicker">
                           <span className="levels-card-id">{game.id}</span>
-                          <span className="levels-card-season">S{game.season}</span>
+                          <span className="levels-card-season">
+                            {game.collection === 'special'
+                              ? getSpecialCategoryConfig(game.specialCategory).shortLabel
+                              : `S${game.season}`}
+                          </span>
                           {game.isSpecialLevel && <span className="levels-card-season">特殊关卡</span>}
                         </span>
                         <strong>{game.levelName}</strong>
@@ -201,7 +240,11 @@ const Levels: React.FC = () => {
                     <h2>{activeGame.levelName}</h2>
                     <div className="levels-detail-tags">
                       <span>{activeGame.id}</span>
-                      <span>第 {activeGame.season} 季</span>
+                      <span>
+                        {activeGame.collection === 'special'
+                          ? getSpecialCategoryConfig(activeGame.specialCategory).label
+                          : `第 ${activeGame.season} 季`}
+                      </span>
                       {activeGame.isSpecialLevel && <span>特殊关卡</span>}
                     </div>
                   </div>

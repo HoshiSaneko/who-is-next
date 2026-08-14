@@ -5,9 +5,15 @@ export interface SeasonEpisode {
     bvid: string;
 }
 
+export interface Special {
+    specialCategory: string;
+    title: string;
+    bvid: string;
+}
+
 export const HOME_FEATURED_VIDEO_CONFIG = {
-    bvid: 'BV11bAUzBEqG',
-    title: '决战！我要夺冠！！！《下一个是谁6》06',
+    bvid: 'BV1nLgs6vEX5',
+    title: '《下一个是谁》音乐特辑',
 };
 
 export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
@@ -58,4 +64,8 @@ export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
     // S7
     { season: 7, episode: 1, title: '《下一个是谁》第七季（1）', bvid: 'BV1UjMn6hEXQ' },
     { season: 7, episode: 2, title: '《下一个是谁》第七季（2）', bvid: 'BV1KRg462E53' },
+];
+
+export const SPECIALS_CONFIG: Special[] = [
+    { specialCategory: 'music', title: '《下一个是谁》音乐特辑', bvid: 'BV1nLgs6vEX5' }
 ];

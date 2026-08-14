@@ -1,5 +1,5 @@
 
-import { Game } from '../types';
+import { Game, SpecialGame } from '../types';
 
 export const GAMES_CONFIG: Game[] = [
   {
@@ -2702,4 +2702,106 @@ export const GAMES_CONFIG: Game[] = [
     url: "https://www.bilibili.com/video/BV1KRg462E53?t=4652.0",
   },
   // Additional games can be appended here statically as needed.
+];
+
+export const SPECIAL_GAMES_CONFIG: SpecialGame[] = [
+  {
+    id: "sp-001",
+    specialCategory: "music",
+    levelName: "谁是假粉丝",
+    rule: "裁判播放周杰伦歌曲，%最后猜出的组穿连体衣%。",
+    levelChampion: "啊吗粽, 徐大虾咯",
+    levelRunnerUp: "雨哥到处跑, 自来卷三木",
+    levelThirdPlace: "力元君, 在下哲别",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=144.2",
+  },
+  {
+    id: "sp-002",
+    specialCategory: "music",
+    levelName: "蒙眼吹美乐笛",
+    rule: "蒙眼在指定位置转一圈后，%找到美乐笛并吹响%就算过关。",
+    levelChampion: "啊吗粽, 徐大虾咯",
+    levelRunnerUp: "雨哥到处跑, 自来卷三木",
+    levelThirdPlace: "力元君, 在下哲别",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=363.5",
+  },
+  {
+    id: "sp-003",
+    specialCategory: "music",
+    levelName: "你听我吹",
+    rule: "出题人用唢呐吹奏一段音乐，一人听完后用珍宝珠美乐笛吹奏音乐，%猜出歌名%就过关。",
+    levelChampion: "雨哥到处跑, 自来卷三木",
+    levelRunnerUp: "啊吗粽, 徐大虾咯",
+    levelThirdPlace: "力元君, 在下哲别",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=427.0",
+  },
+  {
+    id: "sp-004",
+    specialCategory: "music",
+    levelName: "让我们荡起双桨",
+    rule: "用A4纸折纸船并且载着美乐笛横渡泳池，再用美乐笛%吹出 Do Re Mi 三个音%后就算过关。",
+    levelChampion: "雨哥到处跑, 自来卷三木",
+    levelRunnerUp: "啊吗粽, 徐大虾咯",
+    levelThirdPlace: "力元君, 在下哲别",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=1292.0",
+  },
+  {
+    id: "sp-005",
+    specialCategory: "music",
+    levelName: "强运的回响",
+    rule: "把乒乓球投到空灵鼓 1-7 的数字上，投到几就要在宝箱里%连续抽出对应次数%的草莓口味美乐笛就算过关。",
+    levelChampion: "雨哥到处跑, 自来卷三木",
+    levelRunnerUp: "啊吗粽, 徐大虾咯",
+    levelThirdPlace: "力元君, 在下哲别",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=1495.0",
+  },
+  {
+    id: "sp-006",
+    specialCategory: "music",
+    levelName: "土木之神的召唤",
+    rule: "用美乐笛棒棒糖叠高高，高度%超过 30cm%就算过关。",
+    levelChampion: "雨哥到处跑, 自来卷三木",
+    levelRunnerUp: "啊吗粽, 徐大虾咯",
+    levelThirdPlace: "力元君, 在下哲别",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=1779.2",
+  },
+  {
+    id: "sp-007",
+    specialCategory: "music",
+    levelName: "绝对音感",
+    rule: "一人蒙眼，另一名队友在钢琴上随机按三个音后，蒙眼队友需要%准确找到并弹出%就算过关。",
+    levelChampion: "雨哥到处跑, 自来卷三木",
+    levelRunnerUp: "啊吗粽, 徐大虾咯",
+    levelThirdPlace: "力元君, 在下哲别",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=1993.7",
+  },
+  {
+    id: "sp-008",
+    specialCategory: "music",
+    levelName: "你画我猜音乐篇",
+    rule: "裁判选择一首歌曲给一名队友，另一名队友需要根据他的动作或表演，%猜出歌名%就算过关。",
+    levelChampion: "啊吗粽, 徐大虾咯",
+    levelRunnerUp: "雨哥到处跑, 自来卷三木",
+    levelThirdPlace: "力元君, 在下哲别",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=2437.3",
+  },
+  {
+    id: "sp-门票",
+    specialCategory: "music",
+    levelName: "决战门票争夺赛",
+    rule: "珍宝珠美乐笛吹曲挑战！盲抽美乐笛曲目，%吹到 S 评分%就过关。本轮比赛三进二，一组人将无缘最终决战。",
+    levelChampion: "啊吗粽, 徐大虾咯",
+    levelRunnerUp: "雨哥到处跑, 自来卷三木",
+    giveUp: "雨哥到处跑, 自来卷三木",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=2951.5",
+  },
+  {
+    id: "sp-决战",
+    specialCategory: "music",
+    levelName: "肺活量投壶挑战",
+    rule: "一名队友一口气用美乐笛持续吹奏，另一名队友进行投壶，声音停止时游戏结束。%积分更高%的一组成为本期冠军！",
+    levelChampion: "雨哥到处跑, 自来卷三木",
+    levelRunnerUp: "啊吗粽, 徐大虾咯",
+    url: "https://www.bilibili.com/video/BV1nLgs6vEX5?t=3412.9",
+  },
 ];

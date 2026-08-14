@@ -5,7 +5,8 @@ import {
   FiBookOpen,
   FiExternalLink,
 } from 'react-icons/fi';
-import { SEASON_EPISODES_CONFIG } from '../configs/seasonEpisodes.config';
+import { HOME_FEATURED_VIDEO_CONFIG, SEASON_EPISODES_CONFIG, SPECIALS_CONFIG } from '../configs/seasonEpisodes.config';
+import { getSpecialCategoryConfig } from '../configs/specialCategories.config';
 import { BILI_REFRESH_INTERVAL_MS, useBiliData } from '../hooks/useBiliData';
 import { useBiliVideoTotal } from '../hooks/useBiliVideoTotal';
 import { useBiliVideoStats } from '../hooks/useBiliVideoStats';
@@ -28,6 +29,29 @@ const DEFAULT_HERO_BACKGROUND: HeroBackground = {
   alt: '下一个是谁篮球馆',
   src: LOCAL_HERO_BACKGROUND,
 };
+
+const featuredSeasonEpisode = SEASON_EPISODES_CONFIG.find(
+  (episode) => episode.bvid === HOME_FEATURED_VIDEO_CONFIG.bvid,
+);
+const featuredSpecial = SPECIALS_CONFIG.find(
+  (special) => special.bvid === HOME_FEATURED_VIDEO_CONFIG.bvid,
+);
+const featuredSpecialCategory = featuredSpecial
+  ? getSpecialCategoryConfig(featuredSpecial.specialCategory)
+  : null;
+const featuredVideoMeta = featuredSeasonEpisode
+  ? {
+      railLabel: 'EP',
+      railValue: String(featuredSeasonEpisode.episode).padStart(2, '0'),
+      kicker: 'Latest Episode',
+      detail: `Season ${featuredSeasonEpisode.season} / Episode ${String(featuredSeasonEpisode.episode).padStart(2, '0')}`,
+    }
+  : {
+      railLabel: 'SP',
+      railValue: featuredSpecialCategory?.shortLabel.slice(0, 2) || 'SP',
+      kicker: 'Featured Special',
+      detail: featuredSpecialCategory?.label || '特辑',
+    };
 const formatHeroPlayCount = (value: number) => value.toLocaleString('zh-CN');
 
 const FlipNumber: React.FC<{ value: number }> = ({ value }) => {
@@ -95,22 +119,24 @@ const Home: React.FC = () => {
   const biliData = useBiliData();
   const totalData = useBiliVideoTotal();
   const [heroMetric, setHeroMetric] = useState<'total' | 'latest'>('total');
-  const latestEpisode = SEASON_EPISODES_CONFIG[SEASON_EPISODES_CONFIG.length - 1];
-  const latestEpisodeBackground = useMemo<HeroBackground>(
-    () => latestEpisode
-      ? { id: latestEpisode.bvid, alt: `下一个是谁第 ${latestEpisode.season} 季第 ${latestEpisode.episode} 集封面`, src: getCover(latestEpisode.bvid) }
-      : DEFAULT_HERO_BACKGROUND,
-    [latestEpisode],
+  const featuredVideo = HOME_FEATURED_VIDEO_CONFIG;
+  const featuredVideoBackground = useMemo<HeroBackground>(
+    () => ({
+      id: featuredVideo.bvid,
+      alt: `${featuredVideo.title}封面`,
+      src: getCover(featuredVideo.bvid),
+    }),
+    [featuredVideo.bvid, featuredVideo.title],
   );
-  const latestVideoStats = useBiliVideoStats(latestEpisode?.bvid || '');
-  const latestStats = latestEpisode ? biliData?.data.co_creation[latestEpisode.bvid] : null;
-  const [activeBackground, setActiveBackground] = useState<HeroBackground>(() => latestEpisodeBackground);
+  const featuredVideoStats = useBiliVideoStats(featuredVideo.bvid);
+  const featuredStats = biliData?.data.co_creation[featuredVideo.bvid];
+  const [activeBackground, setActiveBackground] = useState<HeroBackground>(() => featuredVideoBackground);
   const activeBackgroundRef = useRef(activeBackground);
   const heroBackgrounds = useMemo<HeroBackground[]>(
-    () => latestEpisodeBackground.id === DEFAULT_HERO_BACKGROUND.id
+    () => featuredVideoBackground.id === DEFAULT_HERO_BACKGROUND.id
       ? [DEFAULT_HERO_BACKGROUND]
-      : [latestEpisodeBackground, DEFAULT_HERO_BACKGROUND],
-    [latestEpisodeBackground],
+      : [featuredVideoBackground, DEFAULT_HERO_BACKGROUND],
+    [featuredVideoBackground],
   );
 
   useEffect(() => {
@@ -156,7 +182,10 @@ const Home: React.FC = () => {
   }, [heroBackgrounds]);
 
   const detailTotals = useMemo(() => {
-    const configuredBvids = new Set(SEASON_EPISODES_CONFIG.map((episode) => episode.bvid));
+    const configuredBvids = new Set([
+      ...SEASON_EPISODES_CONFIG.map((episode) => episode.bvid),
+      ...SPECIALS_CONFIG.map((special) => special.bvid),
+    ]);
     return Object.entries(biliData?.data.co_creation || {}).reduce(
       (acc, [bvid, video]) => {
         if (!configuredBvids.has(bvid)) return acc;
@@ -174,12 +203,12 @@ const Home: React.FC = () => {
     [detailTotals, totalData],
   );
 
-  const latestPlay = latestVideoStats?.data.play ?? latestStats?.play ?? 0;
+  const latestPlay = featuredVideoStats?.data.play ?? featuredStats?.play ?? 0;
   const isLatestMetric = heroMetric === 'latest';
   const heroPlayValue = isLatestMetric ? latestPlay : totals.play;
   const heroMetricOptions = [
     { value: 'total' as const, label: '总播放量', disabled: false },
-    { value: 'latest' as const, label: latestEpisode?.title || '最新一集', disabled: !latestPlay },
+    { value: 'latest' as const, label: featuredVideo.title, disabled: !latestPlay },
   ];
 
   return (
@@ -235,47 +264,47 @@ const Home: React.FC = () => {
             </div>
           </div>
 
-          {latestEpisode && (
+          {featuredVideo && (
             <a
-              href={getBiliVideoUrl(latestEpisode.bvid)}
+              href={getBiliVideoUrl(featuredVideo.bvid)}
               target="_blank"
               rel="noreferrer"
               className="latest-episode-link group"
             >
               <div className="latest-episode-rail" aria-hidden="true">
-                <span>EP</span>
-                <strong>{String(latestEpisode.episode).padStart(2, '0')}</strong>
+                <span>{featuredVideoMeta.railLabel}</span>
+                <strong>{featuredVideoMeta.railValue}</strong>
               </div>
               <div className="latest-episode-copy">
                 <div className="latest-episode-kicker">
                   <FiBookOpen className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Latest Episode</span>
+                  <span>{featuredVideoMeta.kicker}</span>
                 </div>
                 <p className="latest-episode-meta">
-                  Season {latestEpisode.season} / Episode {String(latestEpisode.episode).padStart(2, '0')}
+                  {featuredVideoMeta.detail}
                 </p>
-                <h2 className="latest-episode-title">{latestEpisode.title}</h2>
+                <h2 className="latest-episode-title">{featuredVideo.title}</h2>
                 <div className="latest-episode-stats">
                   <span className="inline-flex items-center gap-1.5">
                     <BiliMetricIcon type="play" />
-                    {formatCompactNumber(latestStats?.play)}
+                    {formatCompactNumber(featuredStats?.play)}
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <BiliMetricIcon type="like" />
-                    {formatCompactNumber(latestStats?.like)}
+                    {formatCompactNumber(featuredStats?.like)}
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <BiliMetricIcon type="coin" />
-                    {formatCompactNumber(latestStats?.coin)}
+                    {formatCompactNumber(featuredStats?.coin)}
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <BiliMetricIcon type="favorite" />
-                    {formatCompactNumber(latestStats?.favorite)}
+                    {formatCompactNumber(featuredStats?.favorite)}
                   </span>
                 </div>
               </div>
               <div className="latest-episode-cover">
-                <OptimizedImage src={getCover(latestEpisode.bvid)} alt={latestEpisode.title} />
+                <OptimizedImage src={getCover(featuredVideo.bvid)} alt={featuredVideo.title} />
               </div>
               <div className="latest-episode-action">
                 <FiExternalLink className="h-4 w-4" aria-hidden="true" />

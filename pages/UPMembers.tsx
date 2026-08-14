@@ -3,7 +3,7 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 import { useEffect } from 'react';
 import { FiAward, FiChevronLeft, FiChevronRight, FiExternalLink, FiFilm, FiUsers } from 'react-icons/fi';
 import { GAMES_CONFIG } from '../configs/games.config';
-import { GROUPS_CONFIG } from '../configs/groups.config';
+import { GROUPS_CONFIG, SPECIAL_GROUPS_CONFIG } from '../configs/groups.config';
 import { UP_MEMBERS_CONFIG } from '../configs/upMembers.config';
 import { useBiliData } from '../hooks/useBiliData';
 import { PageShell } from '../components/ui';
@@ -68,7 +68,7 @@ const UPMembers: React.FC = () => {
           .map((season) => Number(season.id.replace('s', ''))),
       );
 
-      return Array.from(new Set(GAMES_CONFIG.map((game) => game.season)))
+      const seasonChampionCount = Array.from(new Set(GAMES_CONFIG.map((game) => game.season)))
         .filter((season) => completedSeasons.has(season))
         .reduce((count, season) => {
           const seasonGames = GAMES_CONFIG.filter((game) => game.season === season);
@@ -76,6 +76,17 @@ const UPMembers: React.FC = () => {
           const champions = splitNames(finalGame?.levelChampion).filter((name) => name !== '无');
           return count + (champions.includes(activeMember.name) ? 1 : 0);
         }, 0);
+
+      const specialChampionCount = SPECIAL_GROUPS_CONFIG.reduce((count, specialGroup) => {
+        const isDirectWinner = specialGroup.winner.includes(activeMember.name);
+        const isWinningTeamMember = specialGroup.teams.some(
+          (team) => specialGroup.winner.includes(team.name) && team.members.includes(activeMember.name),
+        );
+
+        return count + (isDirectWinner || isWinningTeamMember ? 1 : 0);
+      }, 0);
+
+      return seasonChampionCount + specialChampionCount;
     },
     [activeMember],
   );
