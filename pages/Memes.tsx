@@ -176,7 +176,7 @@ const Memes: React.FC = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <h2 className="line-clamp-2 text-[0.96rem] font-[760] leading-6 text-white/95">{meme.name}</h2>
-                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#ffd59d]/[0.68]">{likes[meme.id] || 0} Links</p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#ffd59d]/[0.68]">{likes[meme.id] || 0} Likes</p>
                     </div>
                     <button
                       type="button"
