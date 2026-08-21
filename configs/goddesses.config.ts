@@ -269,7 +269,7 @@ export const GODDESSES_CONFIG: Goddess[] = [
     name: '于贞', 
     avatar: '/avatars/yuzhen.jpg',
     description: '说唱歌手',
-    games: ['黑白双进', '双人侧方位停车', '飞镖套圈圈', '上上上上上签'],
+    games: ['黑白双进', '双人侧方位停车', '飞镖套圈圈', '上上上上上签', '4个啾啾真的不咋地', '人缘挑战', '脑筋弯弯弯', '飞机飞飞飞', '动捕师', '视觉暂存', '飞球进洞', '反弹乒乓球', '4个jojo真的还可以'],
     bilibiliUrl: 'https://space.bilibili.com/28587303'
   },
 ];
