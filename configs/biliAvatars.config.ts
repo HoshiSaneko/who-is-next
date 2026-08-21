@@ -30,7 +30,8 @@ export const BILI_AVATAR_MAPPING: Record<string, string> = {
   '210752': 'https://i2.hdslb.com/bfs/face/8e5c3a6acf4a48df121963815141e7be9d9f329b.jpg',
   '1600113': 'https://i0.hdslb.com/bfs/face/a5814e1ae9b9f5a6e3e8c012a0d2b344f8fec1cf.gif',
   '18841842': 'https://i0.hdslb.com/bfs/baselabs/9c42c7e10f1da635678a47dbce4f92f04c45496f.png',
-  '334378024': 'https://i2.hdslb.com/bfs/face/fbfe3dbd8d12a0b5eb6f95e5d5bd06ac39af2ee8.jpg'
+  '334378024': 'https://i2.hdslb.com/bfs/face/fbfe3dbd8d12a0b5eb6f95e5d5bd06ac39af2ee8.jpg',
+  '28587303': 'https://i2.hdslb.com/bfs/face/5b16658dcd5bb1d0945a9c84808f961351263a46.jpg'
 };
 
 export function getBiliOfficialAvatar(uid?: string): string | null {

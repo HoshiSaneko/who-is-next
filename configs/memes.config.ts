@@ -133,6 +133,7 @@ export const MEMES_CONFIG: Meme[] = [
       { title:"抢奖牌", url: 'https://www.bilibili.com/video/BV1nKBXBCEoP?t=212.7' },
       { title:"刮彩票", url: 'https://www.bilibili.com/video/BV1tKzcB1ECE?t=1362.0' },
       { title:"来个简单的", url: 'https://www.bilibili.com/video/BV11bAUzBEqG?t=3055.2' },
+      { title:"立于不败的放弃", url: 'https://www.bilibili.com/video/BV1yj8T6zE1N?t=4203.5' },
     ],
     relatedUp: ['自来卷三木'],
   },

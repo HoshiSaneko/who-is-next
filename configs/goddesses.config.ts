@@ -262,4 +262,14 @@ export const GODDESSES_CONFIG: Goddess[] = [
     games: ['精准降落', '帽子DIY', '愤怒的弹弓', '舞蹈克隆', '海洋球丢三盆', '名胜答答答', '黑白双进', '双人侧方位停车', '飞镖套圈圈', '上上上上上签'],
     bilibiliUrl: 'https://space.bilibili.com/334378024'
   },
+  { 
+    id: '27', 
+    season: 7, 
+    episode: 3, 
+    name: '于贞', 
+    avatar: '/avatars/yuzhen.jpg',
+    description: '说唱歌手',
+    games: ['黑白双进', '双人侧方位停车', '飞镖套圈圈', '上上上上上签'],
+    bilibiliUrl: 'https://space.bilibili.com/28587303'
+  },
 ];

@@ -12,8 +12,8 @@ export interface Special {
 }
 
 export const HOME_FEATURED_VIDEO_CONFIG = {
-    bvid: 'BV1nLgs6vEX5',
-    title: '《下一个是谁》音乐特辑',
+    bvid: 'BV1yj8T6zE1N',
+    title: '《下一个是谁》第七季（3）',
 };
 
 export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
@@ -64,6 +64,7 @@ export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
     // S7
     { season: 7, episode: 1, title: '《下一个是谁》第七季（1）', bvid: 'BV1UjMn6hEXQ' },
     { season: 7, episode: 2, title: '《下一个是谁》第七季（2）', bvid: 'BV1KRg462E53' },
+    { season: 7, episode: 3, title: '《下一个是谁》第七季（3）', bvid: 'BV1yj8T6zE1N' },
 ];
 
 export const SPECIALS_CONFIG: Special[] = [

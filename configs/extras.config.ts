@@ -167,6 +167,12 @@ export const EXTRAS_CONFIG: ExtraVideo[] = [
     date: '2023-01-07 22:04:20',
     category: '花絮'
   },
+  {
+    title: '于贞Ingrita｜《下一个是谁》拍摄花絮',
+    bvid: 'BV1zH8q6mEwv',
+    date: '2026-08-21 16:49:25',
+    category: '花絮'
+  },
   // 衍生篇
   {
     title: '一个视频创作者高强度上网一整天，会是什么样的？？',
