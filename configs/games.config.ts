@@ -2492,14 +2492,6 @@ export const GAMES_CONFIG: Game[] = [
     url: "https://www.bilibili.com/video/BV1UjMn6hEXQ?t=285.2",
   },
   {
-    id: "g-235.5",
-    season: 7,
-    levelName: "想组合名",
-    rule: "虾粽自制关卡，%想出组合名%才能开始下一关。",
-    levelChampion: "啊吗粽, 徐大虾咯",
-    url: "https://www.bilibili.com/video/BV1UjMn6hEXQ?t=702.3",
-  },
-  {
     id: "g-236",
     season: 7,
     levelName: "体操摇摇落",
@@ -2780,7 +2772,7 @@ export const GAMES_CONFIG: Game[] = [
     rule: "玩家投掷乒乓球到桌面%反弹并粘到固定位置的胶带上%即为过关。(%双人过关%)",
     levelChampion: "啊吗粽, 徐大虾咯",
     levelRunnerUp: "力元君, 在下哲别",
-    levelThirdPlace: "",
+    levelThirdPlace: "雨哥到处跑, 自来卷三木",
     url: "https://www.bilibili.com/video/BV1yj8T6zE1N?t=4424.9",
   },
   {
