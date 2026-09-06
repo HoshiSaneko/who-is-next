@@ -272,4 +272,14 @@ export const GODDESSES_CONFIG: Goddess[] = [
     games: ['黑白双进', '双人侧方位停车', '飞镖套圈圈', '上上上上上签', '4个啾啾真的不咋地', '人缘挑战', '脑筋弯弯弯', '飞机飞飞飞', '动捕师', '视觉暂存', '飞球进洞', '反弹乒乓球', '4个jojo真的还可以'],
     bilibiliUrl: 'https://space.bilibili.com/28587303'
   },
+  {
+    id: '28',
+    season: 7,
+    episode: 4,
+    name: 'BY2girl',
+    avatar: '/avatars/by2.jpg',
+    description: '唱作歌手BY2组合',
+    games: ['反弹乒乓球', '默契大考验', '投石机', '肺活量挑战', '穿八环', '名画猜猜猜', '开锁大师', '全世界最感动的视频', '飞镖元素周期表', '海洋球猜猜猜'],
+    bilibiliUrl: 'https://space.bilibili.com/497638046'
+  },
 ];
