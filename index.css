@@ -2304,6 +2304,22 @@
     --flip-index: 0;
   }
 
+  .up-member-champion-breakdown {
+    display: block;
+    margin-top: 0.4rem;
+    color: rgba(255, 225, 176, 0.88);
+    font-size: 0.7rem;
+    line-height: 1.7;
+    text-wrap: balance;
+  }
+
+  .up-member-champion-note {
+    margin-top: 0.65rem;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.72rem;
+    line-height: 1.7;
+  }
+
   .up-member-profile-metrics div:not(:last-child)::after {
     content: "";
     position: absolute;

@@ -9,6 +9,7 @@ import { SEASON_EPISODES_CONFIG, SPECIALS_CONFIG } from '../configs/seasonEpisod
 import { useBiliData } from '../hooks/useBiliData';
 import { useBiliVideoTotal } from '../hooks/useBiliVideoTotal';
 import { PageShell } from '../components/ui';
+import { CompetitionScope, getCompetitionStats, SourceCounts, toLeaderboard } from '../utils/competitionStats';
 import { OptimizedImage } from '../src/components/OptimizedImage';
 
 const splitNames = (value?: string) => (value ? value.split(/[,，、&]+/).map((item) => item.trim()).filter(Boolean) : []);
@@ -36,7 +37,7 @@ type DifficultyBucket = {
   name: string;
   count: number;
   color: string;
-  levels: { id: string; levelName: string; collectionLabel: string }[];
+  levels: { id: string; levelName: string; collectionLabel: string; source: 'regular' | 'special' }[];
 };
 
 const toneStyles: Record<Tone, { text: string; icon: string; border: string; glow: string }> = {
@@ -150,6 +151,8 @@ const Stats: React.FC = () => {
   const navigate = useNavigate();
   const biliData = useBiliData();
   const totalData = useBiliVideoTotal();
+  const [leaderboardScope, setLeaderboardScope] = useState<CompetitionScope>('all');
+  const competitionStats = useMemo(() => getCompetitionStats(), []);
   const [activeLeaderboard, setActiveLeaderboard] = useState<LeaderboardType>('clears');
   const [activeProgressId, setActiveProgressId] = useState(() => {
     const latestSeason = GROUPS_CONFIG.reduce((latest, season) => {
@@ -193,62 +196,6 @@ const Stats: React.FC = () => {
   );
 
   const stats = useMemo(() => {
-    const clearCounts: Record<string, number> = {};
-    const giveUpCounts: Record<string, number> = {};
-    const seasonWins: Record<string, number> = {};
-    UP_MEMBERS_CONFIG.forEach((member) => {
-      clearCounts[member.name] = 0;
-      giveUpCounts[member.name] = 0;
-      seasonWins[member.name] = 0;
-    });
-
-    [...GAMES_CONFIG, ...SPECIAL_GAMES_CONFIG].forEach((game) => {
-      splitNames(game.levelChampion).forEach((name) => {
-        if (name !== '无') clearCounts[name] = (clearCounts[name] || 0) + 1;
-      });
-      splitNames(game.giveUp).forEach((name) => {
-        if (name !== '无') giveUpCounts[name] = (giveUpCounts[name] || 0) + 1;
-      });
-    });
-
-    const completedSeasons = new Set(
-      GROUPS_CONFIG
-        .filter((season) => !season.isPlaceholder && season.winner.length > 0)
-        .map((season) => Number(season.id.replace('s', ''))),
-    );
-
-    Array.from(new Set(GAMES_CONFIG.map((game) => game.season)))
-      .filter((season) => completedSeasons.has(season))
-      .forEach((season) => {
-        const seasonGames = GAMES_CONFIG.filter((game) => game.season === season);
-        const finalGame = seasonGames[seasonGames.length - 1];
-        splitNames(finalGame?.levelChampion).forEach((name) => {
-          if (name !== '无') seasonWins[name] = (seasonWins[name] || 0) + 1;
-        });
-      });
-
-    SPECIAL_GROUPS_CONFIG.forEach((specialGroup) => {
-      const champions = new Set<string>();
-
-      specialGroup.winner.forEach((winner) => {
-        const winningTeam = specialGroup.teams.find((team) => team.name === winner);
-        if (winningTeam) {
-          winningTeam.members.forEach((member) => champions.add(member));
-          return;
-        }
-
-        splitNames(winner).forEach((name) => {
-          if (name !== '无') champions.add(name);
-        });
-      });
-
-      champions.forEach((name) => {
-        seasonWins[name] = (seasonWins[name] || 0) + 1;
-      });
-    });
-
-    const toChart = (record: Record<string, number>) => Object.entries(record).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
-
     const difficulty: DifficultyBucket[] = [
       { name: '3 队放弃', count: 0, color: '#c96f56', levels: [] },
       { name: '2 队放弃', count: 0, color: '#d9a85f', levels: [] },
@@ -263,7 +210,7 @@ const Stats: React.FC = () => {
       const bucket = gaveUpTeams.length >= 3 ? difficulty[0] : gaveUpTeams.length === 2 ? difficulty[1] : gaveUpTeams.length === 1 ? difficulty[2] : null;
       if (!bucket) return;
       bucket.count += 1;
-      bucket.levels.push({ id: game.id, levelName: game.levelName, collectionLabel: `S${game.season}` });
+      bucket.levels.push({ id: game.id, levelName: game.levelName, collectionLabel: `正式 S${game.season}`, source: 'regular' });
     });
 
     SPECIAL_GAMES_CONFIG.forEach((game) => {
@@ -277,7 +224,8 @@ const Stats: React.FC = () => {
       bucket.levels.push({
         id: game.id,
         levelName: game.levelName,
-        collectionLabel: getSpecialCategoryConfig(game.specialCategory).shortLabel,
+        collectionLabel: getSpecialCategoryConfig(game.specialCategory).label,
+        source: 'special',
       });
     });
 
@@ -356,27 +304,24 @@ const Stats: React.FC = () => {
     const progressCollections = [...progressSeasons, ...progressSpecials];
 
     return {
-      clears: toChart(clearCounts),
-      giveUps: toChart(giveUpCounts),
-      seasonWins: toChart(seasonWins),
       difficulty,
       progressCollections,
     };
   }, []);
 
-  const topClears = stats.clears.slice(0, 6);
-  const topGiveUps = stats.giveUps.slice(0, 6);
-  const topSeasonWins = stats.seasonWins.slice(0, 6);
+  const topClears = toLeaderboard(competitionStats.clears, leaderboardScope).slice(0, 6);
+  const topGiveUps = toLeaderboard(competitionStats.giveUps, leaderboardScope).slice(0, 6);
+  const topSeasonWins = toLeaderboard(competitionStats.seasonWins, leaderboardScope).slice(0, 6);
   const activeProgress = stats.progressCollections.find((collection) => collection.progressId === activeProgressId) || stats.progressCollections[0];
   const leaderboardTabs: Array<{
     type: LeaderboardType;
     label: string;
     title: string;
     description: string;
-    data: { name: string; count: number }[];
+    data: ({ name: string; count: number } & SourceCounts)[];
   }> = [
     { type: 'clears', label: '单关通关王', title: '单关通关王', description: '按单关通关次数排序。', data: topClears },
-    { type: 'seasonWins', label: '赛季 / 特辑通关王', title: '赛季 / 特辑通关王', description: '按赛季及特辑最终胜场排序。', data: topSeasonWins },
+    { type: 'seasonWins', label: '冠军榜', title: '冠军榜', description: '统计正式赛季与特辑的最终冠军，每人每季或每部特辑计 1 次。', data: topSeasonWins },
     { type: 'giveUps', label: '放弃王', title: '放弃王', description: '按放弃次数排序。', data: topGiveUps },
   ];
   const activeLeaderboardConfig = leaderboardTabs.find((item) => item.type === activeLeaderboard) || leaderboardTabs[0];
@@ -458,7 +403,7 @@ const Stats: React.FC = () => {
     );
   };
 
-  const LeaderboardChart = () => (
+  const renderLeaderboardChart = () => (
     <section className="overflow-hidden rounded-[10px] border border-white/[0.12] bg-[linear-gradient(135deg,rgba(8,11,15,0.68),rgba(8,11,15,0.36))] text-white shadow-[0_22px_62px_rgba(0,0,0,0.22)] backdrop-blur-[18px]">
       <div className="flex flex-col gap-4 border-b border-white/10 px-5 py-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
@@ -486,6 +431,18 @@ const Stats: React.FC = () => {
         </div>
       </div>
       <div className="p-5">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div role="group" aria-label="排行榜统计范围" className="flex gap-1 rounded-lg border border-white/10 bg-white/5 p-1">
+            {([{ value: 'all', label: '全部' }, { value: 'regular', label: '正式' }, { value: 'special', label: '特辑' }] as const).map((scope) => (
+              <button key={scope.value} type="button" aria-pressed={leaderboardScope === scope.value}
+                onClick={() => setLeaderboardScope(scope.value)}
+                className={`rounded-md px-4 py-2 text-xs font-bold transition ${leaderboardScope === scope.value ? 'bg-[#ffd59d]/20 text-[#ffe1b0]' : 'text-white/65 hover:bg-white/10'} focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ffd59d]`}>
+                {scope.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs leading-5 text-white/65">{leaderboardScope === 'all' ? '当前合计包含正式与特辑数据' : leaderboardScope === 'regular' ? '当前仅统计正式赛季' : '当前仅统计特辑'}</p>
+        </div>
         <div className="h-[440px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart key={activeLeaderboard} data={activeLeaderboardConfig.data} layout="vertical" margin={{ left: 24, right: 34, top: 10, bottom: 12 }} barSize={38}>
@@ -504,9 +461,19 @@ const Stats: React.FC = () => {
               contentStyle={{ background: 'rgba(8,11,15,0.92)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 8, color: '#fff', boxShadow: '0 18px 45px rgba(0,0,0,0.3)' }}
               labelStyle={{ color: 'rgba(255,213,157,0.86)' }}
             />
-            <Bar dataKey="count" fill="url(#stats-active-leaderboard-bar)" radius={[0, 8, 8, 0]} />
+            <Bar name="次数" dataKey="count" fill="url(#stats-active-leaderboard-bar)" radius={[0, 8, 8, 0]} />
           </BarChart>
         </ResponsiveContainer>
+        </div>
+        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" aria-label="排行榜来源明细">
+          {activeLeaderboardConfig.data.map((item) => (
+            <div key={item.name} className="rounded-lg border border-white/10 bg-white/5 px-3 py-3">
+              <div className="flex items-center justify-between gap-2 text-sm"><span className="text-white/85">{item.name}</span><strong className="text-[#ffe1b0] tabular-nums">{item.count} 次</strong></div>
+              <p className="mt-1 text-xs leading-5 text-white/65">
+                {leaderboardScope === 'all' ? `正式 ${item.regular} 次 · 特辑 ${item.special} 次` : leaderboardScope === 'regular' ? '仅正式赛季，不含特辑' : '仅特辑，不含正式赛季'}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -692,12 +659,12 @@ const Stats: React.FC = () => {
           </div>
         </div>
 
-        <LeaderboardChart />
+        {renderLeaderboardChart()}
 
         <SeasonProgressChart />
 
         <div className="grid gap-5">
-          <Panel title="关卡难度" description="按放弃队伍数量统计。">
+          <Panel title="关卡难度" description="包含正式与特辑关卡，按放弃队伍数量统计；仅计入已配置队伍的关卡。">
             <div className="grid gap-3 lg:grid-cols-3">
               {stats.difficulty.map((item) => (
                 <div key={item.name} className="rounded-[8px] border border-white/10 bg-white/[0.065] p-4">
@@ -705,6 +672,7 @@ const Stats: React.FC = () => {
                     <span className="text-sm font-bold text-white/[0.76]">{item.name}</span>
                     <span className="text-3xl font-[760] text-white tabular-nums">{item.count}</span>
                   </div>
+                  <p className="mt-2 text-xs leading-5 text-white/65">正式 {item.levels.filter((level) => level.source === 'regular').length} 关 · 特辑 {item.levels.filter((level) => level.source === 'special').length} 关</p>
                   <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#f4d6a3]/[0.09]">
                     <div className="h-full rounded-full shadow-[0_0_18px_rgba(255,213,157,0.18)]" style={{ width: `${Math.min(100, item.count * 8)}%`, background: `linear-gradient(90deg, ${item.color}, rgba(245, 217, 167, 0.78))` }} />
                   </div>

@@ -2,8 +2,7 @@
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { useEffect } from 'react';
 import { FiAward, FiChevronLeft, FiChevronRight, FiExternalLink, FiFilm, FiUsers } from 'react-icons/fi';
-import { GAMES_CONFIG } from '../configs/games.config';
-import { GROUPS_CONFIG, SPECIAL_GROUPS_CONFIG } from '../configs/groups.config';
+import { getChampionRecords } from '../utils/competitionStats';
 import { UP_MEMBERS_CONFIG } from '../configs/upMembers.config';
 import { useBiliData } from '../hooks/useBiliData';
 import { PageShell } from '../components/ui';
@@ -12,7 +11,6 @@ import { BiliData } from '../types';
 import { BILI_API_ENDPOINTS } from '../configs/api.config';
 import { getWebPUrl } from '../src/config/cdn';
 
-const splitNames = (value?: string) => (value ? value.split(/[,，、&]+/).map((item) => item.trim()).filter(Boolean) : []);
 type UpLiveInfo = BiliData['data']['up_info'][string];
 
 const UPMembers: React.FC = () => {
@@ -60,43 +58,19 @@ const UPMembers: React.FC = () => {
     [activeMember],
   );
 
-  const championCount = useMemo(
-    () => {
-      const completedSeasons = new Set(
-        GROUPS_CONFIG
-          .filter((season) => !season.isPlaceholder && season.winner.length > 0)
-          .map((season) => Number(season.id.replace('s', ''))),
-      );
-
-      const seasonChampionCount = Array.from(new Set(GAMES_CONFIG.map((game) => game.season)))
-        .filter((season) => completedSeasons.has(season))
-        .reduce((count, season) => {
-          const seasonGames = GAMES_CONFIG.filter((game) => game.season === season);
-          const finalGame = seasonGames[seasonGames.length - 1];
-          const champions = splitNames(finalGame?.levelChampion).filter((name) => name !== '无');
-          return count + (champions.includes(activeMember.name) ? 1 : 0);
-        }, 0);
-
-      const specialChampionCount = SPECIAL_GROUPS_CONFIG.reduce((count, specialGroup) => {
-        const isDirectWinner = specialGroup.winner.includes(activeMember.name);
-        const isWinningTeamMember = specialGroup.teams.some(
-          (team) => specialGroup.winner.includes(team.name) && team.members.includes(activeMember.name),
-        );
-
-        return count + (isDirectWinner || isWinningTeamMember ? 1 : 0);
-      }, 0);
-
-      return seasonChampionCount + specialChampionCount;
-    },
-    [activeMember],
+  const championRecords = useMemo(
+    () => getChampionRecords().filter((record) => record.names.includes(activeMember.name)),
+    [activeMember.name],
   );
+  const regularChampions = championRecords.filter((record) => record.source === 'regular').length;
+  const specialChampions = championRecords.filter((record) => record.source === 'special').length;
 
   const visualBackground = activeMember.background || '/images/home-hero-basketball-clarity-2400.webp';
   const pageBackground = activeMember.pageBackground;
   const profileMetrics = [
     { label: 'Fans', value: formatCompactNumber(liveInfo?.fans_count), icon: FiUsers },
     { label: 'Videos', value: formatCompactNumber(liveInfo?.video_count), icon: FiFilm },
-    { label: 'Champions', value: championCount, icon: FiAward },
+    { label: '冠军总数', value: championRecords.length, icon: FiAward, detail: `正式 ${regularChampions} 次 · 特辑 ${specialChampions} 次` },
   ];
   const profileNotes = [
     { label: 'Buffs', items: activeMember.buffs || [] },
@@ -183,7 +157,7 @@ const UPMembers: React.FC = () => {
                 </div>
               </div>
               <div className="up-member-profile-metrics">
-                {profileMetrics.map(({ label, value, icon: Icon }, index) => (
+                {profileMetrics.map(({ label, value, detail, icon: Icon }, index) => (
                   <div
                     key={label}
                     className="up-member-profile-metric"
@@ -194,9 +168,16 @@ const UPMembers: React.FC = () => {
                     <strong className="up-member-flip-value" key={`${activeMember.id}-${label}-${value}`}>
                       <span>{value}</span>
                     </strong>
+                    {detail && <small className="up-member-champion-breakdown">{detail}</small>}
                   </div>
                 ))}
               </div>
+              <p className="up-member-champion-note">
+                冠军总数包含正式赛季与特辑的最终冠军。
+                {championRecords.some((record) => record.source === 'special') && (
+                  <span className="block mt-1">特辑夺冠：{championRecords.filter((record) => record.source === 'special').map((record) => record.label).join('、')}</span>
+                )}
+              </p>
               <div className="up-member-profile-insights">
                 <div className="up-member-profile-radar">
                   <h3>Ability Radar</h3>
