@@ -6,6 +6,7 @@ export interface SpecialCategoryConfig {
 
 export const SPECIAL_CATEGORIES_CONFIG: SpecialCategoryConfig[] = [
   { id: 'music', label: '音乐特辑', shortLabel: 'MUSIC' },
+  { id: 'horror', label: '恐怖特辑', shortLabel: 'HORROR' },
 ];
 
 export const getSpecialCategoryConfig = (id: string): SpecialCategoryConfig => (

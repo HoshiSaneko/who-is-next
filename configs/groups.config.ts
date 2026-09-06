@@ -98,6 +98,14 @@ export const SPECIAL_GROUPS_CONFIG: SpecialGroupConfig[] = [
             { name: 'AA兄弟', members: ['力元君', '在下哲别'] }
         ],
         winner: ['Golden Boy']
+    },
+    {
+        specialCategory: 'horror',
+        teams: [
+            { name: '一生之敌', members: ['力元君', '啊吗粽'] },
+            { name: '一生之友', members: ['雨哥到处跑', '自来卷三木'] }
+        ],
+        winner: ['一生之敌']
     }
 ];
 

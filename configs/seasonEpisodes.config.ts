@@ -68,5 +68,6 @@ export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
 ];
 
 export const SPECIALS_CONFIG: Special[] = [
-    { specialCategory: 'music', title: '《下一个是谁》音乐特辑', bvid: 'BV1nLgs6vEX5' }
+    { specialCategory: 'music', title: '《下一个是谁》音乐特辑', bvid: 'BV1nLgs6vEX5' },
+    { specialCategory: 'horror', title: '《下一个是谁》恐怖特辑——无限循环的寺庙', bvid: 'BV1GrtK62EfT' }
 ];
