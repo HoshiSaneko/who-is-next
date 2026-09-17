@@ -69,15 +69,20 @@
 
 .secondary-page-backdrop__image {
   inset: -6%;
+  opacity: 0.42;
+  transform: translate3d(var(--image-x), var(--image-y), 0) scale(1.1);
+  will-change: transform;
+}
+
+.secondary-page-backdrop__image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-image: url('/images/home-hero-next-basketball.webp');
   background-position: 50% 54%;
   background-size: cover;
-  opacity: 0.42;
   filter: grayscale(0.28) saturate(0.72) contrast(1.05) brightness(0.82);
-  transform: translate3d(var(--image-x), var(--image-y), 0) scale(1.1);
-  transition: transform 260ms cubic-bezier(0.2, 0.75, 0.25, 1);
-  animation: secondary-backdrop-drift 34s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-  will-change: transform, background-position;
+  transform: translateZ(0);
 }
 
 .secondary-page-backdrop__shade {
@@ -96,9 +101,7 @@
   background-position: 0 0, 0 0, 0 0;
   opacity: 0.48;
   transform: translate3d(var(--grid-x), var(--grid-y), 0);
-  transition: transform 360ms cubic-bezier(0.2, 0.75, 0.25, 1);
-  animation: secondary-structure-drift 48s linear infinite;
-  will-change: transform, background-position;
+  will-change: transform;
 }
 
 .secondary-page-backdrop__light {
@@ -110,35 +113,7 @@
   background-size: 118% 100%, 100% 100%;
   opacity: 0.74;
   transform: translate3d(var(--material-x), var(--material-y), 0);
-  transition: transform 520ms cubic-bezier(0.2, 0.75, 0.25, 1);
-  animation: secondary-light-sweep 36s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
-  will-change: transform, background-position, opacity;
-}
-
-@keyframes secondary-backdrop-drift {
-  0% {
-    background-position: 47% 52%;
-  }
-  100% {
-    background-position: 54% 57%;
-  }
-}
-
-@keyframes secondary-structure-drift {
-  from { background-position: 0 0, 0 0, 0 0; }
-  to { background-position: 128px 0, 0 64px, 0 0; }
-}
-
-@keyframes secondary-light-sweep {
-  0% {
-    opacity: 0.58;
-    background-position: -5vw 0, 0 0;
-  }
-  55% { opacity: 0.76; }
-  100% {
-    opacity: 0.64;
-    background-position: 5vw 0, 0 0;
-  }
+  will-change: transform;
 }
 
 .app-frame.is-secondary :is(
@@ -176,8 +151,11 @@
 @media (max-width: 700px) {
   .secondary-page-backdrop__image {
     inset: -4% -35%;
-    background-position: 50% 52%;
     opacity: 0.34;
+  }
+
+  .secondary-page-backdrop__image::before {
+    background-position: 50% 52%;
   }
 
   .secondary-page-backdrop__structure {
@@ -186,14 +164,6 @@
 
   .secondary-page-backdrop__light {
     opacity: 0.44;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .secondary-page-backdrop__image,
-  .secondary-page-backdrop__structure,
-  .secondary-page-backdrop__light {
-    animation: none;
   }
 }
 
@@ -264,7 +234,7 @@
     color: rgba(255, 255, 255, 0.56);
     text-align: left;
     cursor: pointer;
-    transition: color 240ms ease, opacity 240ms ease;
+    transition: opacity 240ms ease;
   }
 
   .metric-mode-option:disabled {
@@ -296,7 +266,7 @@
     transform: rotate(45deg);
     border: 1px solid rgba(255, 255, 255, 0.66);
     background: rgba(255, 255, 255, 0.34);
-    transition: background 180ms ease, border-color 180ms ease, opacity 180ms ease;
+    transition: opacity 180ms ease;
   }
 
   .metric-mode-diamond::before {
@@ -314,7 +284,7 @@
     padding: 0.1rem 0;
     overflow-wrap: anywhere;
     text-shadow: 0 12px 34px rgba(0, 0, 0, 0.36);
-    transition: color 240ms ease, opacity 240ms ease, transform 240ms ease;
+    transition: opacity 240ms ease, transform 240ms ease;
   }
 
   .metric-mode-label::after {
@@ -438,7 +408,7 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 20px 55px rgba(0, 0, 0, 0.14);
     backdrop-filter: blur(12px);
-    transition: background 240ms ease, border-color 240ms ease, transform 240ms ease;
+    transition: transform 240ms ease;
   }
 
   .latest-episode-link::after {
@@ -554,7 +524,7 @@
     object-fit: cover;
     filter: saturate(0.82) contrast(0.95);
     opacity: 0.78;
-    transition: filter 420ms ease, opacity 420ms ease, transform 420ms ease;
+    transition: opacity 420ms ease, transform 420ms ease;
   }
 
   .latest-episode-link:hover .latest-episode-cover img {
@@ -572,7 +542,7 @@
     align-self: start;
     justify-self: end;
     color: rgba(255, 255, 255, 0.42);
-    transition: color 220ms ease, transform 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .latest-episode-link:hover .latest-episode-action {
@@ -719,7 +689,7 @@
     padding: 0.56rem 0.72rem 0.58rem;
     text-align: left;
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-    transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .levels-season-tab::before {
@@ -733,7 +703,7 @@
     transform-origin: left;
     border-radius: 2px;
     background: transparent;
-    transition: background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .levels-season-tab > span {
@@ -785,7 +755,6 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.075);
-    transition: border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
   }
 
   .levels-search svg {
@@ -873,7 +842,7 @@
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.07);
     color: rgba(255, 255, 255, 0.72);
-    transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, color 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .levels-page-controls button:hover:not(:disabled) {
@@ -912,7 +881,7 @@
       inset 0 0 0 1px rgba(255, 255, 255, 0.025),
       0 10px 24px rgba(0, 0, 0, 0.08);
     text-align: left;
-    transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .levels-card::before {
@@ -926,7 +895,7 @@
     transform-origin: left center;
     border-radius: 999px;
     background: rgba(255, 213, 157, 0);
-    transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .levels-card:hover,
@@ -1122,7 +1091,7 @@
     color: rgba(255, 235, 202, 0.96);
     font-size: 0.88rem;
     font-weight: 760;
-    transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .levels-source-link:hover {
@@ -1269,7 +1238,7 @@
     padding: 0.56rem 0.72rem 0.58rem;
     text-align: left;
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-    transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .season-selector-item::before {
@@ -1283,7 +1252,7 @@
     transform-origin: left;
     border-radius: 2px;
     background: transparent;
-    transition: background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .season-selector-item span {
@@ -1586,7 +1555,7 @@
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.075);
     padding: 0.68rem;
-    transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .season-episode-card:hover {
@@ -1670,7 +1639,7 @@
 
   .season-episode-card > svg {
     color: rgba(255, 255, 255, 0.42);
-    transition: color 220ms ease, transform 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .season-episode-card:hover > svg {
@@ -1811,7 +1780,7 @@
     padding: 0.55rem;
     color: rgba(255, 255, 255, 0.76);
     text-align: left;
-    transition: background 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .up-member-index-item:hover {
@@ -2013,7 +1982,7 @@
     color: white;
     font-size: 0.82rem;
     font-weight: 700;
-    transition: background 220ms ease, border-color 220ms ease, transform 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .up-member-stage-link:hover {
@@ -2098,12 +2067,7 @@
     filter:
       drop-shadow(0 4px 14px rgba(0, 0, 0, 0.95))
       drop-shadow(0 0 12px rgba(255, 237, 210, 0.4));
-    transition:
-      left 620ms cubic-bezier(0.2, 0.72, 0.18, 1),
-      opacity 180ms ease,
-      transform 240ms ease,
-      color 220ms ease,
-      filter 220ms ease;
+    transition: opacity 180ms ease, transform 240ms ease;
   }
 
   .up-member-profile-scene.is-profile-collapsed .up-member-profile-toggle {
@@ -2161,11 +2125,8 @@
     perspective: 1200px;
     animation: up-member-panel-arrive 540ms cubic-bezier(0.2, 0.72, 0.18, 1) both;
     translate: 0 0;
-    transition:
-      translate 620ms cubic-bezier(0.2, 0.72, 0.18, 1),
-      opacity 420ms ease,
-      filter 520ms ease;
-    will-change: translate, opacity, filter;
+    transition: translate 620ms cubic-bezier(0.2, 0.72, 0.18, 1), opacity 420ms ease;
+    will-change: translate, opacity;
   }
 
   .up-member-profile-scene.is-profile-collapsed .up-member-profile-panel {
@@ -2567,7 +2528,7 @@
     color: rgba(255, 255, 255, 0.82);
     font-size: 0.74rem;
     font-weight: 700;
-    transition: background 220ms ease, border-color 220ms ease, transform 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .up-member-profile-link:hover {
@@ -2606,7 +2567,7 @@
     color: rgba(255, 255, 255, 0.92);
     text-align: left;
     text-shadow: 0 8px 18px rgba(0, 0, 0, 0.42);
-    transition: background 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .up-member-selector-item::before {
@@ -2620,7 +2581,7 @@
     transform-origin: center;
     border-radius: 999px;
     background: rgba(255, 213, 157, 0);
-    transition: background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+    transition: transform 220ms ease;
   }
 
   .up-member-selector-item:hover,
@@ -2887,7 +2848,7 @@
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.08);
   color: white;
-  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .extras-feature-card::after {
@@ -2913,7 +2874,7 @@
   height: 100%;
   object-fit: cover;
   filter: saturate(0.88) contrast(0.98);
-  transition: transform 420ms ease, filter 420ms ease;
+  transition: transform 420ms ease;
 }
 
 .extras-feature-card:hover img {
@@ -3014,7 +2975,7 @@
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.025),
     0 10px 24px rgba(0, 0, 0, 0.08);
-  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .extras-card::before {
@@ -3028,7 +2989,7 @@
   transform-origin: left center;
   border-radius: 999px;
   background: rgba(255, 213, 157, 0);
-  transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .extras-card:hover {
@@ -3067,7 +3028,7 @@
   height: 100%;
   object-fit: cover;
   filter: saturate(0.9) contrast(0.98);
-  transition: transform 420ms ease, filter 420ms ease;
+  transition: transform 420ms ease;
 }
 
 .extras-card:hover .extras-card-cover img {
@@ -3139,7 +3100,7 @@
 .extras-card-foot svg {
   flex: 0 0 auto;
   color: rgba(255, 213, 157, 0.72);
-  transition: transform 220ms ease, color 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .extras-card:hover .extras-card-foot svg {
@@ -3248,7 +3209,7 @@
     rgba(18, 18, 20, 0.58);
   padding: 0.56rem 0.72rem 0.58rem;
   text-align: left;
-  transition: background 220ms ease, border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .guest-season-tab::before {
@@ -3262,7 +3223,7 @@
   transform-origin: left;
   border-radius: 2px;
   background: transparent;
-  transition: background 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .guest-season-tab span {
@@ -3370,7 +3331,7 @@
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.025),
     0 10px 24px rgba(0, 0, 0, 0.08);
-  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .guest-card::before {
@@ -3384,7 +3345,7 @@
   transform-origin: left center;
   border-radius: 999px;
   background: rgba(255, 213, 157, 0);
-  transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .guest-card:hover {
@@ -3433,7 +3394,7 @@
   height: 100%;
   object-fit: cover;
   filter: saturate(0.9) contrast(0.98);
-  transition: transform 420ms ease, filter 420ms ease;
+  transition: transform 420ms ease;
 }
 
 .guest-card:hover .guest-avatar-frame img {
@@ -3518,7 +3479,7 @@
   font-weight: 650;
   line-height: 1.25;
   overflow-wrap: anywhere;
-  transition: background 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .guest-game-list button:hover {
@@ -3542,7 +3503,7 @@
   color: rgba(255, 225, 176, 0.9);
   font-size: 0.78rem;
   font-weight: 760;
-  transition: color 220ms ease, transform 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .guest-source-link:hover {
@@ -4020,7 +3981,7 @@
   color: rgba(255, 225, 176, 0.9);
   font-size: 0.78rem;
   font-weight: 760;
-  transition: color 220ms ease, transform 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .traffic-video-link:hover {
@@ -4312,7 +4273,7 @@
   border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 7px;
   background: rgba(255, 255, 255, 0.045);
-  transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+  transition: transform 220ms ease;
 }
 
 .traffic-video-card-red {
@@ -4355,7 +4316,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 500ms cubic-bezier(0.2, 0.78, 0.2, 1), filter 300ms ease;
+  transition: transform 500ms cubic-bezier(0.2, 0.78, 0.2, 1);
 }
 
 .traffic-video-card:hover .traffic-video-cover img {
@@ -4554,7 +4515,6 @@
 .traffic-share-track span {
   display: block;
   height: 100%;
-  transition: width 650ms cubic-bezier(0.2, 0.78, 0.2, 1);
 }
 
 .traffic-share-track .is-red {
@@ -4768,7 +4728,7 @@
   opacity: 0.88;
   transform-origin: 52% 72%;
   filter: drop-shadow(0 14px 28px rgba(255, 213, 157, 0.16));
-  transition: color 220ms ease, filter 220ms ease, opacity 220ms ease;
+  transition: opacity 220ms ease;
   will-change: transform;
 }
 
@@ -5198,7 +5158,6 @@
   border: 1px solid #88B090 !important;
   padding: 0.25rem 1rem !important;
   letter-spacing: 0.1em;
-  transition: all 0.3s ease;
 }
 
 .wl-btn:hover {

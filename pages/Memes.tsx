@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+﻿import React, { useEffect, useMemo, useState } from 'react';
 import { getPageview, updatePageview } from '@waline/client';
 import { FiExternalLink, FiHeart, FiImage, FiSearch, FiX } from 'react-icons/fi';
 import { MEMES_CONFIG } from '../configs/memes.config';
@@ -119,7 +119,7 @@ const Memes: React.FC = () => {
           {metricCards.map(({ label, icon: Icon, tone }, index) => (
             <article
               key={label}
-              className="group relative min-h-[8.4rem] overflow-hidden rounded-[12px] border border-white/[0.13] bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04)_48%,rgba(255,213,157,0.075))] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.24)] backdrop-blur-[18px] transition duration-300 hover:-translate-y-1 hover:border-[#ffd59d]/[0.42] hover:bg-[linear-gradient(135deg,rgba(255,213,157,0.13),rgba(255,255,255,0.055)_52%,rgba(255,213,157,0.1))]"
+              className="group relative min-h-[8.4rem] overflow-hidden rounded-[12px] border border-white/[0.13] bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04)_48%,rgba(255,213,157,0.075))] p-5 shadow-[0_24px_70px_rgba(0,0,0,0.24)] backdrop-blur-[18px] transition-transform duration-300 hover:-translate-y-1 hover:border-[#ffd59d]/[0.42] hover:bg-[linear-gradient(135deg,rgba(255,213,157,0.13),rgba(255,255,255,0.055)_52%,rgba(255,213,157,0.1))]"
             >
               <div className={`pointer-events-none absolute -right-20 -top-24 h-52 w-52 rounded-full bg-gradient-to-br ${tone} to-transparent blur-3xl`} />
               <div className="relative flex h-full items-start justify-between gap-5">
@@ -129,17 +129,17 @@ const Memes: React.FC = () => {
                     {metricValues[index].toLocaleString('en-US')}
                   </strong>
                 </div>
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[10px] border border-[#ffd59d]/[0.22] bg-[linear-gradient(135deg,rgba(255,213,157,0.13),rgba(255,255,255,0.045))] text-[#ffe1b0] shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_10px_24px_rgba(0,0,0,0.16)] transition duration-300 group-hover:-translate-y-1 group-hover:scale-[1.04] group-hover:border-[#ffd59d]/[0.42]">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[10px] border border-[#ffd59d]/[0.22] bg-[linear-gradient(135deg,rgba(255,213,157,0.13),rgba(255,255,255,0.045))] text-[#ffe1b0] shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_10px_24px_rgba(0,0,0,0.16)] transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-[1.04] group-hover:border-[#ffd59d]/[0.42]">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
               </div>
-              <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-gradient-to-r from-[#ffd59d]/[0.22] via-[#ffe1b0]/[0.42] to-transparent opacity-80 transition duration-300 group-hover:h-[3px] group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-x-6 bottom-0 h-[3px] origin-bottom scale-y-[0.333] bg-gradient-to-r from-[#ffd59d]/[0.22] via-[#ffe1b0]/[0.42] to-transparent opacity-80 transition-[transform,opacity] duration-300 group-hover:scale-y-100 group-hover:opacity-100" />
             </article>
           ))}
         </section>
 
         <section className="grid gap-3 rounded-[10px] border border-white/[0.13] bg-[linear-gradient(135deg,rgba(8,11,15,0.6),rgba(8,11,15,0.34))] p-3 shadow-[0_22px_62px_rgba(0,0,0,0.18)] backdrop-blur-[18px] md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-          <label className="grid h-12 min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-center rounded-[8px] border border-white/10 bg-white/[0.075] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition focus-within:border-[#ffd59d]/40 focus-within:bg-white/[0.1] focus-within:ring-4 focus-within:ring-[#ffd59d]/[0.08]">
+          <label className="grid h-12 min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-center rounded-[8px] border border-white/10 bg-white/[0.075] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] focus-within:border-[#ffd59d]/40 focus-within:bg-white/[0.1] focus-within:ring-4 focus-within:ring-[#ffd59d]/[0.08]">
             <FiSearch className="pointer-events-none h-4 w-4 justify-self-center text-[#ffd59d]/[0.58]" aria-hidden="true" />
             <input
               value={searchQuery}
@@ -167,9 +167,9 @@ const Memes: React.FC = () => {
         ) : (
           <div className="grid gap-3 p-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filtered.map((meme) => (
-              <article key={meme.id} className="group relative flex min-w-0 flex-col overflow-hidden rounded-[8px] border border-white/[0.11] bg-[linear-gradient(135deg,rgba(255,255,255,0.095),rgba(255,255,255,0.045)),rgba(18,16,15,0.72)] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.025),0_10px_24px_rgba(0,0,0,0.08)] transition duration-300 hover:-translate-y-1 hover:border-[#ffd59d]/[0.38] hover:bg-[linear-gradient(135deg,rgba(255,213,157,0.12),rgba(255,255,255,0.065)),rgba(34,27,22,0.78)] hover:shadow-[0_18px_42px_rgba(255,178,92,0.08)]">
+              <article key={meme.id} className="group relative flex min-w-0 flex-col overflow-hidden rounded-[8px] border border-white/[0.11] bg-[linear-gradient(135deg,rgba(255,255,255,0.095),rgba(255,255,255,0.045)),rgba(18,16,15,0.72)] text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.025),0_10px_24px_rgba(0,0,0,0.08)] transition-transform duration-300 hover:-translate-y-1 hover:border-[#ffd59d]/[0.38] hover:bg-[linear-gradient(135deg,rgba(255,213,157,0.12),rgba(255,255,255,0.065)),rgba(34,27,22,0.78)] hover:shadow-[0_18px_42px_rgba(255,178,92,0.08)]">
                 <div className="relative aspect-[4/3] overflow-hidden bg-white/[0.08]">
-                  <OptimizedImage src={getMemeImage(meme.id, meme.image)} alt={meme.name} className="h-full w-full object-cover brightness-[0.86] contrast-[0.98] saturate-[0.9] transition duration-500 group-hover:scale-[1.035] group-hover:brightness-100 group-hover:saturate-100" loading="lazy" />
+                  <OptimizedImage src={getMemeImage(meme.id, meme.image)} alt={meme.name} className="h-full w-full object-cover brightness-[0.86] contrast-[0.98] saturate-[0.9] transition-transform duration-500 group-hover:scale-[1.035] group-hover:brightness-100 group-hover:saturate-100" loading="lazy" />
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_48%,rgba(8,11,15,0.52)_100%)]" />
                 </div>
                 <div className="flex flex-1 flex-col gap-4 p-4">
@@ -181,7 +181,7 @@ const Memes: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleLike(meme.id)}
-                      className={`inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-[8px] border transition duration-200 ${
+                      className={`inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-[8px] border ${
                         liked[meme.id]
                           ? 'border-[#e8b9a0]/40 bg-[#e8b9a0]/[0.14] text-[#ffd8c4] shadow-[0_0_18px_rgba(232,185,160,0.12)]'
                           : 'border-white/10 bg-white/[0.07] text-white/60 hover:border-[#ffd59d]/30 hover:bg-[#ffd59d]/[0.1] hover:text-white'
@@ -205,7 +205,7 @@ const Memes: React.FC = () => {
 
                   <div className="grid gap-2">
                     {meme.sources.slice(0, 3).map((source, index) => (
-                      <a key={`${source.url}-${index}`} href={source.url} target="_blank" rel="noreferrer" className="flex min-w-0 items-center justify-between gap-2 rounded-[7px] border border-white/[0.08] bg-white/[0.06] px-3 py-2 text-xs font-semibold text-white/[0.68] transition duration-200 hover:border-[#ffd59d]/30 hover:bg-[#ffd59d]/[0.1] hover:text-[#fff6e8]">
+                      <a key={`${source.url}-${index}`} href={source.url} target="_blank" rel="noreferrer" className="flex min-w-0 items-center justify-between gap-2 rounded-[7px] border border-white/[0.08] bg-white/[0.06] px-3 py-2 text-xs font-semibold text-white/[0.68] hover:border-[#ffd59d]/30 hover:bg-[#ffd59d]/[0.1] hover:text-[#fff6e8]">
                         <span className="truncate">{getSourceLabel(source, index)}</span>
                         <FiExternalLink className="h-3.5 w-3.5 shrink-0 text-[#ffd59d]/70" />
                       </a>
@@ -214,7 +214,7 @@ const Memes: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setSelectedMeme(meme)}
-                        className="inline-flex w-max items-center gap-1.5 text-xs font-bold text-[#ffd59d]/70 transition hover:text-[#fff6e8]"
+                        className="inline-flex w-max items-center gap-1.5 text-xs font-bold text-[#ffd59d]/70 hover:text-[#fff6e8]"
                       >
                         +{meme.sources.length - 3} more sources
                         <FiExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
@@ -222,7 +222,7 @@ const Memes: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <div className="pointer-events-none absolute inset-x-5 bottom-2 h-px origin-left scale-x-0 bg-[#ffd59d]/95 shadow-[0_0_14px_rgba(255,213,157,0.42)] transition duration-300 group-hover:scale-x-100" />
+                <div className="pointer-events-none absolute inset-x-5 bottom-2 h-px origin-left scale-x-0 bg-[#ffd59d]/95 shadow-[0_0_14px_rgba(255,213,157,0.42)] transition-transform duration-300 group-hover:scale-x-100" />
               </article>
             ))}
           </div>
@@ -251,7 +251,7 @@ const Memes: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedMeme(null)}
-                  className="grid h-9 w-9 shrink-0 place-items-center rounded-[8px] border border-white/10 bg-white/[0.07] text-white/62 transition hover:border-[#ffd59d]/30 hover:bg-[#ffd59d]/[0.1] hover:text-white"
+                  className="grid h-9 w-9 shrink-0 place-items-center rounded-[8px] border border-white/10 bg-white/[0.07] text-white/62 hover:border-[#ffd59d]/30 hover:bg-[#ffd59d]/[0.1] hover:text-white"
                   aria-label="Close sources"
                   title="Close"
                 >
@@ -267,7 +267,7 @@ const Memes: React.FC = () => {
                       href={source.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="grid min-h-11 grid-cols-[2.4rem_minmax(0,1fr)_1rem] items-center gap-3 rounded-[8px] border border-white/[0.08] bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/[0.74] transition hover:border-[#ffd59d]/30 hover:bg-[#ffd59d]/[0.1] hover:text-[#fff6e8]"
+                      className="grid min-h-11 grid-cols-[2.4rem_minmax(0,1fr)_1rem] items-center gap-3 rounded-[8px] border border-white/[0.08] bg-white/[0.06] px-3 py-2 text-sm font-semibold text-white/[0.74] hover:border-[#ffd59d]/30 hover:bg-[#ffd59d]/[0.1] hover:text-[#fff6e8]"
                     >
                       <span className="text-xs font-bold tabular-nums text-[#ffd59d]/60">{String(index + 1).padStart(2, '0')}</span>
                       <span className="min-w-0 truncate">{getSourceLabel(source, index)}</span>

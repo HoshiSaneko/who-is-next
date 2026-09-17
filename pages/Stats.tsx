@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { GAMES_CONFIG, SPECIAL_GAMES_CONFIG } from '../configs/games.config';
@@ -129,14 +129,14 @@ const StatsMetricCard: React.FC<{
   tone: Tone;
   featured?: boolean;
 }> = ({ label, value, icon, tone, featured = false }) => (
-  <article className={`group relative cursor-default overflow-hidden rounded-[12px] border border-white/[0.13] bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04)_48%,rgba(255,213,157,0.075))] text-white shadow-[0_24px_70px_rgba(0,0,0,0.24)] backdrop-blur-[18px] transition duration-300 hover:-translate-y-1 hover:border-[#ffd59d]/[0.42] hover:bg-[linear-gradient(135deg,rgba(255,213,157,0.13),rgba(255,255,255,0.055)_52%,rgba(255,213,157,0.1))] hover:shadow-[0_30px_76px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.1)] ${featured ? 'min-h-[12rem] p-6 sm:p-7 lg:min-h-[14rem] lg:p-8' : 'min-h-[9rem] p-5 sm:p-6 lg:min-h-[10rem]'}`}>
-    <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-[#ffd59d]/[0.075] blur-3xl transition duration-300 group-hover:bg-[#ffd59d]/[0.11]" />
-    <div className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-18deg] bg-[linear-gradient(90deg,transparent,rgba(255,237,210,0.15),transparent)] opacity-0 transition duration-700 group-hover:translate-x-[340%] group-hover:opacity-100" />
-    <div className={`pointer-events-none absolute inset-x-6 bottom-0 h-px bg-gradient-to-r ${toneStyles[tone].glow} via-[#ffe1b0]/[0.42] to-transparent opacity-80 transition duration-300 group-hover:h-[3px] group-hover:opacity-100`} />
+  <article className={`group relative cursor-default overflow-hidden rounded-[12px] border border-white/[0.13] bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04)_48%,rgba(255,213,157,0.075))] text-white shadow-[0_24px_70px_rgba(0,0,0,0.24)] backdrop-blur-[18px] transition-transform duration-300 hover:-translate-y-1 hover:border-[#ffd59d]/[0.42] hover:bg-[linear-gradient(135deg,rgba(255,213,157,0.13),rgba(255,255,255,0.055)_52%,rgba(255,213,157,0.1))] hover:shadow-[0_30px_76px_rgba(0,0,0,0.32),inset_0_1px_0_rgba(255,255,255,0.1)] ${featured ? 'min-h-[12rem] p-6 sm:p-7 lg:min-h-[14rem] lg:p-8' : 'min-h-[9rem] p-5 sm:p-6 lg:min-h-[10rem]'}`}>
+    <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-[#ffd59d]/[0.075] blur-3xl group-hover:bg-[#ffd59d]/[0.11]" />
+    <div className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-18deg] bg-[linear-gradient(90deg,transparent,rgba(255,237,210,0.15),transparent)] opacity-0 transition-[transform,opacity] duration-700 group-hover:translate-x-[340%] group-hover:opacity-100" />
+    <div className={`pointer-events-none absolute inset-x-6 bottom-0 h-[3px] origin-bottom scale-y-[0.333] bg-gradient-to-r ${toneStyles[tone].glow} via-[#ffe1b0]/[0.42] to-transparent opacity-80 transition-[transform,opacity] duration-300 group-hover:scale-y-100 group-hover:opacity-100`} />
     <div className="relative flex min-h-full items-start justify-between gap-5">
       <div className="min-w-0 flex-1">
-        <p className={`${featured ? 'text-[0.74rem] sm:text-[0.82rem]' : 'text-[0.68rem] sm:text-[0.74rem]'} cursor-default font-bold uppercase leading-none tracking-[0.18em] text-[#ffd59d]/[0.72] transition duration-300 group-hover:text-[#ffe1b0]/95`}>{label}</p>
-        <div className={`${featured ? 'mt-5 text-[clamp(2.8rem,7vw,5.25rem)]' : 'mt-4 text-[clamp(2rem,3.8vw,2.85rem)]'} flex cursor-default items-end justify-between gap-4 font-[780] leading-[0.95] tracking-normal text-white tabular-nums drop-shadow-[0_14px_34px_rgba(0,0,0,0.3)] transition duration-300 group-hover:text-[#fff7e8] group-hover:drop-shadow-[0_18px_42px_rgba(255,213,157,0.17)]`}>
+        <p className={`${featured ? 'text-[0.74rem] sm:text-[0.82rem]' : 'text-[0.68rem] sm:text-[0.74rem]'} cursor-default font-bold uppercase leading-none tracking-[0.18em] text-[#ffd59d]/[0.72] group-hover:text-[#ffe1b0]/95`}>{label}</p>
+        <div className={`${featured ? 'mt-5 text-[clamp(2.8rem,7vw,5.25rem)]' : 'mt-4 text-[clamp(2rem,3.8vw,2.85rem)]'} flex cursor-default items-end justify-between gap-4 font-[780] leading-[0.95] tracking-normal text-white tabular-nums drop-shadow-[0_14px_34px_rgba(0,0,0,0.3)] group-hover:text-[#fff7e8] group-hover:drop-shadow-[0_18px_42px_rgba(255,213,157,0.17)]`}>
           <span className="min-w-0 whitespace-nowrap">{value}</span>
           <span className={`stats-metric-icon ${featured ? 'mb-2 h-10 w-10 sm:h-12 sm:w-12 [&_svg]:h-10 [&_svg]:w-10 sm:[&_svg]:h-12 sm:[&_svg]:w-12' : 'mb-1 h-8 w-8 [&_svg]:h-8 [&_svg]:w-8'} shrink-0 ${toneStyles[tone].text}`}>
             <BiliMetricIcon type={icon} />
@@ -418,7 +418,7 @@ const Stats: React.FC = () => {
                 key={tab.type}
                 type="button"
                 onClick={() => setActiveLeaderboard(tab.type)}
-                className={`shrink-0 rounded-[7px] px-3 py-2 text-xs font-bold transition duration-200 ${
+                className={`shrink-0 rounded-[7px] px-3 py-2 text-xs font-bold ${
                   active
                     ? 'bg-[#ffd59d]/[0.16] text-[#ffe1b0] shadow-[inset_0_0_0_1px_rgba(255,213,157,0.2)]'
                     : 'text-white/[0.56] hover:bg-white/[0.07] hover:text-white/[0.86]'
@@ -436,7 +436,7 @@ const Stats: React.FC = () => {
             {([{ value: 'all', label: '全部' }, { value: 'regular', label: '正式' }, { value: 'special', label: '特辑' }] as const).map((scope) => (
               <button key={scope.value} type="button" aria-pressed={leaderboardScope === scope.value}
                 onClick={() => setLeaderboardScope(scope.value)}
-                className={`rounded-md px-4 py-2 text-xs font-bold transition ${leaderboardScope === scope.value ? 'bg-[#ffd59d]/20 text-[#ffe1b0]' : 'text-white/65 hover:bg-white/10'} focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ffd59d]`}>
+                className={`rounded-md px-4 py-2 text-xs font-bold ${leaderboardScope === scope.value ? 'bg-[#ffd59d]/20 text-[#ffe1b0]' : 'text-white/65 hover:bg-white/10'} focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ffd59d]`}>
                 {scope.label}
               </button>
             ))}
@@ -543,7 +543,7 @@ const Stats: React.FC = () => {
             type="button"
             aria-pressed={!hidden}
             onClick={() => toggleProgressTeam(team.chartName)}
-            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition duration-200 ${
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 ${
               hidden
                 ? 'border-white/[0.07] bg-white/[0.025] opacity-45 hover:opacity-75'
                 : 'border-white/10 bg-white/[0.055] hover:border-[#ffd59d]/25 hover:bg-[#ffd59d]/[0.08]'
@@ -596,7 +596,7 @@ const Stats: React.FC = () => {
                 key={collection.progressId}
                 type="button"
                 onClick={() => setActiveProgressId(collection.progressId)}
-                className={`shrink-0 rounded-[7px] px-3 py-2 text-xs font-bold transition duration-200 ${
+                className={`shrink-0 rounded-[7px] px-3 py-2 text-xs font-bold ${
                   active
                     ? 'bg-[#ffd59d]/[0.16] text-[#ffe1b0] shadow-[inset_0_0_0_1px_rgba(255,213,157,0.2)]'
                     : 'text-white/[0.56] hover:bg-white/[0.07] hover:text-white/[0.86]'
@@ -684,10 +684,10 @@ const Stats: React.FC = () => {
                             key={`${item.name}-${level.id}`}
                             type="button"
                             onClick={() => navigate('/levels', { state: { selectedGameId: level.id } })}
-                            className="group flex w-full items-center justify-between gap-3 rounded-[7px] border border-white/10 bg-white/[0.055] px-3 py-2 text-left text-xs transition duration-200 hover:border-[#ffd59d]/35 hover:bg-[#ffd59d]/[0.09] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd59d]/70"
+                            className="group flex w-full items-center justify-between gap-3 rounded-[7px] border border-white/10 bg-white/[0.055] px-3 py-2 text-left text-xs hover:border-[#ffd59d]/35 hover:bg-[#ffd59d]/[0.09] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ffd59d]/70"
                           >
                             <span className="min-w-0 truncate font-semibold text-white/[0.78]" title={level.levelName}>{level.levelName}</span>
-                            <span className="shrink-0 text-[#ffd59d]/70 transition group-hover:text-[#ffe1b0]">{level.collectionLabel} · {level.id}</span>
+                            <span className="shrink-0 text-[#ffd59d]/70 group-hover:text-[#ffe1b0]">{level.collectionLabel} · {level.id}</span>
                           </button>
                         ))}
                       </div>
