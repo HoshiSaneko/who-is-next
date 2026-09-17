@@ -120,7 +120,7 @@ const Navigation: React.FC = () => {
 
         <button
           type="button"
-          className="ml-1 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-slate-950 bg-slate-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.18)] transition hover:bg-slate-800 lg:hidden"
+          className="ml-auto flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-slate-950 bg-slate-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.18)] transition hover:bg-slate-800 lg:hidden"
           onClick={() => setMobileMenuOpen((open) => !open)}
           aria-label="Toggle menu"
         >
@@ -129,14 +129,15 @@ const Navigation: React.FC = () => {
       </div>
 
       <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22 }}
-            className="pointer-events-auto absolute left-3 right-3 top-[4.35rem] z-20 overflow-hidden rounded-[18px] border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.14)] lg:hidden"
-          >
+        <motion.div
+          initial={false}
+          animate={{ height: mobileMenuOpen ? 'auto' : 0, opacity: mobileMenuOpen ? 1 : 0 }}
+          transition={{ duration: 0.22 }}
+          aria-hidden={!mobileMenuOpen}
+          className={`absolute left-3 right-3 top-[4.35rem] z-20 overflow-hidden rounded-[18px] border border-slate-200 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.14)] lg:hidden ${
+            mobileMenuOpen ? 'pointer-events-auto' : 'pointer-events-none'
+          }`}
+        >
             <div className="mx-auto flex max-w-7xl flex-col gap-2 p-3">
               {allNavItems.map((item) => {
                 const active = location.pathname === item.path;
@@ -158,8 +159,7 @@ const Navigation: React.FC = () => {
                 <MusicPlayer />
               </div>
             </div>
-          </motion.div>
-        )}
+        </motion.div>
       </AnimatePresence>
     </nav>
   );
