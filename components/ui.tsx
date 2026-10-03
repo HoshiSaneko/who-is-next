@@ -145,11 +145,11 @@ export const MediaCard: React.FC<{
   children?: React.ReactNode;
 }> = ({ title, image, meta, href, children }) => {
   const content = (
-    <article className="group h-full overflow-hidden rounded-[8px] border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_35px_rgba(15,23,42,0.08)]">
+    <article className="group h-full overflow-hidden rounded-[8px] border border-slate-200 bg-white transition-transform hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_18px_35px_rgba(15,23,42,0.08)]">
       {image && (
         <div className="aspect-video overflow-hidden bg-slate-100 p-2">
           <div className="h-full w-full overflow-hidden rounded-[6px]">
-            <OptimizedImage src={image} alt={title} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+            <OptimizedImage src={image} alt={title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
           </div>
         </div>
       )}
