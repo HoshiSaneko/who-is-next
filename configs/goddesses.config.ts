@@ -282,4 +282,14 @@ export const GODDESSES_CONFIG: Goddess[] = [
     games: ['反弹乒乓球', '默契大考验', '投石机', '肺活量挑战', '穿八环', '名画猜猜猜', '开锁大师', '全世界最感动的视频', '飞镖元素周期表', '海洋球猜猜猜'],
     bilibiliUrl: 'https://space.bilibili.com/497638046'
   },
+  {
+    id: '29',
+    season: 7,
+    episode: 5,
+    name: '星悦小美女PKU',
+    avatar: '/avatars/xingyue.jpg',
+    description: 'bilibili 知名Vlog UP主',
+    games: ['击球立瓶', '译歌猜猜猜', '积木叠叠叠', '部首拼字', '采茶称称称', '精准点钞', '单词猜猜猜', '睡睡睡睡睡', '套圈儿', '手抖就被电', '决战--采茶'],
+    bilibiliUrl: 'https://space.bilibili.com/315898473'
+  },
 ];

@@ -12,8 +12,8 @@ export interface Special {
 }
 
 export const HOME_FEATURED_VIDEO_CONFIG = {
-    bvid: 'BV1HBbE6cEc5',
-    title: '《下一个是谁》第七季（4）',
+    bvid: 'BV1cAYP6YEvj',
+    title: '《下一个是谁》第七季（5）',
 };
 
 export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
@@ -66,6 +66,7 @@ export const SEASON_EPISODES_CONFIG: SeasonEpisode[] = [
     { season: 7, episode: 2, title: '《下一个是谁》第七季（2）', bvid: 'BV1KRg462E53' },
     { season: 7, episode: 3, title: '《下一个是谁》第七季（3）', bvid: 'BV1yj8T6zE1N' },
     { season: 7, episode: 4, title: '《下一个是谁》第七季（4）', bvid: 'BV1HBbE6cEc5' },
+    { season: 7, episode: 5, title: '《下一个是谁》第七季（5）', bvid: 'BV1cAYP6YEvj' },
 ];
 
 export const SPECIALS_CONFIG: Special[] = [
